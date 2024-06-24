@@ -1,3 +1,60 @@
 spring:
   application:
     name: JHP-World
+
+  profiles:
+    include: oauth2
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jhp
+    username: root
+    password: 1234
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    baseline-version: 0
+    fail-on-missing-locations: true
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate # flyway가 실행되고 ddl-auto가 실행됨. 따라서 create로 설정하면 안됨. 배포 시에는 validate로 설정.
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: false  # hibernate와 flyway 초기화 실행 순서 지정. false로 설정하면 flyway가 먼저 실행됨.
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+  security:
+    user:
+      name: user
+      password: 1234
+
+  thymeleaf:
+    cache: false
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+
+
+jwt:
+  secret: Hello_This_Is_My_Secret_Key_For_JWT_Hello_This_Is_My_Secret_Key_For_JWT_Hello_This_Is_My_Secret_Key_For_JWT
+  access-token-time: 600000  # 10분
+  refresh-token-time: 8640000000  # 100일
+
+server:
+  port: 8080
+
+  error:
+    include-exception: false
+    include-message: always
+    include-stacktrace: never
+    whitelabel.enabled: true
