@@ -1,7 +1,6 @@
 package minskim2.JHP_World.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import minskim2.JHP_World.config.login.exception.JwtCustomException;
 import minskim2.JHP_World.domain.member.exception.MemberException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
@@ -14,8 +13,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RestControllerAdvice
@@ -62,29 +60,27 @@ public class GlobalExceptionHandler {
     /** 여기부터는 CustomException 처리 핸들러 */
 
     // 400 Bad Request
+//    @ExceptionHandler({
+//    })
+//    public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {
+//        return ResponseEntity.status(BAD_REQUEST).body(ErrorResponse.from(e));
+//    }
+
+    // 401 Unauthorized
     @ExceptionHandler({
-            JwtCustomException.JwtExpiredException.class,
-            JwtCustomException.JwtInvalidException.class,
+            HttpException.UnauthorizedException.class
     })
-    public ResponseEntity<ErrorResponse> handleGlobalBadRequestException(final CustomException e) {
-        return ResponseEntity.status(BAD_REQUEST).body(ErrorResponse.from(e));
+    public ResponseEntity<ErrorResponse> handleGlobalUnauthorizedException(final CustomException e) {
+        return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.from(e));
     }
 
-//    // 401 Unauthorized
-//    @ExceptionHandler({
-//            // 인증 오류 추가
-//    })
-//    public ResponseEntity<ErrorResponse> handleGlobalUnauthorizedException(final CustomException e) {
-//        return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.from(e));
-//    }
-//
-//    // 403 Forbidden
-//    @ExceptionHandler({
-//            // 권한 오류 추가
-//    })
-//    public ResponseEntity<ErrorResponse> handleGlobalForbiddenException(final CustomException e) {
-//        return ResponseEntity.status(FORBIDDEN).body(ErrorResponse.from(e));
-//    }
+    // 403 Forbidden
+    @ExceptionHandler({
+            HttpException.ForbiddenException.class
+    })
+    public ResponseEntity<ErrorResponse> handleGlobalForbiddenException(final CustomException e) {
+        return ResponseEntity.status(FORBIDDEN).body(ErrorResponse.from(e));
+    }
 
     // 404 Not Found
     @ExceptionHandler({

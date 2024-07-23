@@ -11,17 +11,20 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class EnvBean {
-    @Value("${jwt.secret}")
-    private String jwtSecretKey;
-    @Value("${jwt.access-token-time}")
-    private long accessTokenTime;
-    @Value("${jwt.refresh-token-time}")
-    private long refreshTokenTime;
-
+    // Kakao
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
     @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
     private String kakaoClientSecret;
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String kakaoRedirectUri;
+
+    // URL
+    @Value("${url.login}")
+    private String loginUrl;
+    @Value("${url.login-success}")
+    private String loginSuccessUrl;
+    @Value("${url.logout}")
+    private String logoutUrl;
+
 }

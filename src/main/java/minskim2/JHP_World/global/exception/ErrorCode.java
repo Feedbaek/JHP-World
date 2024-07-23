@@ -15,11 +15,8 @@ public enum ErrorCode {
     CONFLICT(409, "Conflict"),
     INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
 
-    // 10000 ~ 19999: Login, JWT
+    // 10000 ~ 19999: Login
     LOGIN_FAILED(10401, "로그인 실패"),
-
-    JWT_INVALID(11400, "JWT 토큰이 유효하지 않습니다"),
-    JWT_EXPIRED(11400, "JWT 토큰이 만료 되었습니다."),
 
     // 20000 ~ 29999: Member
     MEMBER_NOT_FOUND(20404, "멤버를 찾을 수 없습니다"),
