@@ -21,7 +21,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: validate # flyway가 실행되고 ddl-auto가 실행됨. 따라서 create로 설정하면 안됨. 배포 시에는 validate로 설정.
+      ddl-auto: validate # flyway가 실행되고 ddl-auto가 실행됨. validate로 설정하여 검증 모드로 설정.
     show-sql: false
     properties:
       hibernate:
@@ -44,11 +44,11 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
+url:
+  login: /login
+  login-success: /home
+  logout: /logout
 
-jwt:
-  secret: Hello_This_Is_My_Secret_Key_For_JWT_Hello_This_Is_My_Secret_Key_For_JWT_Hello_This_Is_My_Secret_Key_For_JWT
-  access-token-time: 600000  # 10분
-  refresh-token-time: 8640000000  # 100일
 
 server:
   port: 8080
@@ -58,3 +58,7 @@ server:
     include-message: always
     include-stacktrace: never
     whitelabel.enabled: true
+
+  servlet:
+    session:
+      timeout: 30m
