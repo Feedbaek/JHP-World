@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -19,6 +20,7 @@ public class MemberService {
     @Transactional
     public Member createMember(String phoneNumber, String kakaoId) throws MemberException {
         // todo: 중복 체크
+
 
         // todo: 멤버 생성
         Member member = Member.builder()

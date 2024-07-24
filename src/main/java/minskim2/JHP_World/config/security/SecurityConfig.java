@@ -32,6 +32,8 @@ public class SecurityConfig {
     private final String[] GET_LIST = {
         // 인덱스 페이지
         "/",
+        // 소셜 로그인 페이지
+        "/login/**",
     };
 
     // 모든 사용자 허용 경로

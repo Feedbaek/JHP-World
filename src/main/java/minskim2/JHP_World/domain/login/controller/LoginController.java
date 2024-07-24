@@ -16,9 +16,9 @@ public class LoginController {
         return "login";
     }
 
-    // 카카오 로그인 페이지로 이동
+    // 카카오 로그인 페이지로 리다이렉트
     @GetMapping("/kakao")
     public String loginKakao() {
-        return "forward:/oauth2/authorization/kakao";
+        return "redirect:/oauth2/authorization/kakao";
     }
 }

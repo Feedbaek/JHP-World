@@ -3,6 +3,7 @@ package minskim2.JHP_World.config.login.oauth2;
 import minskim2.JHP_World.domain.member.entity.Member;
 import minskim2.JHP_World.domain.member.entity.Role;
 import minskim2.JHP_World.domain.member.enums.RoleName;
+import minskim2.JHP_World.domain.member.exception.RoleException;
 import minskim2.JHP_World.domain.member.repository.MemberRepository;
 import minskim2.JHP_World.domain.member.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +61,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
         String oauth2Id = registrationId + ":" + oAuth2User.getName();
         // 임시 유저로 역할 설정
         Role role = roleRepository.findByName(RoleName.USER.name())
-                .orElseThrow(() -> new OAuth2AuthenticationException("존재하지 않는 권한입니다."));
+                .orElseThrow(RoleException.RoleNotFoundException::new);
         // todo: member 엔티티 확정 후 수정
         return memberRepository.findByOauth2id(oauth2Id)
                 .orElseGet(() -> memberRepository.save(Member.builder()
