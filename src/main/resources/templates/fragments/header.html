@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!-- Thymeleaf 선언 / headerFragment 임을 선언-->
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="HeaderFragment">
+<div style="border: solid 1px yellow; display: flex; justify-content: space-between;">
+    <h1 style="text-align: left; width: 50%;">JHP World</h1>
+
+    <div style="text-align: right; width: 50%;">
+        <a href="/mypage"> 마이 페이지 </a>
+        <a href="/logout"> 로그아웃 </a>
+    </div>
+</div>
+</html>
