@@ -24,7 +24,7 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "lecture_id", nullable = false)
     private Lecture lecture;
 
-    @Column(name = "title", nullable = false, length = 100)
+    @Column(name = "title", nullable = false, length = 50)
     private String title;
 
     @Column(name = "body", nullable = false, columnDefinition = "TEXT")

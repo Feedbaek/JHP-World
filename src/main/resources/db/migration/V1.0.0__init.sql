@@ -3,7 +3,7 @@ create table role
 (
     id            bigint auto_increment
         primary key,
-    name          varchar(255) not null,
+    name          enum('ADMIN', 'USER') not null,
     created_date  datetime(6)  null,
     modified_date datetime(6)  null,
     constraint role_name_unique
@@ -18,6 +18,7 @@ create table member
     oauth2id      varchar(50) not null,
     name          varchar(30) null,
     role_id       bigint      not null,
+    is_enabled    boolean     not null,
     created_date  datetime(6) null,
     modified_date datetime(6) null,
     constraint member_oauth2id_unique

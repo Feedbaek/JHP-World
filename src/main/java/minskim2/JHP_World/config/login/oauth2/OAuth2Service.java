@@ -68,6 +68,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
                         .oauth2id(oauth2Id)
                         .name(name)
                         .role(role)
+                        .isEnabled(true)
                         .build()));
     }
 }

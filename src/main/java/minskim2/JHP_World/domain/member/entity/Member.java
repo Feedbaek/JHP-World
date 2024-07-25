@@ -26,11 +26,15 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    @Column(name = "is_enabled", nullable = false)
+    private boolean isEnabled;
+
     @Builder
-    public Member(Long id, String oauth2id, String name, Role role) {
+    public Member(Long id, String oauth2id, String name, Role role, boolean isEnabled) {
         this.id = id;
         this.oauth2id = oauth2id;
         this.name = name;
         this.role = role;
+        this.isEnabled = isEnabled;
     }
 }
