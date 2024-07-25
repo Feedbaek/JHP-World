@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RoleService {
     private final RoleRepository roleRepository;
+
+    // RoleName enum에 있는 모든 RoleName으로 Role을 생성
     @PostConstruct
     protected void init() {
         for (RoleName roleName : RoleName.values()) {
-            if (!roleRepository.existsByName(roleName.name())) {
+            if (!roleRepository.existsByName(roleName)) {
                 roleRepository.save(Role.builder()
-                        .name(roleName.name()).build()
+                        .name(roleName).build()
                 );
             }
         }
