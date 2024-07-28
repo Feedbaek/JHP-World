@@ -7,15 +7,15 @@ create table lecture (
     modified_date datetime(6)  null
 );
 
--- subject table
-create table subject (
+-- assignment table
+create table assignment (
     id            bigint auto_increment
         primary key,
     body          TEXT         not null,
     lecture_id    bigint       not null,
     created_date  datetime(6)  null,
     modified_date datetime(6)  null,
-    constraint subject_lecture_id_fk
+    constraint assignment_lecture_id_fk
         foreign key (lecture_id) references lecture (id)
 );
 
@@ -25,28 +25,28 @@ create table solution (
         primary key,
     source_code   TEXT         not null,
     member_id     bigint       not null,
-    subject_id    bigint       not null,
+    assignment_id    bigint       not null,
     created_date  datetime(6)  null,
     modified_date datetime(6)  null,
     constraint solution_member_id_fk
         foreign key (member_id) references member (id),
-    constraint solution_subject_id_fk
-        foreign key (subject_id) references subject (id)
+    constraint solution_assignment_id_fk
+        foreign key (assignment_id) references assignment (id)
 );
 
 -- test_case table
 create table test_case (
     id            bigint auto_increment
         primary key,
-    subject_id    bigint       not null,
+    assignment_id    bigint       not null,
     member_id     bigint       not null,
     input         TEXT         not null,
     output        TEXT         not null,
     description   TEXT         null,
     created_date  datetime(6)  null,
     modified_date datetime(6)  null,
-    constraint test_case_subject_id_fk
-        foreign key (subject_id) references subject (id),
+    constraint test_case_assignment_id_fk
+        foreign key (assignment_id) references assignment (id),
     constraint test_case_member_id_fk
         foreign key (member_id) references member (id)
 );

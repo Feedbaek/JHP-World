@@ -44,11 +44,6 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
-url:
-  login: /login
-  login-success: /home
-  logout: /logout
-
 
 server:
   port: 8080
@@ -62,3 +57,13 @@ server:
   servlet:
     session:
       timeout: 30m
+
+
+url:
+  login: /login
+  login-success: /home
+  logout: /logout
+
+
+test:
+  enable: true

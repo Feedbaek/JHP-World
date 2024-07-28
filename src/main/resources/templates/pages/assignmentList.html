@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultLayout}"
+      layout:fragment="Content"
+>
+<head>
+    <title th:title="${title}"></title>
+</head>
+<body>
+
+<div th:each="assignment : ${assignmentList}">
+    <p th:text="${assignment.id}"></p>
+</div>
+
+
+</body>
+</html>

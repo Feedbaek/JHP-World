@@ -3,11 +3,13 @@ package minskim2.JHP_World.domain.test_case.entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import minskim2.JHP_World.domain.assignment.entity.Assignment;
 import minskim2.JHP_World.domain.member.entity.Member;
-import minskim2.JHP_World.domain.subject.entity.Subject;
 import minskim2.JHP_World.global.entity.BaseEntity;
 
+@Getter
 @Entity
 @Table(name = "test_case")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,8 +19,8 @@ public class TestCase extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subject_id", nullable = false)
-    private Subject subject;
+    @JoinColumn(name = "assignment_id", nullable = false)
+    private Assignment assignment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -34,9 +36,9 @@ public class TestCase extends BaseEntity {
     private String description;
 
     @Builder
-    public TestCase(Long id, Subject subject, Member member, String input, String output, String description) {
+    public TestCase(Long id, Assignment assignment, Member member, String input, String output, String description) {
         this.id = id;
-        this.subject = subject;
+        this.assignment = assignment;
         this.member = member;
         this.input = input;
         this.output = output;

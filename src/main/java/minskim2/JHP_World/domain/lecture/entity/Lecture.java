@@ -3,9 +3,11 @@ package minskim2.JHP_World.domain.lecture.entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import minskim2.JHP_World.global.entity.BaseEntity;
 
+@Getter
 @Entity
 @Table(name = "lecture")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

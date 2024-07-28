@@ -27,4 +27,8 @@ public class EnvBean {
     @Value("${url.logout}")
     private String logoutUrl;
 
+    // test
+    @Value("${test.enable}")
+    private String testEnable;
+
 }

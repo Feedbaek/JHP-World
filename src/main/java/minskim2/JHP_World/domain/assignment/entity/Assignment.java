@@ -1,16 +1,18 @@
-package minskim2.JHP_World.domain.subject.entity;
+package minskim2.JHP_World.domain.assignment.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.global.entity.BaseEntity;
 
+@Getter
 @Entity
-@Table(name = "subject")
+@Table(name = "assignment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Subject extends BaseEntity {
+public class Assignment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +25,7 @@ public class Subject extends BaseEntity {
     private Lecture lecture;
 
     @Builder
-    public Subject(Long id, String body, Lecture lecture) {
+    public Assignment(Long id, String body, Lecture lecture) {
         this.id = id;
         this.body = body;
         this.lecture = lecture;

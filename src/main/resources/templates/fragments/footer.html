@@ -3,7 +3,27 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       th:fragment="FooterFragment">
+
+<head>
+    <title></title>
+    <style>
+        .page-link {
+            margin-right: 10px; /* 원하는 여백 크기로 조정 */
+        }
+        .current-page {
+            color: deepskyblue;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
 <div style="border: solid 1px blue">
-    <h1>Footer 영역입니다.</h1>
+    <!-- 페이징 숫자 -->
+    <div style="display: flex; justify-content: center;">
+        <div th:each="p : ${pageNums}">
+            <a th:if="${p == currentPage}" th:href="${currentUri} + '?page=' + ${p}" th:text="${p}" class="page-link" th:classappend="current-page"></a>
+            <a th:unless="${p == currentPage}" th:href="${currentUri} + '?page=' + ${p}" th:text="${p}" class="page-link"></a>
+        </div>
+    </div>
 </div>
 </html>
