@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+import static minskim2.JHP_World.global.constant.IntConstant.ASSIGNMENT_LIST_SIZE;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/assignment/{lectureId}/list")
@@ -31,7 +33,7 @@ public class AssignmentListController {
         ModelSetter.setPaging(model, page);
 
         // 해당 강의의 모든 과목 조회
-        List<AssignmentDto> assignmentList = assignmentService.findAllByLectureId(lectureId, page);
+        List<AssignmentDto> assignmentList = assignmentService.findAssignmentByLectureId(lectureId, page, ASSIGNMENT_LIST_SIZE);
         model.addAttribute("assignmentList", assignmentList);
         return "/pages/assignmentList";
     }

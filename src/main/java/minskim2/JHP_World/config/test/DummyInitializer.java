@@ -18,15 +18,34 @@ public class DummyInitializer {
     private final AssignmentRepository assignmentRepository;
 
     /**
-    * 더미 강의 데이터 생성
+    * 강의 데이터 생성
     * */
     private void initLecture() {
-        for (int i=1; i<=3; ++i) {
-            if (lectureRepository.findById((long) i).isPresent()) {
-                continue;
-            }
+        // 문제해결기법 강의
+        if (lectureRepository.findByName("문제해결기법").isEmpty()) {
             Lecture lecture = Lecture.builder()
-                    .name("강의 이름 - " + i)
+                    .name("문제해결기법")
+                    .build();
+            lectureRepository.save(lecture);
+        }
+        // 자료구조 강의
+        if (lectureRepository.findByName("자료구조").isEmpty()) {
+            Lecture lecture = Lecture.builder()
+                    .name("자료구조")
+                    .build();
+            lectureRepository.save(lecture);
+        }
+        // 알고리즘설계 강의
+        if (lectureRepository.findByName("알고리즘설계").isEmpty()) {
+            Lecture lecture = Lecture.builder()
+                    .name("알고리즘설계")
+                    .build();
+            lectureRepository.save(lecture);
+        }
+        // 오토마타 강의
+        if (lectureRepository.findByName("오토마타").isEmpty()) {
+            Lecture lecture = Lecture.builder()
+                    .name("오토마타")
                     .build();
             lectureRepository.save(lecture);
         }
@@ -37,10 +56,10 @@ public class DummyInitializer {
      */
     private void initAssignment() {
         for (int i=1; i<=3; ++i) {
-            if (assignmentRepository.findById((long) i).isPresent()) {
+            Lecture lecture = lectureRepository.findByName("문제해결기법").orElseThrow();
+            if (assignmentRepository.countByLectureId(lecture.getId()) >= 3) {
                 continue;
             }
-            Lecture lecture = lectureRepository.findById(1L).orElse(null);
             Assignment assignment = Assignment.builder()
                     .body("과제 내용 - " + i)
                     .lecture(lecture)
@@ -48,11 +67,11 @@ public class DummyInitializer {
             assignmentRepository.save(assignment);
         }
 
-        for (int i=4; i<=6; ++i) {
-            if (assignmentRepository.findById((long) i).isPresent()) {
+        for (int i=1; i<=3; ++i) {
+            Lecture lecture = lectureRepository.findByName("자료구조").orElseThrow();
+            if (assignmentRepository.countByLectureId(lecture.getId()) >= 3) {
                 continue;
             }
-            Lecture lecture = lectureRepository.findById(2L).orElse(null);
             Assignment assignment = Assignment.builder()
                     .body("과제 내용 - " + i)
                     .lecture(lecture)
@@ -60,11 +79,23 @@ public class DummyInitializer {
             assignmentRepository.save(assignment);
         }
 
-        for (int i=7; i<=9; ++i) {
-            if (assignmentRepository.findById((long) i).isPresent()) {
+        for (int i=1; i<=3; ++i) {
+            Lecture lecture = lectureRepository.findByName("알고리즘설계").orElseThrow();
+            if (assignmentRepository.countByLectureId(lecture.getId()) >= 3) {
                 continue;
             }
-            Lecture lecture = lectureRepository.findById(3L).orElse(null);
+            Assignment assignment = Assignment.builder()
+                    .body("과제 내용 - " + i)
+                    .lecture(lecture)
+                    .build();
+            assignmentRepository.save(assignment);
+        }
+
+        for (int i=1; i<=3; ++i) {
+            Lecture lecture = lectureRepository.findByName("오토마타").orElseThrow();
+            if (assignmentRepository.countByLectureId(lecture.getId()) >= 3) {
+                continue;
+            }
             Assignment assignment = Assignment.builder()
                     .body("과제 내용 - " + i)
                     .lecture(lecture)

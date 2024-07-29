@@ -17,6 +17,8 @@ public class Assignment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // TODO: 과제 제목 필드 추가
+
     @Column(name = "body", nullable = false, columnDefinition = "TEXT")
     private String body;
 

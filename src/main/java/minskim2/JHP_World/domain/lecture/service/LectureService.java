@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LectureService {
     private final LectureRepository lectureRepository;
+
     // TODO: 아래 메소드들 예외 처리 추가
     public void save(Lecture lecture) {
         try {
             lectureRepository.save(lecture);
         } catch (Exception e) {
             log.error("강의 저장 중 오류 발생", e);
+            throw new IllegalArgumentException("강의 저장 중 오류 발생");
         }
     }
 
@@ -25,6 +27,15 @@ public class LectureService {
             lectureRepository.deleteById(lectureId);
         } catch (Exception e) {
             log.error("강의 삭제 중 오류 발생", e);
+            throw new IllegalArgumentException("강의 삭제 중 오류 발생");
         }
+    }
+
+    public Lecture findById(Long lectureId) {
+        return lectureRepository.findById(lectureId).orElseThrow(() -> new IllegalArgumentException("해당 강의가 존재하지 않습니다."));
+    }
+
+    public Lecture findByName(String name) {
+        return lectureRepository.findByName(name).orElseThrow(() -> new IllegalArgumentException("해당 강의가 존재하지 않습니다."));
     }
 }

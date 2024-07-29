@@ -51,8 +51,8 @@ public class AssignmentService {
         }
     }
 
-    public List<AssignmentDto> findAllByLectureId(Long lectureId, int page) {
-        Pageable pageable = PageRequest.of(page, ASSIGNMENT_LIST_SIZE, Sort.by("createdDate"));
+    public List<AssignmentDto> findAssignmentByLectureId(Long lectureId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate"));
         Page<Assignment> assignments = assignmentRepository.findAllByLectureId(lectureId, pageable);
         // Assignment를 AssignmentDto로 전부 변환하여 반환
         return assignments.map(this::convertToDto).getContent();

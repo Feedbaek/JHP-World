@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     Page<Assignment> findAllByLectureId(Long lectureId, Pageable pageable);
+
+    int countByLectureId(Long lectureId);
 }
