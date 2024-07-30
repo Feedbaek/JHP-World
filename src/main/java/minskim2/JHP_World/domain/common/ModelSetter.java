@@ -25,4 +25,11 @@ public class ModelSetter {
         model.addAttribute("pageNums", pageNums);
         model.addAttribute("currentPage", currentPage);
     }
+    /**
+     * 타이틀 설정 메서드
+     * */
+    public static void setTitle(Model model,String Title, String title) {
+        model.addAttribute("Title", Title);
+        model.addAttribute("title", title);
+    }
 }

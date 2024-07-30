@@ -18,6 +18,8 @@ public class Assignment extends BaseEntity {
     private Long id;
 
     // TODO: 과제 제목 필드 추가
+    @Column(name = "title", nullable = false, length = 50)
+    private String title;
 
     @Column(name = "body", nullable = false, columnDefinition = "TEXT")
     private String body;
@@ -27,8 +29,9 @@ public class Assignment extends BaseEntity {
     private Lecture lecture;
 
     @Builder
-    public Assignment(Long id, String body, Lecture lecture) {
+    public Assignment(Long id, String title, String body, Lecture lecture) {
         this.id = id;
+        this.title = title;
         this.body = body;
         this.lecture = lecture;
     }

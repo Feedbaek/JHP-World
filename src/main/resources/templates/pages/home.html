@@ -6,7 +6,7 @@
       layout:fragment="Content"
 >
 <head>
-    <title>Home</title>
+    <title th:text="${title}"></title>
     <link rel="stylesheet" type="text/css" href="/css/styles.css" />
 
     <style>
@@ -35,28 +35,28 @@
     <h2> 문제해결기법 </h2>
         <ul>
             <li th:each="assignment : ${problemSolvingList}">
-                <a th:href="'/assignment/' + ${assignment.getLectureId()} + '/' + ${assignment.getId()}" th:text="${assignment.id}"></a>
+                <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
             </li>
         </ul>
 
     <h2> 자료구조 </h2>
         <ul>
             <li th:each="assignment : ${dataStructureList}">
-                <a th:href="'/assignment/' + ${assignment.getId()}" th:text="${assignment.id}"></a>
+                <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
             </li>
         </ul>
 
     <h2> 오토마타 </h2>
         <ul>
             <li th:each="assignment : ${automataList}">
-                <a th:href="'/assignment/' + ${assignment.getId()}" th:text="${assignment.id}"></a>
+                <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
             </li>
         </ul>
 
     <h2> 알고리즘설계 </h2>
         <ul>
             <li th:each="assignment : ${algorithmDesignList}">
-                <a th:href="'/assignment/' + ${assignment.getId()}" th:text="${assignment.id}"></a>
+                <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
             </li>
         </ul>
 

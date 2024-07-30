@@ -61,6 +61,7 @@ public class DummyInitializer {
                 continue;
             }
             Assignment assignment = Assignment.builder()
+                    .title("과제 제목 - " + i)
                     .body("과제 내용 - " + i)
                     .lecture(lecture)
                     .build();
@@ -73,6 +74,7 @@ public class DummyInitializer {
                 continue;
             }
             Assignment assignment = Assignment.builder()
+                    .title("과제 제목 - " + i)
                     .body("과제 내용 - " + i)
                     .lecture(lecture)
                     .build();
@@ -85,6 +87,7 @@ public class DummyInitializer {
                 continue;
             }
             Assignment assignment = Assignment.builder()
+                    .title("과제 제목 - " + i)
                     .body("과제 내용 - " + i)
                     .lecture(lecture)
                     .build();
@@ -97,6 +100,7 @@ public class DummyInitializer {
                 continue;
             }
             Assignment assignment = Assignment.builder()
+                    .title("과제 제목 - " + i)
                     .body("과제 내용 - " + i)
                     .lecture(lecture)
                     .build();

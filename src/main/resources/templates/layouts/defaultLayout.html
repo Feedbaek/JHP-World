@@ -7,7 +7,7 @@
 
 <!--공통 JS / CSS 영역을 관리하는 환경 영역-->
 <head th:replace="~{fragments/head :: HeadFragment}">
-    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE"> JHP World </title>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE" th:text="${Title ?: 'JHP World'}"></title>
 </head>
 
 <body>

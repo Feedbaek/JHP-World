@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.domain.lecture.repository.LectureRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j(topic = "LectureService")
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class LectureService {
     private final LectureRepository lectureRepository;

@@ -11,6 +11,7 @@ create table lecture (
 create table assignment (
     id            bigint auto_increment
         primary key,
+    title         varchar(50)  not null,
     body          TEXT         not null,
     lecture_id    bigint       not null,
     created_date  datetime(6)  null,
