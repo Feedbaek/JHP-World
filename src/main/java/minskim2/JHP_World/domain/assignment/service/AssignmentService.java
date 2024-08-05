@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
 import minskim2.JHP_World.domain.assignment.repository.AssignmentRepository;
+import minskim2.JHP_World.domain.lecture.entity.Lecture;
+import minskim2.JHP_World.domain.lecture.repository.LectureRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class AssignmentService {
     private final AssignmentRepository assignmentRepository;
+    private final LectureRepository lectureRepository;
 
     /**
      * Assignment 엔티티를 AssignmentDto로 변환하는 메소드
@@ -33,27 +36,28 @@ public class AssignmentService {
                 .build();
     }
 
-    // TODO: 아래 메소드들 예외 처리 추가
+    // TODO: 아래 메소드들 커스텀 예외 처리 추가
     /**
      * Assignment 저장 메소드
      * */
-    public void save(Assignment assignment) {
-        try {
-            assignmentRepository.save(assignment);
-        } catch (Exception e) {
-            log.error("과목 저장 중 오류 발생", e);
-        }
+    public Assignment createAssignment(AssignmentDto assignmentDto) {
+        // 해당 강의가 존재하지 않으면 예외 발생
+        Lecture lecture = lectureRepository.findById(assignmentDto.getLectureId()).orElseThrow(()
+                -> new IllegalArgumentException("해당 강의가 존재하지 않습니다."));
+        // Assignment 생성
+        Assignment assignment = Assignment.builder()
+                .title(assignmentDto.getTitle())
+                .body(assignmentDto.getBody())
+                .lecture(lecture)
+                .build();
+        return assignmentRepository.save(assignment);
     }
 
     /**
      * Assignment 삭제 메소드
      * */
     public void deleteById(Long assignmentId) {
-        try {
-            assignmentRepository.deleteById(assignmentId);
-        } catch (Exception e) {
-            log.error("과목 삭제 중 오류 발생", e);
-        }
+        assignmentRepository.deleteById(assignmentId);
     }
 
     /**

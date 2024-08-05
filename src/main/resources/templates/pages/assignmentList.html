@@ -12,7 +12,7 @@
 <body>
 
 <div th:each="assignment : ${assignmentList}">
-    <p th:text="${assignment.title}"></p>
+    <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
 </div>
 
 

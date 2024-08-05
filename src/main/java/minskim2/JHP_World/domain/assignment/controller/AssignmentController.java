@@ -2,13 +2,14 @@ package minskim2.JHP_World.domain.assignment.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.domain.common.ModelSetter;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
-import minskim2.JHP_World.domain.lecture.entity.Lecture;
+import minskim2.JHP_World.domain.lecture.dto.LectureDto;
 import minskim2.JHP_World.domain.lecture.service.LectureService;
+import minskim2.JHP_World.domain.post.dto.PostDto;
+import minskim2.JHP_World.domain.post.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 import static minskim2.JHP_World.global.constant.IntConstant.ASSIGNMENT_LIST_SIZE;
+import static minskim2.JHP_World.global.constant.IntConstant.PREVIEW_SIZE;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ import static minskim2.JHP_World.global.constant.IntConstant.ASSIGNMENT_LIST_SIZ
 public class AssignmentController {
     private final AssignmentService assignmentService;
     private final LectureService lectureService;
+    private final PostService postService;
 
     /**
      * 특정 과제 내용 조회
@@ -33,23 +36,28 @@ public class AssignmentController {
     @GetMapping("/{assignmentId}")
     public String getAssignment(@PathVariable Long assignmentId, HttpServletRequest request, Model model) {
         // title 설정 && URI 설정
-        AssignmentDto assignment = assignmentService.findById(assignmentId);
-        Lecture lecture = lectureService.findById(assignment.getLectureId());
-        ModelSetter.setTitle(model, lecture.getName(), "#" + assignment.getId());
+        AssignmentDto assignmentDto = assignmentService.findById(assignmentId);
+        LectureDto lectureDto = lectureService.findById(assignmentDto.getLectureId());
+        ModelSetter.setTitle(model, lectureDto.getName(), "#" + assignmentDto.getId());
         ModelSetter.setCurrentUri(model, request.getRequestURI());
 
-        model.addAttribute("assignment", assignment);
+        // 해당 강의 게시물 조회
+        List<PostDto> postDto = postService.findAllByLectureId(assignmentId, 0, PREVIEW_SIZE);
+
+        // model에 추가
+        model.addAttribute("assignment", assignmentDto);
+        model.addAttribute("postList", postDto);
         return "/pages/assignment";
     }
     /**
      * 특정 강의 모든 과제 조회
      * */
-    @GetMapping("/{lectureId}/list")
-    public String getAllList(@PathVariable Long lectureId, @Positive @RequestParam(name = "page", defaultValue = "1") final int positivePage,
+    @GetMapping("/list/lecture/{lectureId}")
+    public String getAllList(@PathVariable Long lectureId, @Positive @RequestParam(name = "page", defaultValue = "1", required = false) final int positivePage,
                              HttpServletRequest request, Model model) {
         // title 설정 && URI 설정 && 페이징 처리
-        Lecture lecture = lectureService.findById(lectureId);
-        ModelSetter.setTitle(model, lecture.getName(), "과제 목록");
+        LectureDto lectureDto = lectureService.findById(lectureId);
+        ModelSetter.setTitle(model, lectureDto.getName(), "과제 목록");
         ModelSetter.setCurrentUri(model, request.getRequestURI());
         ModelSetter.setPaging(model, positivePage);
 

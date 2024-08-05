@@ -2,6 +2,7 @@ package minskim2.JHP_World.domain.lecture.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import minskim2.JHP_World.domain.lecture.dto.LectureDto;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.domain.lecture.repository.LectureRepository;
 import org.springframework.stereotype.Service;
@@ -33,8 +34,17 @@ public class LectureService {
         }
     }
 
-    public Lecture findById(Long lectureId) {
-        return lectureRepository.findById(lectureId).orElseThrow(() -> new IllegalArgumentException("해당 강의가 존재하지 않습니다."));
+    public LectureDto convertToDto(Lecture lecture) {
+        return LectureDto.builder()
+                .id(lecture.getId())
+                .name(lecture.getName())
+                .build();
+    }
+
+    public LectureDto findById(Long lectureId) {
+        Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(
+                () -> new IllegalArgumentException("해당 강의가 존재하지 않습니다."));
+        return convertToDto(lecture);
     }
 
     public Lecture findByName(String name) {
