@@ -8,21 +8,26 @@ import minskim2.JHP_World.domain.assignment.repository.AssignmentRepository;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.domain.lecture.repository.LectureRepository;
 import minskim2.JHP_World.domain.member.entity.Member;
+import minskim2.JHP_World.domain.member.entity.Role;
+import minskim2.JHP_World.domain.member.enums.RoleName;
 import minskim2.JHP_World.domain.member.repository.MemberRepository;
+import minskim2.JHP_World.domain.member.repository.RoleRepository;
 import minskim2.JHP_World.domain.post.entity.Post;
 import minskim2.JHP_World.domain.post.repository.PostRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /** 테스트용 더미 데이터 생성 */
 @Component
 @RequiredArgsConstructor
-public class DummyInitializer {
+public class DummyInitializer implements CommandLineRunner {
     private final EnvBean envBean;
     private final LectureRepository lectureRepository;
     private final AssignmentRepository assignmentRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final RoleRepository roleRepository;
 
     /**
     * 강의 데이터 생성
@@ -119,7 +124,17 @@ public class DummyInitializer {
      * 더미 Post 데이터 생성
      * */
     private void initPost() {
-        Member member = memberRepository.findByOauth2id("kakao:3583393097").orElseThrow();
+        Member member = memberRepository.findById(1L).orElseGet(() -> {
+            Role userRole = roleRepository.findByName(RoleName.USER).orElseThrow();
+            Member member1 = Member.builder()
+                    .id(1L)
+                    .name("test")
+                    .oauth2id("kakao:testOauth2id")
+                    .role(userRole)
+                    .isEnabled(true)
+                    .build();
+            return memberRepository.save(member1);
+        });
         for (int i=1; i<=3; ++i) {
             Lecture lecture = lectureRepository.findByName("문제해결기법").orElseThrow();
             if (postRepository.countByLectureId(lecture.getId()) >= 3) {
@@ -178,8 +193,8 @@ public class DummyInitializer {
      * 더미 데이터 생성 메소드
      * */
     @Transactional
-    @PostConstruct
-    public void init() {
+    @Override
+    public void run(String... args) {
         if (envBean.getTestEnable().equals("true")) {
             initLecture();
             initAssignment();
