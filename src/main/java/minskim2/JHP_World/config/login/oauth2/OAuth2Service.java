@@ -15,11 +15,12 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j(topic = "OAuth2UserService")
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class OAuth2Service extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
@@ -53,7 +54,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
                 .oauth2Id(member.getOauth2id())
                 .name(name)
                 .attributes(oAuth2User.getAttributes())
-                .authorities(oAuth2User.getAuthorities())
+                .authorities(List.of(() -> member.getRole().getName().getRoleName()))
                 .build();
     }
 
