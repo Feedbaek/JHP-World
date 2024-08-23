@@ -1,11 +1,11 @@
 package minskim2.JHP_World.global.exception;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ErrorCode {
     // Basic HTTP Status Code
     BAD_REQUEST(400, "Bad Request"),
