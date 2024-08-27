@@ -52,6 +52,7 @@ public class SecurityConfig {
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // 로그인 설정
         http
+//            .csrf(AbstractHttpConfigurer::disable) // csrf 비활성화
             .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 비활성화
             // oauth2 로그인 설정
             .oauth2Login(oauth2 -> oauth2
@@ -84,6 +85,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(HttpMethod.GET, GET_LIST).permitAll() // GET 메소드 허용 경로 (GET 메소드)
                     .requestMatchers(WHITE_LIST).permitAll() // 모든 사용자 허용 경로 (모든 메소드)
+//                    .anyRequest().permitAll() // 그 외 나머지 경로는 전부 모든 사용자 허용
                     .anyRequest().authenticated() // 그 외 나머지 경로는 전부 인증 필요
             );
 
