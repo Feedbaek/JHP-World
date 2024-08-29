@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static utils.TestUtility.JsonRequest;
+import static utils.TestUtility.JsonRequestChain;
+import static utils.TestUtility.makeGradeRequest;
 
 @AutoConfigureMockMvc
 @Transactional
@@ -27,13 +28,12 @@ public class GradeTest {
     @DisplayName("과제 테스트 실행 - 실패")
     void testGrade() throws Exception {
         // Given
-        GradeRequest gradeRequest = new GradeRequest();
-        gradeRequest.setSolutionId(1L);
-        gradeRequest.setTestCaseId(1L);
-        gradeRequest.setCode("code");
+        GradeRequest gradeRequest = makeGradeRequest();
 
         // when
-        mockMvc.perform(JsonRequest(post("/api/grade"), gradeRequest))
+        mockMvc.perform(
+                    JsonRequestChain(post("/api/grade"), gradeRequest)
+                )
 
         // then
                 .andExpect(status().isOk())

@@ -4,13 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import minskim2.JHP_World.config.login.oauth2.KakaoUser;
+import minskim2.JHP_World.domain.grade.dto.GradeRequest;
 import minskim2.JHP_World.global.dto.Request;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @Log4j2
 public class TestUtility {
@@ -27,8 +26,16 @@ public class TestUtility {
                 .build();
     }
 
-    public static RequestBuilder JsonRequest(MockHttpServletRequestBuilder actionWithUrl,
-                                             Request request) {
+    public static GradeRequest makeGradeRequest() {
+        GradeRequest gradeRequest = new GradeRequest();
+        gradeRequest.setSolutionId(1L);
+        gradeRequest.setTestCaseId(1L);
+        gradeRequest.setCode("code");
+        return gradeRequest;
+    }
+
+    public static MockHttpServletRequestBuilder JsonRequestChain(MockHttpServletRequestBuilder actionWithUrl,
+                                                                 Request request) {
         try {
             return actionWithUrl
                     .contentType("application/json")
