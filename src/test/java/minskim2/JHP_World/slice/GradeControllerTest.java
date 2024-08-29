@@ -1,4 +1,4 @@
-package minskim2.JHP_World.controller;
+package minskim2.JHP_World.slice;
 
 import minskim2.JHP_World.domain.grade.controller.GradeController;
 import minskim2.JHP_World.domain.grade.dto.GradeRequest;
@@ -19,7 +19,7 @@ import static utils.TestUtility.MockKakaoUser;
 
 
 @WebFluxTest(controllers = GradeController.class)
-@DisplayName("GradeController 테스트")
+@DisplayName("GradeController - 슬라이스 테스트")
 public class GradeControllerTest {
     @Autowired
     private WebTestClient webTestClient;
