@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Slf4j(topic = "OAuth2UserService")
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 @Service
 public class OAuth2Service extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
