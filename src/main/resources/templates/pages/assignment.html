@@ -11,10 +11,9 @@
 </head>
 <body>
 
-<h1 th:text="${assignment.title}"></h1>
+<h1 th:text="${assignment.title}">안녕하세요</h1>
 
 <p th:text="${assignment.body}"></p>
-
 <h1> 토론방 </h1>
 <a th:href="'/post/list/lecture/' + ${assignment.lectureId}">더보기</a>
 
