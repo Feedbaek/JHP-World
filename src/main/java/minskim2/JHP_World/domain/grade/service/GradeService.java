@@ -8,12 +8,11 @@ import minskim2.JHP_World.domain.grade.repository.GradeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 @Log4j2(topic = "GradeService")
 @RequiredArgsConstructor
 public class GradeService {
@@ -33,11 +32,14 @@ public class GradeService {
     }
 
 
-    public GradeResponse run(String containerName, String command) {
+    public GradeResponse run(String containerName, String command, String input) {
 
         StringBuilder output = new StringBuilder();
+        List<String> commandList = new ArrayList<>(List.of("docker", "exec", "-it", containerName));
+        commandList.addAll(List.of(command.split(" ")));
+
         // 명령어 실행 및 종료 코드 확인
-        int exitCode = executeDockerCommand(containerName, command, output);
+        int exitCode = executeDockerCommand(commandList, input, output);
 
         if (exitCode == 0) {
             log.info("명령어가 성공적으로 실행되었습니다.");
@@ -57,16 +59,23 @@ public class GradeService {
     }
 
     // Docker 명령어 실행 로직
-    public int executeDockerCommand(String containerName, String command, StringBuilder output) {
+    private int executeDockerCommand(List<String> command, String input, StringBuilder output) {
 
         try {
             // docker exec 명령어를 ProcessBuilder로 실행
-            ProcessBuilder processBuilder = new ProcessBuilder(
-                    "docker", "exec", containerName, "sh", "-c", command
-            );
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            log.info("Docker 명령어 실행: {}", processBuilder.command());
 
             // 프로세스 시작
             Process process = processBuilder.start();
+            log.info("Docker 명령어 실행 중...");
+
+            // 프로세스의 입력으로 문자열 전달
+            try (BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(process.getOutputStream()))) {
+                writer.write(input);
+            }
+            log.info("Docker 명령어 입력: {}", input);
 
             // 프로세스의 출력을 읽어오기
             try (BufferedReader reader = new BufferedReader(
@@ -76,6 +85,7 @@ public class GradeService {
                     output.append(line).append("\n");
                 }
             }
+            log.info("Docker 명령어 출력: {}", output.toString());
 
             // 프로세스가 종료될 때까지 대기 후 종료 코드 반환
             return process.waitFor();
