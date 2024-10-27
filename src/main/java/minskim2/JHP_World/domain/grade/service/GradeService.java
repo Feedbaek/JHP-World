@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,11 +31,10 @@ public class GradeService {
     }
 
 
-    public GradeResponse run(String containerName, String command, String input) {
+    public GradeResponse run(String command, String input) {
 
         StringBuilder output = new StringBuilder();
-        List<String> commandList = new ArrayList<>(List.of("docker", "exec", "-it", containerName));
-        commandList.addAll(List.of(command.split(" ")));
+        List<String> commandList = List.of(command.split(" "));
 
         // 명령어 실행 및 종료 코드 확인
         int exitCode = executeDockerCommand(commandList, input, output);
@@ -54,6 +52,7 @@ public class GradeService {
                     .result(output.toString())
                     .build();
         } else {
+            log.error("명령어 실행 중 오류 발생: {}, {}", exitCode, output.toString());
             throw new RuntimeException("명령어 실행 실패");
         }
     }
@@ -85,8 +84,6 @@ public class GradeService {
                     output.append(line).append("\n");
                 }
             }
-            log.info("Docker 명령어 출력: {}", output.toString());
-
             // 프로세스가 종료될 때까지 대기 후 종료 코드 반환
             return process.waitFor();
 
