@@ -19,9 +19,8 @@ public class GradeController {
 
     // 과제 테스트 실행
     @PostMapping
-    public JsonBody<GradeResponse> testGrade(@AuthenticationPrincipal CustomOAuth2User oAuth2User, @RequestBody GradeRequest gradeRequest) {
-        GradeResponse gradeResponse = gradeService.testGrade(oAuth2User.getMemberId(), gradeRequest);
-        return JsonBody.success(GRADE_SUCCESS, gradeResponse);
+    public GradeResponse testGrade(@AuthenticationPrincipal CustomOAuth2User oAuth2User, @RequestBody GradeRequest gradeRequest) {
+        return gradeService.testGrade(oAuth2User.getMemberId(), gradeRequest);
     }
 
     @PostMapping("/test")

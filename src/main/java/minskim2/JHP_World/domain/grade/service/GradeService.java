@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -31,22 +32,19 @@ public class GradeService {
     }
 
 
-    public GradeResponse run(String command, String input) {
+    public GradeResponse run(List<String> command, String input) {
 
         StringBuilder output = new StringBuilder();
-        List<String> commandList = List.of(command.split(" "));
 
         // 명령어 실행 및 종료 코드 확인
-        int exitCode = executeDockerCommand(commandList, input, output);
+        int exitCode = executeDockerCommand(command, input, output);
 
         if (exitCode == 0) {
-            log.info("명령어가 성공적으로 실행되었습니다.");
             return GradeResponse.builder()
                     .message("명령어 실행 성공")
                     .result(output.toString())
                     .build();
         } else if (exitCode == 1) {
-            log.error("명령어 실행 중 오류 발생: {}", output.toString());
             return GradeResponse.builder()
                     .message("명령어 실행 실패")
                     .result(output.toString())
@@ -70,9 +68,9 @@ public class GradeService {
             log.info("Docker 명령어 실행 중...");
 
             // 프로세스의 입력으로 문자열 전달
-            try (BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(process.getOutputStream()))) {
-                writer.write(input);
+            try (OutputStream os = process.getOutputStream()) {
+                os.write(input.getBytes());
+                os.flush();
             }
             log.info("Docker 명령어 입력: {}", input);
 
@@ -85,7 +83,16 @@ public class GradeService {
                 }
             }
             // 프로세스가 종료될 때까지 대기 후 종료 코드 반환
-            return process.waitFor();
+            int status = process.waitFor();
+            if (status == 0) {
+                log.info("Docker 명령어 실행 완료: {}", output.toString());
+            } else {
+                log.error("Docker 명령어 실행 중 오류 발생: {}", output.toString());
+                InputStream errorStream = process.getErrorStream();
+                String errorOutput = new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
+                log.error("Error output: {}", errorOutput);
+            }
+            return status;
 
         } catch (IOException | InterruptedException e) {
             log.error("Docker 명령어 실행 중 오류 발생: {}", e.getMessage(), e);

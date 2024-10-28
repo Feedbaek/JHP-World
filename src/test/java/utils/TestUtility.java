@@ -6,10 +6,10 @@ import lombok.extern.log4j.Log4j2;
 import minskim2.JHP_World.config.login.oauth2.KakaoUser;
 import minskim2.JHP_World.domain.grade.dto.GradeRequest;
 import minskim2.JHP_World.global.dto.Request;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 
 @Log4j2
 public class TestUtility {
@@ -41,7 +41,7 @@ public class TestUtility {
                     .contentType("application/json")
                     .content(objectMapper.writeValueAsString(request))
                     .with(csrf())
-                    .with(SecurityMockMvcRequestPostProcessors.oauth2Login().oauth2User(MockKakaoUser()));
+                    .with(oauth2Login().oauth2User(MockKakaoUser()));
         } catch (JsonProcessingException e) {
             log.info(e);
             throw new RuntimeException(e);
