@@ -10,13 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Log4j2(topic = "GradeService")
 @RequiredArgsConstructor
 public class GradeService {
+
+    private final String CONTAINER_NAME = "cpp_runner_container";
+
     private final GradeRepository gradeRepository;
+
 
     @Transactional
     public GradeResponse testGrade(Long memberId, GradeRequest gradeRequest) {
@@ -32,12 +37,12 @@ public class GradeService {
     }
 
 
-    public GradeResponse run(List<String> command, String input) {
+    public GradeResponse run(List<String> command, String timeout, String input) {
 
         StringBuilder output = new StringBuilder();
 
         // 명령어 실행 및 종료 코드 확인
-        int exitCode = executeDockerCommand(command, input, output);
+        int exitCode = executeDockerCommand(command, timeout, input, output);
 
         if (exitCode == 0) {
             return GradeResponse.builder()
@@ -56,11 +61,15 @@ public class GradeService {
     }
 
     // Docker 명령어 실행 로직
-    private int executeDockerCommand(List<String> command, String input, StringBuilder output) {
+    private int executeDockerCommand(List<String> command, String timeout, String input, StringBuilder output) {
 
         try {
+            List<String> dockerCommand = new ArrayList<>(
+                    List.of("docker", "exec", "-i", getContainerName(), "timeout", timeout));
+            dockerCommand.addAll(command);
+
             // docker exec 명령어를 ProcessBuilder로 실행
-            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            ProcessBuilder processBuilder = new ProcessBuilder(dockerCommand);
             log.info("Docker 명령어 실행: {}", processBuilder.command());
 
             // 프로세스 시작
@@ -98,5 +107,10 @@ public class GradeService {
             log.error("Docker 명령어 실행 중 오류 발생: {}", e.getMessage(), e);
             return -1;  // 예외 발생 시 오류 코드 반환
         }
+    }
+
+    private String getContainerName() {
+        // TODO: 컨테이너 이름을 동적으로 변경할 수 있도록 수정
+        return CONTAINER_NAME;
     }
 }

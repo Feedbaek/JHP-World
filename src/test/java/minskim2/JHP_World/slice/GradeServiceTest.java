@@ -19,10 +19,11 @@ public class GradeServiceTest {
 
     private final GradeService gradeService;
 
-    private final String CONTAINER_NAME = "cpp_runner_container";
     private final String COMPILE_COMMAND = "g++ -xc++ - -o /usr/src/app/output";
-    private final String EXECUTE_COMMAND = "timeout 2s /usr/src/app/output";
+    private final String EXECUTE_COMMAND = "/usr/src/app/output";
 
+    private final ArrayList<String> commandCompile = new ArrayList<>(List.of(COMPILE_COMMAND.split(" ")));
+    private final ArrayList<String> commandExecute = new ArrayList<>(List.of(EXECUTE_COMMAND.split(" ")));
 
 
     public GradeServiceTest() {
@@ -42,23 +43,9 @@ public class GradeServiceTest {
                 "    return 0;\n" +
                 "}\n";
 
-        ArrayList<String> commandCompile = new ArrayList<>();
-        commandCompile.add("docker");
-        commandCompile.add("exec");
-        commandCompile.add("-i");
-        commandCompile.add(CONTAINER_NAME);
-
-        ArrayList<String> commandExecute = new ArrayList<>(commandCompile);
-
-        String[] commandArray = COMPILE_COMMAND.split(" ");
-        Collections.addAll(commandCompile, commandArray);
-
-        commandArray = EXECUTE_COMMAND.split(" ");
-        Collections.addAll(commandExecute, commandArray);
-
         // when
-        GradeResponse compileResult = gradeService.run(commandCompile, code);
-        GradeResponse executeResult = gradeService.run(commandExecute, "1 2");
+        GradeResponse compileResult = gradeService.run(commandCompile, "2s", code);
+        GradeResponse executeResult = gradeService.run(commandExecute, "1s", "1 2");
 
         // then
         log.info("compile result: {}", compileResult);
@@ -76,24 +63,10 @@ public class GradeServiceTest {
                 "    return 0;\n" +
                 "}\n";
 
-        ArrayList<String> commandCompile = new ArrayList<>();
-        commandCompile.add("docker");
-        commandCompile.add("exec");
-        commandCompile.add("-i");
-        commandCompile.add(CONTAINER_NAME);
-
-        ArrayList<String> commandExecute = new ArrayList<>(commandCompile);
-
-        String[] commandArray = COMPILE_COMMAND.split(" ");
-        Collections.addAll(commandCompile, commandArray);
-
-        commandArray = EXECUTE_COMMAND.split(" ");
-        Collections.addAll(commandExecute, commandArray);
-
         // when
-        GradeResponse compileResult = gradeService.run(commandCompile, code);
+        GradeResponse compileResult = gradeService.run(commandCompile, "2s", code);
         Throwable throwable = assertThrows(RuntimeException.class, () ->
-                gradeService.run(commandExecute, "1 2")
+                gradeService.run(commandExecute, "1s", "1 2")
         );
 
         // then
