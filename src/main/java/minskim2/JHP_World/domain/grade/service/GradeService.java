@@ -93,6 +93,7 @@ public class GradeService {
             }
             // 프로세스가 종료될 때까지 대기 후 종료 코드 반환
             int status = process.waitFor();
+
             if (status == 0) {
                 log.info("Docker 명령어 실행 완료: {}", output.toString());
             } else {
