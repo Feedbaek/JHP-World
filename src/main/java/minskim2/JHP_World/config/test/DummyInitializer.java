@@ -1,6 +1,5 @@
 package minskim2.JHP_World.config.test;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.config.EnvBean;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;

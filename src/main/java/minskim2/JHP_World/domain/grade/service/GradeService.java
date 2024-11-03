@@ -5,6 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import minskim2.JHP_World.domain.grade.dto.GradeRequest;
 import minskim2.JHP_World.domain.grade.dto.GradeResponse;
 import minskim2.JHP_World.domain.grade.repository.GradeRepository;
+import minskim2.JHP_World.domain.test_case.entity.TestCase;
+import minskim2.JHP_World.domain.test_case.repository.TestCaseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,26 +20,48 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GradeService {
 
-    private final String CONTAINER_NAME = "cpp_runner_container";
+    private final String COMPILE_COMMAND_STR = "g++ -xc++ - -o /usr/src/app/output";
+    private final String EXECUTE_COMMAND_STR = "/usr/src/app/output";
+
+    private final ArrayList<String> COMPILE_COMMAND = new ArrayList<>(List.of(COMPILE_COMMAND_STR.split(" ")));
+    private final ArrayList<String> EXECUTE_COMMAND = new ArrayList<>(List.of(EXECUTE_COMMAND_STR.split(" ")));
 
     private final GradeRepository gradeRepository;
+    private final TestCaseRepository testCaseRepository;
 
 
     @Transactional
     public GradeResponse testGrade(Long memberId, GradeRequest gradeRequest) {
         // TODO: 입력 값 검증
-        // TODO: 과제 테스트 실행로직 추가
+        // 컴파일 명령어 실행
+        run(COMPILE_COMMAND, "2s", gradeRequest.getCode());
+        // TODO: 테스트 케이스 가져오기
+        TestCase testCase = testCaseRepository.findById(gradeRequest.getTestCaseId()).orElseThrow();
+        // 실행 명령어 실행
+        String executeResult = run(EXECUTE_COMMAND, "1s", testCase.getInput());
 
-        log.info("과제 테스트 실행");
+        // 실행 결과와 예상 결과 비교 후 결과 기록
+        return getGradeResponseByResult(testCase.getOutput(), executeResult);
+    }
 
-        return GradeResponse.builder()
-                .message("테스트 성공")
-                .result("PASS")
-                .build();
+    private static GradeResponse getGradeResponseByResult(String expectedOutput, String executeResult) {
+        if (expectedOutput.equals(executeResult)) {
+            // TODO: 테스트 성공 기록 저장
+            return GradeResponse.builder()
+                    .message("정답입니다.")
+                    .result(executeResult)
+                    .build();
+        } else {
+            // TODO: 테스트 실패 결과 저장
+            return GradeResponse.builder()
+                    .message("오답입니다.")
+                    .result(executeResult)
+                    .build();
+        }
     }
 
 
-    public GradeResponse run(List<String> command, String timeout, String input) {
+    public String run(List<String> command, String timeout, String input) {
 
         StringBuilder output = new StringBuilder();
 
@@ -45,15 +69,7 @@ public class GradeService {
         int exitCode = executeDockerCommand(command, timeout, input, output);
 
         if (exitCode == 0) {
-            return GradeResponse.builder()
-                    .message("명령어 실행 성공")
-                    .result(output.toString())
-                    .build();
-        } else if (exitCode == 1) {
-            return GradeResponse.builder()
-                    .message("명령어 실행 실패")
-                    .result(output.toString())
-                    .build();
+            return output.toString();
         } else {
             log.error("명령어 실행 중 오류 발생: {}, {}", exitCode, output.toString());
             throw new RuntimeException("명령어 실행 실패");
@@ -70,20 +86,13 @@ public class GradeService {
 
             // docker exec 명령어를 ProcessBuilder로 실행
             ProcessBuilder processBuilder = new ProcessBuilder(dockerCommand);
-            log.info("Docker 명령어 실행: {}", processBuilder.command());
-
             // 프로세스 시작
             Process process = processBuilder.start();
-            log.info("Docker 명령어 실행 중...");
-
             // 프로세스의 입력으로 문자열 전달
             try (OutputStream os = process.getOutputStream()) {
                 os.write(input.getBytes());
                 os.flush();
             }
-            log.info("Docker 명령어 입력: {}", input);
-
-            // 프로세스의 출력을 읽어오기
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()))) {
                 String line;
@@ -91,12 +100,9 @@ public class GradeService {
                     output.append(line).append("\n");
                 }
             }
-            // 프로세스가 종료될 때까지 대기 후 종료 코드 반환
             int status = process.waitFor();
 
-            if (status == 0) {
-                log.info("Docker 명령어 실행 완료: {}", output.toString());
-            } else {
+            if (status != 0) {
                 log.error("Docker 명령어 실행 중 오류 발생: {}", output.toString());
                 InputStream errorStream = process.getErrorStream();
                 String errorOutput = new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
@@ -112,6 +118,6 @@ public class GradeService {
 
     private String getContainerName() {
         // TODO: 컨테이너 이름을 동적으로 변경할 수 있도록 수정
-        return CONTAINER_NAME;
+        return "cpp_runner_container";
     }
 }

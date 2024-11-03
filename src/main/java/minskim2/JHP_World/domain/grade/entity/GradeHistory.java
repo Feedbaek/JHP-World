@@ -8,9 +8,9 @@ import minskim2.JHP_World.domain.test_case.entity.TestCase;
 import minskim2.JHP_World.global.entity.BaseEntity;
 
 @Entity
-@Table(name = "grade")
+@Table(name = "grade_history")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Grade extends BaseEntity {
+public class GradeHistory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

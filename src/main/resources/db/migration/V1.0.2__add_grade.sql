@@ -1,4 +1,4 @@
-create table grade (
+create table grade_history (
     id            bigint auto_increment
         primary key,
     solution_id   bigint       not null,

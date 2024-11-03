@@ -7,15 +7,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j(topic = "GradeServiceTest")
 @DisplayName("GradeService - 슬라이스 테스트")
-public class GradeServiceTest {
+public class GradeHistoryServiceTest {
 
     private final GradeService gradeService;
 
@@ -26,8 +24,8 @@ public class GradeServiceTest {
     private final ArrayList<String> commandExecute = new ArrayList<>(List.of(EXECUTE_COMMAND.split(" ")));
 
 
-    public GradeServiceTest() {
-        gradeService = new GradeService(null);
+    public GradeHistoryServiceTest() {
+        gradeService = new GradeService(null, null);
     }
 
     @Test
@@ -44,8 +42,8 @@ public class GradeServiceTest {
                 "}\n";
 
         // when
-        GradeResponse compileResult = gradeService.run(commandCompile, "2s", code);
-        GradeResponse executeResult = gradeService.run(commandExecute, "1s", "1 2");
+        String compileResult = gradeService.run(commandCompile, "2s", code);
+        String executeResult = gradeService.run(commandExecute, "1s", "1 2");
 
         // then
         log.info("compile result: {}", compileResult);
@@ -64,7 +62,7 @@ public class GradeServiceTest {
                 "}\n";
 
         // when
-        GradeResponse compileResult = gradeService.run(commandCompile, "2s", code);
+        String compileResult = gradeService.run(commandCompile, "2s", code);
         Throwable throwable = assertThrows(RuntimeException.class, () ->
                 gradeService.run(commandExecute, "1s", "1 2")
         );
