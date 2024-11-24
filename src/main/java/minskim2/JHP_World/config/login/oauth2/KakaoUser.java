@@ -1,16 +1,15 @@
 package minskim2.JHP_World.config.login.oauth2;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Map;
 
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class KakaoUser implements CustomOAuth2User {
     private String registrationId;  // kakao
     private Long memberId;  // DB에 저장된 id
@@ -30,14 +29,5 @@ public class KakaoUser implements CustomOAuth2User {
     @Override
     public String getRegistrationId() {
         return registrationId;
-    }
-    @Builder
-    public KakaoUser(String registrationId, Long memberId, String name, String oauth2Id, Map<String, Object> attributes, Collection<? extends GrantedAuthority> authorities) {
-        this.registrationId = registrationId;
-        this.memberId = memberId;
-        this.name = name;
-        this.oauth2Id = oauth2Id;
-        this.attributes = attributes;
-        this.authorities = authorities;
     }
 }

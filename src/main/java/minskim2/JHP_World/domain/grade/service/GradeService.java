@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import minskim2.JHP_World.domain.grade.dto.GradeRequest;
 import minskim2.JHP_World.domain.grade.dto.GradeResponse;
+import minskim2.JHP_World.domain.grade.entity.Grade;
 import minskim2.JHP_World.domain.grade.repository.GradeRepository;
+import minskim2.JHP_World.domain.solution.entity.Solution;
+import minskim2.JHP_World.domain.solution.repository.SolutionRepository;
 import minskim2.JHP_World.domain.test_case.entity.TestCase;
 import minskim2.JHP_World.domain.test_case.repository.TestCaseRepository;
 import org.springframework.stereotype.Service;
@@ -28,36 +31,55 @@ public class GradeService {
 
     private final GradeRepository gradeRepository;
     private final TestCaseRepository testCaseRepository;
+    private final SolutionRepository solutionRepository;
 
 
+    /**
+     * 과제 테스트 실행
+     * @param memberId 사용자 ID
+     * @param gradeRequest 테스트 요청 정보
+     * @return 테스트 결과
+     * </p>
+     * 로그인한 사용자의 과제 테스트를 실행한다. 사용자는 이미 만들어져 있는 테스트 케이스와 솔루션을 선택하여 테스트를 실행할 수 있다.
+     * 테스트 케이스는 자유롭게 선택할 수 있으나, 솔루션은 로그인한 사용자가 작성한 솔루션만 선택할 수 있다.
+     * 테스트 케이스의 입력값을 솔루션의 소스코드에 적용하여 실행한 결과를 저장하고 반환한다.
+     * */
     @Transactional
-    public GradeResponse testGrade(Long memberId, GradeRequest gradeRequest) {
+    public GradeResponse solutionGrade(Long memberId, GradeRequest gradeRequest) {
         // TODO: 입력 값 검증
-        // 컴파일 명령어 실행
-        run(COMPILE_COMMAND, "2s", gradeRequest.getCode());
-        // TODO: 테스트 케이스 가져오기
+        // validateRequest(gradeRequest);\
+
+        // Test Case와 Solution 조회
         TestCase testCase = testCaseRepository.findById(gradeRequest.getTestCaseId()).orElseThrow();
+        Solution solution = solutionRepository.findByIdAndMemberId(gradeRequest.getSolutionId(), memberId).orElseThrow();
+
+        // TODO: 컴파일 및 실행 결과 로직 분리 및 수정
+        // 컴파일 명령어 실행
+        run(COMPILE_COMMAND, "2s", solution.getSourceCode());
+
         // 실행 명령어 실행
         String executeResult = run(EXECUTE_COMMAND, "1s", testCase.getInput());
 
-        // 실행 결과와 예상 결과 비교 후 결과 기록
-        return getGradeResponseByResult(testCase.getOutput(), executeResult);
+        // 결과 비교 후 저장 및 응답 반환
+        return saveGradeAndGetResponse(testCase, solution, executeResult);
     }
 
-    private static GradeResponse getGradeResponseByResult(String expectedOutput, String executeResult) {
-        if (expectedOutput.equals(executeResult)) {
-            // TODO: 테스트 성공 기록 저장
-            return GradeResponse.builder()
-                    .message("정답입니다.")
-                    .result(executeResult)
-                    .build();
-        } else {
-            // TODO: 테스트 실패 결과 저장
-            return GradeResponse.builder()
-                    .message("오답입니다.")
-                    .result(executeResult)
-                    .build();
-        }
+
+    /**
+     * 테스트 결과 저장 및 반환
+     * */
+    private GradeResponse saveGradeAndGetResponse(TestCase testCase, Solution solution, String executeResult) {
+
+        Grade grade = Grade.builder()
+                .testCase(testCase)
+                .solution(solution)
+                .result(executeResult)
+                .message(executeResult.equals(testCase.getOutput()) ? "SUCCESS" : "FAIL")  // 결과 비교 후 메시지 설정
+                .build();
+
+        gradeRepository.save(grade);
+
+        return GradeResponse.from(grade);
     }
 
 

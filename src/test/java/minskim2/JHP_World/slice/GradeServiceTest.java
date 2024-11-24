@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j(topic = "GradeServiceTest")
 @DisplayName("GradeService - 슬라이스 테스트")
-public class GradeHistoryServiceTest {
+public class GradeServiceTest {
 
     private final GradeService gradeService;
 
@@ -24,13 +24,13 @@ public class GradeHistoryServiceTest {
     private final ArrayList<String> commandExecute = new ArrayList<>(List.of(EXECUTE_COMMAND.split(" ")));
 
 
-    public GradeHistoryServiceTest() {
-        gradeService = new GradeService(null, null);
+    public GradeServiceTest() {
+        gradeService = new GradeService(null, null, null);
     }
 
     @Test
     @DisplayName("C/C++ 코드 컴파일 테스트 - 성공")
-    void testGrade() {
+    void solutionGrade() {
         // given
         String code = "#include<iostream>\n" +
                 "\n" +

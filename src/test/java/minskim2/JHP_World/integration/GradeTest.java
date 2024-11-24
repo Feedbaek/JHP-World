@@ -20,7 +20,7 @@ import static utils.TestUtility.makeGradeRequest;
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DisplayName("GradeController - 통합 테스트")
-public class GradeHistoryTest {
+public class GradeTest {
     @Autowired
     private MockMvc mockMvc;
 

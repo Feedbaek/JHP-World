@@ -17,13 +17,13 @@ public class GradeController {
 
     // 과제 테스트 실행
     @PostMapping
-    public GradeResponse testGrade(@AuthenticationPrincipal CustomOAuth2User oAuth2User,
-                                   @RequestBody @Valid GradeRequest gradeRequest) {
-        return gradeService.testGrade(oAuth2User.getMemberId(), gradeRequest);
+    public GradeResponse solutionGrade(@AuthenticationPrincipal CustomOAuth2User oAuth2User,
+                                       @RequestBody @Valid GradeRequest gradeRequest) {
+        return gradeService.solutionGrade(oAuth2User.getMemberId(), gradeRequest);
     }
 
     @PostMapping("/test")
     public GradeResponse testGrade2() {
-        return gradeService.testGrade(1L, new GradeRequest());
+        return gradeService.solutionGrade(1L, new GradeRequest());
     }
 }
