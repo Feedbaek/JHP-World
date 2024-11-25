@@ -9,6 +9,7 @@ import minskim2.JHP_World.domain.grade.service.GradeService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/grade")

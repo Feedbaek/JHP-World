@@ -14,7 +14,7 @@ public enum ErrorCode {
     // 11000 ~ 11999: Member
     MEMBER_NOT_FOUND(11404, "멤버를 찾을 수 없습니다", HttpStatus.NOT_FOUND),
     // 12000 ~ 12999: Role
-    ROLE_NOT_FOUND(12404, "역할을 찾을 수 없습니다", HttpStatus.NOT_FOUND),
+    ROLE_NOT_FOUND(12404, "역할을 찾을 수 없습니다", HttpStatus.INTERNAL_SERVER_ERROR),
 
     ;
 

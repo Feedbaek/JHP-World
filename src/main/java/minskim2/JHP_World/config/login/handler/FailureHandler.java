@@ -8,7 +8,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 
 /**
  * 로그인 실패 핸들러
