@@ -38,11 +38,24 @@ spring:
       name: user
       password: 1234
 
+  session:
+    redis:
+      namespace: jhp
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 1234
+      repositories:
+        enabled: false
+
   thymeleaf:
     cache: false
     check-template-location: true
     prefix: classpath:/templates/
     suffix: .html
+
 
 
 server:
@@ -57,6 +70,8 @@ server:
   servlet:
     session:
       timeout: 30m
+      cookie:
+        name: JSESSIONID
 
 
 url:

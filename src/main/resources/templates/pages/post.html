@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultLayout}"
+      layout:fragment="Content"
+>
+<head>
+    <title th:text="${title}"></title>
+</head>
+<body>
+
+<h1 th:text="${post.title}"></h1>
+
+<p th:text="${post.body}"></p>
+
+</body>
+</html>

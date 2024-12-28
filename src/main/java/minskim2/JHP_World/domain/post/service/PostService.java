@@ -23,6 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostService {
+
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final LectureRepository lectureRepository;
@@ -30,18 +31,19 @@ public class PostService {
     /**
      * CRUD 메서드 구현
      * */
+    @Transactional
     public PostDto createPost(PostDto postDto) {
         // 해당 회원이나 강의가 존재하지 않으면 예외 발생
-        Member member = memberRepository.findById(postDto.getMemberId()).orElseThrow(()
+        Member member = memberRepository.findById(postDto.memberId()).orElseThrow(()
                 -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
-        Lecture lecture = lectureRepository.findById(postDto.getLectureId()).orElseThrow(()
+        Lecture lecture = lectureRepository.findById(postDto.lectureId()).orElseThrow(()
                 -> new IllegalArgumentException("해당 강의가 존재하지 않습니다."));
 
         Post post = Post.builder()
                 .member(member)
                 .lecture(lecture)
-                .title(postDto.getTitle())
-                .body(postDto.getBody())
+                .title(postDto.title())
+                .body(postDto.body())
                 .build();
         postRepository.save(post);
 
