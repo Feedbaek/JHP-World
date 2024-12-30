@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.global.exception.CustomException;
 import minskim2.JHP_World.global.exception.ErrorCode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -16,6 +18,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +51,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
         String name = profile.get("nickname").toString();
 
         Member member = findOrSaveMember(oAuth2User, "kakao", name);
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(member.getRole().getName().name()));
 
         return KakaoUser.builder()
                 .registrationId("kakao")
@@ -55,7 +59,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
                 .oauth2Id(member.getOauth2id())
                 .name(name)
                 .attributes(oAuth2User.getAttributes())
-                .authorities(List.of(() -> member.getRole().getName().getRoleName()))
+                .authorities(authorities)
                 .build();
     }
 

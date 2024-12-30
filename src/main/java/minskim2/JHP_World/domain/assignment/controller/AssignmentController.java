@@ -49,7 +49,10 @@ public class AssignmentController {
         model.addAttribute("postList", postDto);
         return "/pages/assignment";
     }
+
+
     /**
+     * @deprecated
      * 특정 강의 모든 과제 조회
      * */
     @GetMapping("/list/lecture/{lectureId}")

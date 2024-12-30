@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
+import minskim2.JHP_World.domain.assignment.repository.AssignmentQueryRepository;
 import minskim2.JHP_World.domain.assignment.repository.AssignmentRepository;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.domain.lecture.repository.LectureRepository;
@@ -21,7 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AssignmentService {
+
     private final AssignmentRepository assignmentRepository;
+    private final AssignmentQueryRepository assignmentQueryRepository;
     private final LectureRepository lectureRepository;
 
     /**
@@ -77,5 +80,17 @@ public class AssignmentService {
         Assignment assignment = assignmentRepository.findById(assignmentId).orElseThrow(()
                 -> new IllegalArgumentException("해당 과제가 존재하지 않습니다."));
         return convertToDto(assignment);
+    }
+
+
+    // 위에 메소드들은 Deprecated 될 예정입니다.
+
+    /**
+     * Lecture ID로 해당 강의의 Assignment 목록을 조회하는 메소드
+     * */
+    public List<AssignmentDto> getAssignmentListByLectureId(Long lectureId, int page) {
+         return assignmentQueryRepository.findListByLectureId(lectureId, page).stream()
+                 .map(AssignmentDto::from)
+                 .toList();
     }
 }

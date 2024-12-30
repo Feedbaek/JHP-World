@@ -1,10 +1,7 @@
 package minskim2.JHP_World.domain.assignment.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.global.entity.BaseEntity;
 
@@ -12,6 +9,8 @@ import minskim2.JHP_World.global.entity.BaseEntity;
 @Entity
 @Table(name = "assignment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class Assignment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +26,4 @@ public class Assignment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_id", nullable = false)
     private Lecture lecture;
-
-    @Builder
-    public Assignment(Long id, String title, String body, Lecture lecture) {
-        this.id = id;
-        this.title = title;
-        this.body = body;
-        this.lecture = lecture;
-    }
 }

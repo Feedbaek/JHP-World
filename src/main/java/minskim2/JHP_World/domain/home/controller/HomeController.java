@@ -22,6 +22,9 @@ public class HomeController {
     private final AssignmentService assignmentService;
     private final LectureService lectureService;
 
+    /**
+     * 임시 홈 화면
+     * */
     @GetMapping
     public String home(Model model) {
         ModelSetter.setTitle(model,null, "Home");

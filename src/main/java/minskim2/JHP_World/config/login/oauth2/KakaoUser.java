@@ -3,13 +3,19 @@ package minskim2.JHP_World.config.login.oauth2;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class KakaoUser implements CustomOAuth2User {
+public class KakaoUser implements CustomOAuth2User, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String registrationId;  // kakao
     private Long memberId;  // DB에 저장된 id
     private String name;  // kakao 닉네임
