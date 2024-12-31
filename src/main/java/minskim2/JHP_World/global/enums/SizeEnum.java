@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum SizeEnum {
 
     ASSIGNMENT_LIST(10),
+    POST_LIST(10),
+
     ;
 
     private final int Size;

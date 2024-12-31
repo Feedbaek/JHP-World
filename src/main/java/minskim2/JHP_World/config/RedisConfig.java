@@ -40,7 +40,7 @@ public class RedisConfig {
             include = JsonTypeInfo.As.PROPERTY,
             property = "@class"
     )
-    public abstract class KakaoUserMixin {
+    public static abstract class KakaoUserMixin {
     }
 
     /**

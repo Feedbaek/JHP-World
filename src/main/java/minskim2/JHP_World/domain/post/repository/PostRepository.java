@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Page<Post> findAllByLectureId(Long assignmentId, Pageable pageable);
+    Page<Post> findAllByLectureId(Long LectureId, Pageable pageable);
 
     int countByLectureId(Long LectureId);
 }
