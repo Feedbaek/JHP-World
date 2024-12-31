@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <!-- Thymeleaf 선언 / headerFragment 임을 선언-->
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      th:fragment="HeaderFragment">
-<div style="border: solid 1px yellow; display: flex; justify-content: space-between;">
-    <h1 style="text-align: left; width: 50%;">JHP World</h1>
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<div th:fragment="HeaderFragment">
+<!--    <div style="border: solid 1px yellow; display: flex; justify-content: space-between;">-->
+<!--        <h1 style="text-align: left; width: 50%;">JHP World</h1>-->
 
-    <div style="text-align: right; width: 50%;">
-        <a href="/myPage"> 마이 페이지 </a>
-        <a href="/logout"> 로그아웃 </a>
-    </div>
+<!--        <div style="text-align: right; width: 50%;">-->
+<!--            <a href="/myPage"> 마이 페이지 </a>-->
+<!--            <a href="/logout"> 로그아웃 </a>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand btn btn-link text-secondary" href="/home">홈 화면</a>
+        <div class="ml-auto">
+            <form style="float: left; padding:10px;" sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" th:action="@{/mypage}" method="get">
+                <button class="btn btn-link text-secondary mx-1" type="submit">마이 페이지</button>
+            </form>
+            <form style="float: left; padding:10px;" sec:authorize="hasAuthority('ADMIN')" class="form-inline my-2 my-lg-0" th:action="@{/admin}" method="get">
+                <button class="btn btn-link text-secondary my-2 my-sm-0" type="submit">관리자 페이지</button>
+            </form>
+            <form style="float: left; padding:10px;" sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
+                <button class="btn btn-link text-danger" type="submit">로그아웃</button>
+            </form>
+        </div>
+        <!-- other navbar content -->
+    </nav>
 </div>
 </html>

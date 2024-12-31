@@ -13,6 +13,9 @@ public class ModelSetter {
      * 페이징 처리를 위한 메서드
      * */
     public static void setPaging(Model model, int currentPage) {
+        if (currentPage < 0) {
+            return;
+        }
         int[] pageNums = new int[5];
         int p = currentPage;
         int i = 0;
@@ -31,5 +34,14 @@ public class ModelSetter {
     public static void setTitle(Model model,String Title, String title) {
         model.addAttribute("Title", Title);
         model.addAttribute("title", title);
+    }
+
+    /**
+     * Model 초기화 메서드
+     */
+    public static void init(Model model, String Title, String title, int page, String url) {
+        setTitle(model, Title, title);
+        setPaging(model, page);
+        setCurrentUri(model, url);
     }
 }

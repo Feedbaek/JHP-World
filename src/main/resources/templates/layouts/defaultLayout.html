@@ -2,22 +2,35 @@
 <!--라이브러리 참조 : Thymeleaf & Thymeleaf Layout -->
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
->
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-<!--공통 JS / CSS 영역을 관리하는 환경 영역-->
-<head th:replace="~{fragments/head :: HeadFragment}">
-    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE" th:text="${Title ?: 'JHP World'}"></title>
+<!--Common Head-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE"></title>
+    <!--Common JS-->
+<!--    <script th:inline="javascript" type="text/javascript" th:src="@{/lib/jquery-3.6.1.min.js}"></script>-->
+<!--    <script th:inline="javascript" type="text/javascript" th:src="@{/lib/jquery-ui.min.js}"></script>-->
+
+    <!--Common CSS -->
 </head>
 
 <body>
 <!--Header 영역을 참조합니다.-->
-<header th:replace="~{fragments/header :: HeaderFragment}"></header>
+    <header th:replace="~{fragments/header :: HeaderFragment}"></header>
 
-<!--Content 내용 영역을 참조합니다-->
-<th:block layout:fragment="Content"></th:block>
+    <!--Content 내용 영역을 참조합니다-->
+    <th:block layout:fragment="Content"></th:block>
 
-<!--Footer 영역을 참조합니다.-->
-<footer th:replace="~{fragments/footer :: FooterFragment}"></footer>
+    <!--Footer 영역을 참조합니다.-->
+    <footer th:replace="~{fragments/footer :: FooterFragment}"></footer>
+
+    <!-- Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

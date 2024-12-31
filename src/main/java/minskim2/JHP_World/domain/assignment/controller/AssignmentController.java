@@ -37,8 +37,7 @@ public class AssignmentController {
     public String getAssignment(@PathVariable Long assignmentId, HttpServletRequest request, Model model) {
         // title 설정 && URI 설정
         AssignmentDto assignmentDto = assignmentService.findById(assignmentId);
-        LectureDto lectureDto = lectureService.findById(assignmentDto.getLectureId());
-        ModelSetter.setTitle(model, lectureDto.getName(), "#" + assignmentDto.getId());
+        ModelSetter.setTitle(model, assignmentDto.getTitle(), "#" + assignmentDto.getId());
         ModelSetter.setCurrentUri(model, request.getRequestURI());
 
         // 해당 강의 게시물 조회

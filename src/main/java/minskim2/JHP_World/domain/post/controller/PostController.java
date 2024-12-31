@@ -1,6 +1,7 @@
 package minskim2.JHP_World.domain.post.controller;
 
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.domain.common.ModelSetter;
 import minskim2.JHP_World.domain.post.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,7 @@ public class PostController {
         var post = postService.findById(id);
 
         // 조회한 게시글을 Model에 담아서 post.html로 전달
+        ModelSetter.init(model, "Post", "id", -1, "/post/" + id);
         model.addAttribute("post", post);
 
         return "/pages/post";
@@ -43,6 +45,7 @@ public class PostController {
         var postList = postService.findAllByLectureId(lectureId, page, POST_LIST.getSize());
 
         // 조회한 게시글 목록을 Model에 담아서 postList.html로 전달
+        ModelSetter.init(model, "Post", "List", page, "/post/list");
         model.addAttribute("postList", postList);
 
         return "/pages/postList";
