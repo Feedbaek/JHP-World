@@ -23,8 +23,8 @@
                 <!-- 페이징 숫자 -->
                 <div style="display: flex; justify-content: center;">
                     <div th:each="p : ${pageNums}">
-                        <a th:if="${p == currentPage}" th:href="${currentUri} + '?page=' + ${p}" th:text="${p}" class="page-link" th:classappend="current-page"></a>
-                        <a th:unless="${p == currentPage}" th:href="${currentUri} + '?page=' + ${p}" th:text="${p}" class="page-link"></a>
+                        <a th:if="${p == currentPage}" th:href="${currentUri} + '&page=' + ${p}" th:text="${p}" class="page-link" th:classappend="current-page"></a>
+                        <a th:unless="${p == currentPage}" th:href="${currentUri} + '&page=' + ${p}" th:text="${p}" class="page-link"></a>
                     </div>
                 </div>
             </div>

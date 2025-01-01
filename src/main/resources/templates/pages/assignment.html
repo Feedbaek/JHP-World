@@ -16,7 +16,7 @@
 <p th:text="${assignment.body}"></p>
 
 <h1> 토론방 </h1>
-<a th:href="'/post/list?page=0&lectureId=' + ${assignment.lectureId}">더보기</a>
+<a th:href="'/post/list?lectureId=' + ${assignment.lectureId}">더보기</a>
 
 <p th:each="post : ${postList}">
     <a th:href="'/post/' + ${post.id}" th:text="${post.title}"></a>

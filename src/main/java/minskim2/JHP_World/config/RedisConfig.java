@@ -47,7 +47,7 @@ public class RedisConfig {
      * Spring Session Serializer 설정
      * */
     @Bean
-    public RedisSerializer<Object> springSessionDefaultRedisSerializer(ObjectMapper objectMapper) {
+    public RedisSerializer<Object> springSessionRedisSerializer(ObjectMapper objectMapper) {
 
         ClassLoader loader = this.getClass().getClassLoader();
 

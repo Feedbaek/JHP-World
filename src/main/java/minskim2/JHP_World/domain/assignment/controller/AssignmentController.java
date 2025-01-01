@@ -41,7 +41,7 @@ public class AssignmentController {
         ModelSetter.setCurrentUri(model, request.getRequestURI());
 
         // 해당 강의 게시물 조회
-        List<PostDto> postDto = postService.findAllByLectureId(assignmentId, 0, PREVIEW_SIZE);
+        List<PostDto> postDto = postService.findAllByLectureId(assignmentId, 1, PREVIEW_SIZE);
 
         // model에 추가
         model.addAttribute("assignment", assignmentDto);
@@ -55,16 +55,18 @@ public class AssignmentController {
      * 특정 강의 모든 과제 조회
      * */
     @GetMapping("/list/lecture/{lectureId}")
-    public String getAllList(@PathVariable Long lectureId, @Positive @RequestParam(name = "page", defaultValue = "1", required = false) final int positivePage,
-                             HttpServletRequest request, Model model) {
+    public String getAllList(@PathVariable Long lectureId,
+            @Positive @RequestParam(defaultValue = "1", required = false) int page,
+            HttpServletRequest request, Model model) {
+
         // title 설정 && URI 설정 && 페이징 처리
         LectureDto lectureDto = lectureService.findById(lectureId);
         ModelSetter.setTitle(model, lectureDto.getName(), "과제 목록");
         ModelSetter.setCurrentUri(model, request.getRequestURI());
-        ModelSetter.setPaging(model, positivePage);
+        ModelSetter.setPaging(model, page);
 
         // 해당 강의의 모든 과목 조회
-        List<AssignmentDto> assignmentList = assignmentService.getDtoListByLectureId(lectureId, positivePage - 1, ASSIGNMENT_LIST_SIZE);
+        List<AssignmentDto> assignmentList = assignmentService.getDtoListByLectureId(lectureId, page, ASSIGNMENT_LIST_SIZE);
         model.addAttribute("assignmentList", assignmentList);
         return "/pages/assignmentList";
     }

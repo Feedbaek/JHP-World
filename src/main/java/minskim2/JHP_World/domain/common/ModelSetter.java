@@ -5,14 +5,20 @@ import org.springframework.ui.Model;
 public class ModelSetter {
     /**
      * 현재 URI를 설정하는 메서드
+     * currentUri는 항상 끝에 ?가 붙어있어야 함
      * */
     public static void setCurrentUri(Model model, String currentUri) {
+        // 쿼리 스트링이 없을 경우 ?를 붙여줌
+        if (!currentUri.contains("?")) {
+            currentUri += "?";
+        }
         model.addAttribute("currentUri", currentUri);
     }
     /**
      * 페이징 처리를 위한 메서드
      * */
     public static void setPaging(Model model, int currentPage) {
+
         if (currentPage < 0) {
             return;
         }
@@ -32,6 +38,7 @@ public class ModelSetter {
      * 타이틀 설정 메서드
      * */
     public static void setTitle(Model model,String Title, String title) {
+
         model.addAttribute("Title", Title);
         model.addAttribute("title", title);
     }

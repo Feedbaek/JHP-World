@@ -1,5 +1,6 @@
 package minskim2.JHP_World.domain.post.service;
 
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
@@ -15,10 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @Service
+@Validated
 @Slf4j(topic = "PostService")
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -70,8 +73,10 @@ public class PostService {
                 .build();
     }
 
-    public List<PostDto> findAllByLectureId(Long lectureId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate"));
+    public List<PostDto> findAllByLectureId(Long lectureId, @Positive int page, int size) {
+
+        int pageNumber = page - 1;
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("createdDate"));
         Page<Post> postList = postRepository.findAllByLectureId(lectureId, pageable);
         return postList.stream()
                 .map(this::convertToDto)
