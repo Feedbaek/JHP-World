@@ -2,13 +2,77 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <title>Login</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 40px 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #FEE500; /* Kakao 로그인 색상 */
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button:hover {
+            background-color: #FFD800;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            background-color: #FFC700;
+        }
+
+        button img {
+            margin-right: 10px;
+            height: 24px;
+            width: 24px;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Login with Kakao</h1>
-<form th:action="@{/login/kakao}" method="get">
-    <button type="submit">Login with Kakao</button>
-</form>
+<div class="container">
+    <h1>소셜 로그인</h1>
+    <form th:action="@{/login/kakao}" method="get">
+        <button type="submit">
+            Login with Kakao
+        </button>
+    </form>
+</div>
 
 </body>
 </html>

@@ -17,7 +17,7 @@ import static minskim2.JHP_World.global.constant.IntConstant.PREVIEW_SIZE;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/home")
+@RequestMapping("")
 public class HomeController {
     private final AssignmentService assignmentService;
     private final LectureService lectureService;
@@ -25,7 +25,7 @@ public class HomeController {
     /**
      * 임시 홈 화면
      * */
-    @GetMapping
+    @GetMapping("/home")
     public String home(Model model) {
         ModelSetter.setTitle(model,null, "Home");
 
@@ -48,5 +48,11 @@ public class HomeController {
         model.addAttribute("automataList", automataList);
 
         return "/pages/home";
+    }
+
+    @GetMapping("/mypage")
+    public String mypage(Model model) {
+        ModelSetter.setTitle(model, null, "My Page");
+        return "/pages/myPage";
     }
 }

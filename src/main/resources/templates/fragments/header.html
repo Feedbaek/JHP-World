@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!-- Thymeleaf 선언 / headerFragment 임을 선언-->
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="HeaderFragment">
 <!--    <div style="border: solid 1px yellow; display: flex; justify-content: space-between;">-->
 <!--        <h1 style="text-align: left; width: 50%;">JHP World</h1>-->
@@ -23,6 +22,9 @@
             </form>
             <form style="float: left; padding:10px;" sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
                 <button class="btn btn-link text-danger" type="submit">로그아웃</button>
+            </form>
+            <form style="float: left; padding:10px;" sec:authorize="!isAuthenticated()" class="form-inline my-2 my-lg-0" th:action="@{/login}" method="get">
+                <button class="btn btn-link text-secondary my-1" type="submit">로그인</button>
             </form>
         </div>
         <!-- other navbar content -->

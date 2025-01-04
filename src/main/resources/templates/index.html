@@ -1,14 +1,63 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>JHP World</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 30px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .container button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .container button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .container button:active {
+            background-color: #003f7f;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Welcome to the JHP World</h1>
-<form th:action="@{/home}" method="get">
-    <button type="submit">시작하기</button>
-</form>
+<div class="container">
+    <h1>Welcome to the JHP World</h1>
+    <form th:action="@{/home}" method="get">
+        <button type="submit">시작하기</button>
+    </form>
+</div>
 
 </body>
 </html>

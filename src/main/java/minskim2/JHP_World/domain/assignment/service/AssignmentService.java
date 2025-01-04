@@ -91,13 +91,13 @@ public class AssignmentService {
     }
 
 
-    // 위에 메소드들은 Deprecated 될 예정입니다.
-
     /**
      * Lecture ID로 해당 강의의 Assignment 목록을 조회하는 메소드
      * */
-    public List<AssignmentDto> getAssignmentListByLectureId(Long lectureId, int page) {
-         return assignmentQueryRepository.findListByLectureId(lectureId, page).stream()
+    public List<AssignmentDto> getAssignmentListByLectureId(Long lectureId, @Positive int page) {
+
+        int pageNumber = page - 1;
+        return assignmentQueryRepository.findListByLectureId(lectureId, pageNumber).stream()
                  .map(AssignmentDto::from)
                  .toList();
     }

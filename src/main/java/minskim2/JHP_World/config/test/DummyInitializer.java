@@ -35,6 +35,7 @@ public class DummyInitializer implements CommandLineRunner {
         // 문제해결기법 강의
         if (lectureRepository.findByName("문제해결기법").isEmpty()) {
             Lecture lecture = Lecture.builder()
+                    .id(1L)
                     .name("문제해결기법")
                     .build();
             lectureRepository.save(lecture);
@@ -42,6 +43,7 @@ public class DummyInitializer implements CommandLineRunner {
         // 자료구조 강의
         if (lectureRepository.findByName("자료구조").isEmpty()) {
             Lecture lecture = Lecture.builder()
+                    .id(2L)
                     .name("자료구조")
                     .build();
             lectureRepository.save(lecture);
@@ -49,6 +51,7 @@ public class DummyInitializer implements CommandLineRunner {
         // 알고리즘설계 강의
         if (lectureRepository.findByName("알고리즘설계").isEmpty()) {
             Lecture lecture = Lecture.builder()
+                    .id(3L)
                     .name("알고리즘설계")
                     .build();
             lectureRepository.save(lecture);
@@ -56,6 +59,7 @@ public class DummyInitializer implements CommandLineRunner {
         // 오토마타 강의
         if (lectureRepository.findByName("오토마타").isEmpty()) {
             Lecture lecture = Lecture.builder()
+                    .id(4L)
                     .name("오토마타")
                     .build();
             lectureRepository.save(lecture);
