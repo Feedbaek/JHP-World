@@ -1,5 +1,6 @@
 package minskim2.JHP_World.config.login.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.config.EnvBean;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Slf4j(topic = "SuccessHandler")
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SuccessHandler implements AuthenticationSuccessHandler {
@@ -26,7 +28,7 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
 
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         // 로그인 성공 시 리다이렉트
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 

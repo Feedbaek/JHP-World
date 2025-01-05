@@ -34,12 +34,14 @@ public class SecurityConfig {
         "/",
         // 소셜 로그인 페이지
         "/login/**",
+        // 정적 리소스
+        "/css/**",
+        "/js/**",
 
         // Home 페이지
         "/home",
         // 강의 별 과제 목록 조회
         "/lecture/*/assignmentList",
-
     };
 
     // 모든 사용자 허용 경로
