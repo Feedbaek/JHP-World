@@ -34,8 +34,11 @@ public class SecurityConfig {
         "/",
         // 소셜 로그인 페이지
         "/login/**",
-        // home 페이지
+
+        // Home 페이지
         "/home",
+        // 강의 별 과제 목록 조회
+        "/lecture/*/assignmentList",
 
     };
 

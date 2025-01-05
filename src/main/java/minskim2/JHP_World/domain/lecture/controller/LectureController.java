@@ -26,7 +26,7 @@ public class LectureController {
                                  @Positive @RequestParam(defaultValue = "1", required = false) int page) {
 
         var list = assignmentService.getAssignmentListByLectureId(lecture_id, page);
-        ModelSetter.init(model, "Assignment", "과제 목록", page, "/lecture/" + lecture_id + "/assignmentList");
+        ModelSetter.init(model, "과제 목록", page, "/lecture/" + lecture_id + "/assignmentList");
         model.addAttribute("assignmentList", list);
 
         return "/pages/assignmentList";

@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'DungGeunMo-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/wooin21/web/fonts/etc/DungGeunMo-Regular.woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'DungGeunMo-Regular';
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}

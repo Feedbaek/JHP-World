@@ -30,7 +30,7 @@ public class PostController {
         var post = postService.findById(id);
 
         // 조회한 게시글을 Model에 담아서 post.html로 전달
-        ModelSetter.init(model, "Post", "id", -1, "/post/" + id);
+        ModelSetter.init(model, "Post" + "id", null, "/post/" + id);
         model.addAttribute("post", post);
 
         return "/pages/post";
@@ -48,7 +48,7 @@ public class PostController {
         var postList = postService.findAllByLectureId(lectureId, page, POST_LIST_DEFAULT.getSize());
 
         // 조회한 게시글 목록을 Model에 담아서 postList.html로 전달
-        ModelSetter.init(model, "Post", "List", page, "/post/list?lectureId=" + lectureId);
+        ModelSetter.init(model, "Post List", page, "/post/list?lectureId=" + lectureId);
         model.addAttribute("postList", postList);
 
         return "/pages/postList";

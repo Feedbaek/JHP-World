@@ -27,7 +27,7 @@ public class HomeController {
      * */
     @GetMapping("/home")
     public String home(Model model) {
-        ModelSetter.setTitle(model,null, "Home");
+        ModelSetter.setTitle(model, "Home");
 
         // 과제 목록 조회
         // 1. 문제해결기법 과제
@@ -52,7 +52,7 @@ public class HomeController {
 
     @GetMapping("/mypage")
     public String mypage(Model model) {
-        ModelSetter.setTitle(model, null, "My Page");
+        ModelSetter.setTitle(model, "My Page");
         return "/pages/myPage";
     }
 }

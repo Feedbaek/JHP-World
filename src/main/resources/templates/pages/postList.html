@@ -74,7 +74,7 @@
 <div class="container">
     <h1 th:text="${title}"></h1>
     <div class="post-list">
-        <div th:each="post : ${postList}">
+        <div class="post-card" th:each="post : ${postList}">
             <a th:href="'/post/' + ${post.id}" th:text="${post.title}"></a>
         </div>
     </div>

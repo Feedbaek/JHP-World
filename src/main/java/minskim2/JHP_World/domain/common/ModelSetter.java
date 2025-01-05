@@ -17,9 +17,9 @@ public class ModelSetter {
     /**
      * 페이징 처리를 위한 메서드
      * */
-    public static void setPaging(Model model, int currentPage) {
+    public static void setPaging(Model model, Integer currentPage) {
 
-        if (currentPage < 0) {
+        if (currentPage == null) {
             return;
         }
         int[] pageNums = new int[5];
@@ -37,17 +37,16 @@ public class ModelSetter {
     /**
      * 타이틀 설정 메서드
      * */
-    public static void setTitle(Model model,String Title, String title) {
+    public static void setTitle(Model model, String title) {
 
-        model.addAttribute("Title", Title);
         model.addAttribute("title", title);
     }
 
     /**
      * Model 초기화 메서드
      */
-    public static void init(Model model, String Title, String title, int page, String url) {
-        setTitle(model, Title, title);
+    public static void init(Model model, String title, Integer page, String url) {
+        setTitle(model, title);
         setPaging(model, page);
         setCurrentUri(model, url);
     }
