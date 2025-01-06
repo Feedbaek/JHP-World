@@ -44,7 +44,7 @@ public class PostController {
      * lectureId에 해당하는 게시글 목록을 조회하는 메서드
      */
     @GetMapping("/list")
-    public String getPostListByLectureId(@RequestParam Long lectureId,
+    public String getPostListByLectureId(@RequestParam(required = false) Long lectureId,
             @Positive @RequestParam(defaultValue = "1", required = false) int page,
             Model model) {
 

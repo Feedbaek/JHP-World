@@ -14,8 +14,8 @@ import static minskim2.JHP_World.domain.comment.dto.CommentRes.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/comment")
-public class CommentController {
+@RequestMapping("/api/comment")
+public class CommentRestController {
 
     private final CommentService commentService;
 

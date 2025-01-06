@@ -8,7 +8,6 @@ import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
 import minskim2.JHP_World.domain.lecture.dto.LectureDto;
 import minskim2.JHP_World.domain.lecture.service.LectureService;
-import minskim2.JHP_World.domain.post.dto.PostDto;
 import minskim2.JHP_World.domain.post.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import static minskim2.JHP_World.global.constant.IntConstant.ASSIGNMENT_LIST_SIZE;
-import static minskim2.JHP_World.global.constant.IntConstant.PREVIEW_SIZE;
+import static minskim2.JHP_World.global.enums.SizeEnum.ASSIGNMENT_LIST;
+import static minskim2.JHP_World.global.enums.SizeEnum.DEFAULT_PREVIEW;
 
 @Controller
 @RequiredArgsConstructor
@@ -42,11 +41,11 @@ public class AssignmentController {
         ModelSetter.setCurrentUri(model, request.getRequestURI());
 
         // 해당 강의 게시물 조회
-        List<PostDto> postDto = postService.findAllByLectureId(assignmentId, 1, PREVIEW_SIZE);
+        var postList = postService.findAllByLectureId(assignmentId, 1, DEFAULT_PREVIEW.getSize());
 
         // model에 추가
         model.addAttribute("assignment", assignmentDto);
-        model.addAttribute("postList", postDto);
+        model.addAttribute("postList", postList);
         return "/pages/assignment";
     }
 
@@ -67,7 +66,7 @@ public class AssignmentController {
         ModelSetter.setPaging(model, page);
 
         // 해당 강의의 모든 과목 조회
-        List<AssignmentDto> assignmentList = assignmentService.getDtoListByLectureId(lectureId, page, ASSIGNMENT_LIST_SIZE);
+        List<AssignmentDto> assignmentList = assignmentService.getDtoListByLectureId(lectureId, page, ASSIGNMENT_LIST.getSize());
         model.addAttribute("assignmentList", assignmentList);
         return "/pages/assignmentList";
     }

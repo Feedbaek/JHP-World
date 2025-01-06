@@ -24,4 +24,10 @@ public class Lecture extends BaseEntity {
         this.id = id;
         this.name = name;
     }
+
+    public static Lecture ById(Long id) {
+        return Lecture.builder()
+                .id(id)
+                .build();
+    }
 }

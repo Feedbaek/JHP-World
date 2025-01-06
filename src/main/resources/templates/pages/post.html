@@ -137,7 +137,7 @@
         });
 
         // JSON 데이터를 POST 요청으로 전송
-        fetch('/comment/create', {
+        fetch('/api/comment/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -147,8 +147,7 @@
         })
         .then(response => {
             if (response.ok) {
-                alert('댓글이 등록되었습니다.');
-                form.reset(); // 폼 초기화
+                location.reload();
             } else {
                 alert('댓글 등록에 실패했습니다.');
             }

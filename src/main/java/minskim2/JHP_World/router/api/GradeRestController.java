@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/grade")
-public class GradeController {
+public class GradeRestController {
     private final GradeService gradeService;
 
     // 과제 테스트 실행

@@ -44,7 +44,7 @@
 
         .section ul {
             list-style: none;
-            padding: 0;
+            padding: 0 0 0 20px;
         }
 
         .section ul li {
@@ -68,14 +68,10 @@
             font-size: 0.9rem;
         }
 
-        .right-section ul {
-            padding-left: 20px;
+        .section a.more {
+            float: right;
         }
 
-        .right-section ul li {
-            margin-bottom: 10px;
-            color: #555;
-        }
     </style>
 </head>
 <body>
@@ -85,7 +81,7 @@
 
     <div class="section left-section">
         <h2>문제해결기법</h2>
-        <a th:href="'/lecture/1/assignmentList'">더보기</a>
+        <a th:href="'/lecture/1/assignmentList'" class="more">더보기</a>
         <ul>
             <li th:each="assignment : ${problemSolvingList}">
                 <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
@@ -93,7 +89,7 @@
         </ul>
 
         <h2>자료구조</h2>
-        <a th:href="'/lecture/2/assignmentList'">더보기</a>
+        <a th:href="'/lecture/2/assignmentList'" class="more">더보기</a>
         <ul>
             <li th:each="assignment : ${dataStructureList}">
                 <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
@@ -101,7 +97,7 @@
         </ul>
 
         <h2>알고리즘설계</h2>
-        <a th:href="'/lecture/3/assignmentList'">더보기</a>
+        <a th:href="'/lecture/3/assignmentList'" class="more">더보기</a>
         <ul>
             <li th:each="assignment : ${algorithmDesignList}">
                 <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
@@ -111,8 +107,11 @@
 
     <div class="section right-section">
         <h2>토론방</h2>
+        <a th:href="'/post/list'" class="more">더보기</a>
         <ul>
-            <li>과제 1. 풀이비법</li>
+            <li th:each="post : ${postList}">
+                <a th:href="'/post/' + ${post.id}" th:text="${post.title}"></a>
+            </li>
         </ul>
     </div>
 </div>

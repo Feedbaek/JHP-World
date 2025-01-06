@@ -8,6 +8,8 @@ import minskim2.JHP_World.domain.lecture.repository.LectureRepository;
 import minskim2.JHP_World.domain.member.entity.Member;
 import minskim2.JHP_World.domain.member.repository.MemberRepository;
 import minskim2.JHP_World.domain.post.dto.PostDto;
+import minskim2.JHP_World.domain.post.dto.PostReq;
+import minskim2.JHP_World.domain.post.dto.PostRes;
 import minskim2.JHP_World.domain.post.entity.Post;
 import minskim2.JHP_World.domain.post.repository.PostRepository;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,9 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
+import static minskim2.JHP_World.domain.post.dto.PostReq.*;
+import static minskim2.JHP_World.domain.post.dto.PostRes.*;
+
 @Service
 @Validated
 @Slf4j(topic = "PostService")
@@ -28,19 +33,15 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
-    private final LectureRepository lectureRepository;
 
     /**
      * CRUD 메서드 구현
      * */
     @Transactional
-    public PostDto createPost(PostDto postDto) {
-        // 해당 회원이나 강의가 존재하지 않으면 예외 발생
-        Member member = memberRepository.findById(postDto.memberId()).orElseThrow(()
-                -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
-        Lecture lecture = lectureRepository.findById(postDto.lectureId()).orElseThrow(()
-                -> new IllegalArgumentException("해당 강의가 존재하지 않습니다."));
+    public CreateRes createPost(Long memberId, CreateReq postDto) {
+
+        Member member = Member.ById(memberId);
+        Lecture lecture = Lecture.ById(postDto.lectureId());
 
         Post post = Post.builder()
                 .member(member)
@@ -50,7 +51,7 @@ public class PostService {
                 .build();
         postRepository.save(post);
 
-        return convertToDto(post);
+        return CreateRes.of(post.getId());
     }
 
     public void deleteById(Long id) {
@@ -73,13 +74,21 @@ public class PostService {
                 .build();
     }
 
-    public List<PostDto> findAllByLectureId(Long lectureId, @Positive int page, int size) {
+    public List<GetPreviewRes> findAllByLectureId(Long lectureId, @Positive int page, int size) {
 
         int pageNumber = page - 1;
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("createdDate"));
-        Page<Post> postList = postRepository.findAllByLectureId(lectureId, pageable);
+
+        Page<Post> postList;
+        if (lectureId == null) {
+            // lectureId가 null이면 전체 게시글 조회
+            postList = postRepository.findAll(pageable);
+        } else {
+            postList = postRepository.findAllByLectureId(lectureId, pageable);
+        }
+
         return postList.stream()
-                .map(this::convertToDto)
+                .map(GetPreviewRes::from)
                 .toList();
     }
 }
