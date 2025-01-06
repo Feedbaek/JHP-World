@@ -1,4 +1,4 @@
-package minskim2.JHP_World.domain.lecture.controller;
+package minskim2.JHP_World.router.view;
 
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;

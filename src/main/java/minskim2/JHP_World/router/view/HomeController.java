@@ -1,4 +1,4 @@
-package minskim2.JHP_World.domain.home.controller;
+package minskim2.JHP_World.router.view;
 
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;

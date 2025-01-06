@@ -1,4 +1,4 @@
-package minskim2.JHP_World.domain.comment.controller;
+package minskim2.JHP_World.router.api;
 
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.config.login.oauth2.KakaoUser;

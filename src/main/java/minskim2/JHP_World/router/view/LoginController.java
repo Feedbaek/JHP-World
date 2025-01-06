@@ -1,4 +1,4 @@
-package minskim2.JHP_World.domain.login.controller;
+package minskim2.JHP_World.router.view;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

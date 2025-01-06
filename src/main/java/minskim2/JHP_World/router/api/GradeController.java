@@ -1,4 +1,4 @@
-package minskim2.JHP_World.domain.grade.controller;
+package minskim2.JHP_World.router.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

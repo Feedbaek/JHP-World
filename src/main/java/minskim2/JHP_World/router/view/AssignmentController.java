@@ -1,4 +1,4 @@
-package minskim2.JHP_World.domain.assignment.controller;
+package minskim2.JHP_World.router.view;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Positive;
