@@ -5,23 +5,21 @@ import lombok.Builder;
 public class CommentReq {
 
     @Builder
-    public record create (
-            Long id,
-            Long memberId,
+    public record CreateReq(
             Long postId,
             String body
     ) {
     }
 
     @Builder
-    public record update (
+    public record UpdateReq(
             Long id,
             String body
     ) {
     }
 
     @Builder
-    public record delete (
+    public record DeleteReq(
             Long id
     ) {
     }

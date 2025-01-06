@@ -1,28 +1,34 @@
 package minskim2.JHP_World.domain.comment.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import minskim2.JHP_World.domain.comment.entity.Comment;
 
 public class CommentRes {
 
     @Builder
-    public record create (
-        Long id,
-        Long memberId,
-        Long postId,
-        String body
+    public record CreateRes (
+        Long id
     ) {
+        public static CreateRes of(Long id) {
+            return new CreateRes(id);
+        }
+        public static CreateRes from(Comment comment) {
+            return new CreateRes(comment.getId());
+        }
     }
 
     @Builder
-    public record update (
+    public record UpdateRes (
         Long id,
         String body
     ) {
+        public static UpdateRes of(Long id, String body) {
+            return new UpdateRes(id, body);
+        }
     }
 
     @Builder
-    public record delete (
+    public record DeleteRes (
         Long id
     ) {
     }

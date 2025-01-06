@@ -26,6 +26,7 @@ import static minskim2.JHP_World.global.constant.IntConstant.PREVIEW_SIZE;
 @RequiredArgsConstructor
 @RequestMapping("/assignment")
 public class AssignmentController {
+
     private final AssignmentService assignmentService;
     private final LectureService lectureService;
     private final PostService postService;

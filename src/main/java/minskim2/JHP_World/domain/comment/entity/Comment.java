@@ -1,15 +1,13 @@
 package minskim2.JHP_World.domain.comment.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import minskim2.JHP_World.domain.member.entity.Member;
 import minskim2.JHP_World.domain.post.entity.Post;
 import minskim2.JHP_World.global.entity.BaseEntity;
 
 @Entity
+@Getter
 @Builder
 @Table(name = "comment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
