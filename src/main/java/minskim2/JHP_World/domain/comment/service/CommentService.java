@@ -9,6 +9,9 @@ import minskim2.JHP_World.domain.post.entity.Post;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static minskim2.JHP_World.domain.comment.dto.CommentReq.*;
 import static minskim2.JHP_World.domain.comment.dto.CommentRes.*;
 
@@ -20,16 +23,14 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
+    /**
+     * 댓글 생성
+     * */
     @Transactional
     public CreateRes createComment(Long memberId, CreateReq req) {
 
-        Member member = Member.builder()
-                .id(memberId)
-                .build();
-
-        Post post = Post.builder()
-                .id(req.postId())
-                .build();
+        Member member = Member.ById(memberId);
+        Post post = Post.ById(req.postId());
 
         Comment comment = Comment.builder()
                 .member(member)
@@ -40,5 +41,16 @@ public class CommentService {
         commentRepository.save(comment);
 
         return CreateRes.from(comment);
+    }
+
+    /**
+     * 댓글 목록 조회
+     * */
+    public List<GetRes> getCommentList(Long postId) {
+        List<Comment> comments = commentRepository.findAllByPost_Id(postId);
+
+        return comments.stream()
+                .map(GetRes::from)
+                .collect(Collectors.toList());
     }
 }

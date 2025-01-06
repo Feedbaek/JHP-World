@@ -18,6 +18,17 @@ public class CommentRes {
     }
 
     @Builder
+    public record GetRes (
+        Long id,
+        String memberName,
+        String body
+    ) {
+        public static GetRes from(Comment comment) {
+            return new GetRes(comment.getId(), comment.getMember().getName(), comment.getBody());
+        }
+    }
+
+    @Builder
     public record UpdateRes (
         Long id,
         String body

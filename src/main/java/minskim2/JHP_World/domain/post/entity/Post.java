@@ -1,10 +1,7 @@
 package minskim2.JHP_World.domain.post.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.domain.member.entity.Member;
 import minskim2.JHP_World.global.entity.BaseEntity;
@@ -12,6 +9,8 @@ import minskim2.JHP_World.global.entity.BaseEntity;
 @Getter
 @Entity
 @Table(name = "post")
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
     @Id
@@ -32,12 +31,10 @@ public class Post extends BaseEntity {
     @Column(name = "body", nullable = false, columnDefinition = "TEXT")
     private String body;
 
-    @Builder
-    public Post(Long id, Member member, Lecture lecture, String title, String body) {
-        this.id = id;
-        this.member = member;
-        this.lecture = lecture;
-        this.title = title;
-        this.body = body;
+
+    public static Post ById(Long id) {
+        return Post.builder()
+                .id(id)
+                .build();
     }
 }

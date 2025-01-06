@@ -65,6 +65,12 @@
             margin-top: 30px;
         }
 
+        .add-comment h2 {
+            font-size: 1.2rem;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
         .add-comment textarea {
             width: 100%;
             height: 80px;
@@ -104,13 +110,12 @@
     <div class="comment-section">
         <h2>댓글</h2>
         <div th:each="comment : ${commentList}" class="comment-card">
-            <p class="author" th:text="${comment.author}"></p>
+            <p class="author" th:text="${comment.memberName}"></p>
             <p th:text="${comment.body}"></p>
         </div>
     </div>
 
     <div class="add-comment">
-        <h2>댓글 추가</h2>
         <form id="commentForm">
             <input type="hidden" name="postId" th:value="${post.id}">
             <textarea name="body" placeholder="댓글을 입력하세요..." required></textarea>

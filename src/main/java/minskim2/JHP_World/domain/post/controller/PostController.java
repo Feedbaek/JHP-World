@@ -2,6 +2,7 @@ package minskim2.JHP_World.domain.post.controller;
 
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.domain.comment.service.CommentService;
 import minskim2.JHP_World.domain.common.ModelSetter;
 import minskim2.JHP_World.domain.post.service.PostService;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import static minskim2.JHP_World.global.enums.SizeEnum.POST_LIST_DEFAULT;
 public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     /**
      * Path Parameter 로 받은 id에 해당하는 게시글을 조회하는 메서드
@@ -28,10 +30,12 @@ public class PostController {
 
         // id에 해당하는 게시글을 조회하는 서비스 호출
         var post = postService.findById(id);
+        var commentList = commentService.getCommentList(id);
 
         // 조회한 게시글을 Model에 담아서 post.html로 전달
         ModelSetter.init(model, post.title(), null, "/post/" + id);
         model.addAttribute("post", post);
+        model.addAttribute("commentList", commentList);
 
         return "/pages/post";
     }
