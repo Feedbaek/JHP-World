@@ -66,13 +66,45 @@
             line-height: 1.5;
         }
 
-        .toggle-button {
-            text-align: right;
+        .action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 20px;
+            border-bottom: 2px solid #ccc; /* 밑줄의 두께와 색상 설정 */
+            /*padding-bottom: 5px; !* 텍스트와 밑줄 사이의 간격 설정 *!*/
+            /* 투명도 설정 */
+            opacity: 0.8;
+        }
+
+        .subject-tabs {
+            display: flex;
+            /*gap: 0px;*/
+        }
+
+        .subject-tabs button {
+            padding: 5px 10px;
+            font-size: 1rem;
+            color: #217cff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: white;
+        }
+
+        .subject-tabs button:hover {
+            background-color: #64abff;
+            color: white;
+        }
+
+        .subject-tabs button.active {
+            background-color: #56a4ff;
+            color: white;
         }
 
         .toggle-button button {
-            padding: 10px 15px;
+            padding: 5px 10px;
             font-size: 1rem;
             color: #217cff;
             border: none;
@@ -163,9 +195,18 @@
 <div class="container">
     <h1 th:text="${title}"></h1>
 
-    <!-- 게시물 등록 버튼 -->
-    <div class="toggle-button">
-        <button id="openPopupButton">게시물 등록</button>
+    <!-- 과목 선택과 게시물 등록 액션 바 -->
+    <div class="action-bar">
+        <!-- 과목 선택 탭 -->
+        <div class="subject-tabs">
+            <button th:each="lecture : ${lectureList}" th:id="'lecture_' + ${lecture.id}"
+                    th:data-id="${lecture.id}" th:text="${lecture.name}"></button>
+        </div>
+
+        <!-- 게시물 등록 버튼 -->
+        <div class="toggle-button">
+            <button id="openPopupButton">게시물 등록</button>
+        </div>
     </div>
 
     <!-- 팝업 오버레이 -->
@@ -206,6 +247,29 @@
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
+
+
+        // 과목 탭 클릭 시 URL 업데이트 및 눌림 표시
+        document.querySelectorAll('.subject-tabs button').forEach(button => {
+            // 현재 URL에서 쿼리 파라미터 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentLectureId = urlParams.get("lectureId");
+
+            const lectureId = button.getAttribute("data-id");
+
+            // 쿼리 파라미터와 버튼의 lectureId가 같으면 active 클래스 추가
+            if (lectureId === currentLectureId) {
+                button.classList.add("active");
+            }
+
+            // 버튼 클릭 시 URL 업데이트
+            button.addEventListener('click', function () {
+                const url = new URL(window.location.href);
+                url.searchParams.set('lectureId', lectureId);
+                window.location.href = url.toString();
+            });
+        });
+
         // 팝업 열기
         openPopupButton.addEventListener("click", function () {
             popupOverlay.style.display = "block";
@@ -215,6 +279,7 @@
         closePopupButton.addEventListener("click", function () {
             popupOverlay.style.display = "none";
         });
+
 
         // 오버레이 클릭 시 닫기
         popupOverlay.addEventListener("click", function (event) {
