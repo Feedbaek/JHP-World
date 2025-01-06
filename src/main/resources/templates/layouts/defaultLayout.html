@@ -17,9 +17,13 @@
 
     <!--Common CSS -->
     <link rel="stylesheet" href="/css/style.css">
+
+    <!-- CSRF Token -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 </head>
 
-<body>
+<body class="default-layout">
 <!--Header 영역을 참조합니다.-->
     <header th:replace="~{fragments/header :: HeaderFragment}"></header>
 

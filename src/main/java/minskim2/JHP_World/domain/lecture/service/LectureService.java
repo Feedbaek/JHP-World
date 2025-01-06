@@ -8,6 +8,8 @@ import minskim2.JHP_World.domain.lecture.repository.LectureRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Slf4j(topic = "LectureService")
 @Transactional(readOnly = true)
@@ -49,5 +51,11 @@ public class LectureService {
 
     public Lecture findByName(String name) {
         return lectureRepository.findByName(name).orElseThrow(() -> new IllegalArgumentException("해당 강의가 존재하지 않습니다."));
+    }
+
+    public List<LectureDto> findAll() {
+        return lectureRepository.findAll().stream()
+                .map(this::convertToDto)
+                .toList();
     }
 }

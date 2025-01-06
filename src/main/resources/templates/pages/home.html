@@ -103,6 +103,14 @@
                 <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
             </li>
         </ul>
+
+        <h2>오토마타</h2>
+        <a th:href="'/lecture/4/assignmentList'" class="more">더보기</a>
+        <ul>
+            <li th:each="assignment : ${automataList}">
+                <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
+            </li>
+        </ul>
     </div>
 
     <div class="section right-section">

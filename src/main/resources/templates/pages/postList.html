@@ -173,9 +173,16 @@
         <div class="popup">
             <button class="close-button" id="closePopupButton">&times;</button>
             <h2>새 게시물 등록</h2>
-            <form th:action="@{/post}" th:method="post">
+            <form id="postForm">
                 <input type="text" name="title" placeholder="제목을 입력하세요" required>
-                <textarea name="content" placeholder="내용을 입력하세요" rows="5" required></textarea>
+                <!-- 과목 선택 드롭다운 -->
+                <label>
+                    <select name="lecture" required>
+                        <option value="" disabled selected>과목을 선택하세요</option>
+                        <option th:each="lecture : ${lectureList}" th:value="${lecture.id}" th:text="${lecture.name}"></option>
+                    </select>
+                </label>
+                <textarea name="body" placeholder="내용을 입력하세요" rows="5" required></textarea>
                 <button type="submit">등록</button>
             </form>
         </div>
@@ -194,6 +201,10 @@
         const openPopupButton = document.getElementById("openPopupButton");
         const closePopupButton = document.getElementById("closePopupButton");
         const popupOverlay = document.getElementById("popupOverlay");
+        const postForm = document.getElementById("postForm");
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
         // 팝업 열기
         openPopupButton.addEventListener("click", function () {
@@ -209,6 +220,44 @@
         popupOverlay.addEventListener("click", function (event) {
             if (event.target === popupOverlay) {
                 popupOverlay.style.display = "none";
+            }
+        });
+
+        // 폼 제출 처리
+        postForm.addEventListener("submit", async function (event) {
+            event.preventDefault(); // 기본 폼 제출 막기
+
+            const title = postForm.title.value;
+            const lecture = postForm.lecture.value;
+            const body = postForm.body.value;
+
+            const postData = {
+                lectureId: lecture,
+                title: title,
+                body: body
+            };
+
+            try {
+                const response = await fetch('/api/post/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                if (response.ok) {
+                    popupOverlay.style.display = "none";
+                    // 필요한 경우 게시물 목록을 갱신하거나 페이지를 리로드
+                    location.reload();
+                } else {
+                    const errorData = await response.json();
+                    alert('등록 실패: ' + errorData.message);
+                }
+            } catch (error) {
+                console.error('API 요청 중 오류 발생:', error);
+                alert('알 수 없는 오류가 발생했습니다.');
             }
         });
     });
