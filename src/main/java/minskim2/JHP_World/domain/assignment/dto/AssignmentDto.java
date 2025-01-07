@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.domain.assignment.entity.Assignment;
 
 @Getter
 @Builder
@@ -21,6 +22,15 @@ public class AssignmentDto {
                 .title(query.getTitle())
                 .body(query.getBody())
                 .lectureId(query.getLectureId())
+                .build();
+    }
+
+    public static AssignmentDto from(Assignment entity) {
+        return AssignmentDto.builder()
+                .id(entity.getId())
+                .title(entity.getTitle())
+                .body(entity.getBody())
+                .lectureId(entity.getLecture().getId())
                 .build();
     }
 }

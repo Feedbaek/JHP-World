@@ -1,34 +1,48 @@
 <!DOCTYPE html>
-<!-- Thymeleaf 선언 / FooterFragment 임을 선언-->
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
-
-<!--<head>-->
-<!--    <title></title>-->
-<!--    <style>-->
-<!--        .page-link {-->
-<!--            margin-right: 10px; /* 원하는 여백 크기로 조정 */-->
-<!--        }-->
-<!--        .current-page {-->
-<!--            color: deepskyblue;-->
-<!--            font-weight: bold;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <div th:fragment="FooterFragment">
     <footer th:if="${pageNums}" class="container py-4">
         <div class="row">
             <div class="col">
-                <!-- 페이징 숫자 -->
-                <div style="display: flex; justify-content: center;">
-                    <div th:each="p : ${pageNums}">
-                        <a th:if="${p == currentPage}" th:href="${currentUri} + '&page=' + ${p}" th:text="${p}" class="page-link" th:classappend="current-page"></a>
-                        <a th:unless="${p == currentPage}" th:href="${currentUri} + '&page=' + ${p}" th:text="${p}" class="page-link"></a>
-                    </div>
-                </div>
+                <!-- 페이징 컨테이너 -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center" style="list-style: none; padding: 0; display: flex; gap: 10px;">
+                        <!-- 이전 버튼 -->
+                        <li th:classappend="${currentPage == 1} ? 'disabled'" style="display: inline;">
+                            <a th:href="${currentUri} + '&page=' + (${currentPage - 1})"
+                               aria-label="Previous"
+                               style="text-decoration: none; font-size: 1.1em; color: gray; padding: 0 8px;"
+                               th:if="${currentPage > 1}">
+                                &laquo;
+                            </a>
+                            <span th:if="${currentPage == 1}" style="font-size: 1.1em; color: lightgray; padding: 0 8px;">&laquo;</span>
+                        </li>
+                        <!-- 페이징 숫자 -->
+                        <li th:each="p : ${pageNums}" style="display: inline;">
+                            <span th:if="${p == currentPage}"
+                                  th:text="${p}"
+                                  style="font-weight: bold; font-size: 1.2em; color: black; padding: 0 8px;"></span>
+                            <a th:unless="${p == currentPage}"
+                               th:href="${currentUri} + '&page=' + ${p}"
+                               th:text="${p}"
+                               style="text-decoration: none; font-size: 1.1em; color: gray; padding: 0 8px;"></a>
+                        </li>
+                        <!-- 다음 버튼 -->
+                        <li th:classappend="${currentPage == totalPages} ? 'disabled'" style="display: inline;">
+                            <a th:href="${currentUri} + '&page=' + (${currentPage + 1})"
+                               aria-label="Next"
+                               style="text-decoration: none; font-size: 1.1em; color: gray; padding: 0 8px;"
+                               th:if="${currentPage < totalPages}">
+                                &raquo;
+                            </a>
+                            <span th:if="${currentPage == totalPages}" style="font-size: 1.1em; color: lightgray; padding: 0 8px;">&raquo;</span>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </footer>
 </div>
+
 </html>

@@ -78,13 +78,15 @@ public class NotificationService {
         // 특정 알림 읽음 처리
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new IllegalArgumentException("알림이 존재하지 않습니다."));
+        // 알림을 읽을 권한이 있는지 확인
+        if (!notification.getReceiver().getId().equals(userId)) {
+            throw new IllegalArgumentException("해당 알림을 읽음 처리 할 권한이 없습니다.");
+        }
+
         // 읽음 처리
         Notification.markAsRead(notification);
 
         notificationRepository.save(notification);
-
-        // Redis 에서 알림 여부 제거
-        deleteRedisMarkAsRead(userId);
     }
 
     // Redis에서 읽지 않은 상태 제거

@@ -10,14 +10,14 @@ public class NotificationRes {
             Long id,
             Long postId,
             String message,
-            String createdAt
+            String createdDate
     ) {
         public static GetRes from(Notification notification) {
             return GetRes.builder()
                     .id(notification.getId())
                     .postId(notification.getPost().getId())
                     .message(notification.getMessage())
-                    .createdAt(notification.getCreatedDate().toString())
+                    .createdDate(notification.getCreatedDate().toString())
                     .build();
         }
     }

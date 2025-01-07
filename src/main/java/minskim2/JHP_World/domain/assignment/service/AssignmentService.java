@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
+import minskim2.JHP_World.domain.assignment.dto.AssignmentQ;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
 import minskim2.JHP_World.domain.assignment.repository.AssignmentQueryRepository;
 import minskim2.JHP_World.domain.assignment.repository.AssignmentRepository;
@@ -71,14 +72,13 @@ public class AssignmentService {
      * @param lectureId 강의 ID
      * @param page 페이지 번호. 1 이상 자연수
      * */
-    public List<AssignmentDto> getDtoListByLectureId(Long lectureId, @Positive int page, int size) {
+    public Page<Assignment> getDtoListByLectureId(Long lectureId, @Positive int page, int size) {
 
         // 페이지 번호와 사이즈로 Pageable 객체 생성
         int pageNumber = page - 1;
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("createdDate"));
-        Page<Assignment> assignments = assignmentRepository.findAllByLectureId(lectureId, pageable);
-        // Assignment를 AssignmentDto로 전부 변환하여 반환
-        return assignments.map(this::convertToDto).getContent();
+
+        return assignmentRepository.findAllByLectureId(lectureId, pageable);
     }
 
     /**
@@ -94,11 +94,9 @@ public class AssignmentService {
     /**
      * Lecture ID로 해당 강의의 Assignment 목록을 조회하는 메소드
      * */
-    public List<AssignmentDto> getAssignmentListByLectureId(Long lectureId, @Positive int page) {
+    public Page<AssignmentQ> getAssignmentListByLectureId(Long lectureId, @Positive int page) {
 
         int pageNumber = page - 1;
-        return assignmentQueryRepository.findListByLectureId(lectureId, pageNumber).stream()
-                 .map(AssignmentDto::from)
-                 .toList();
+        return assignmentQueryRepository.findListByLectureId(lectureId, pageNumber);
     }
 }
