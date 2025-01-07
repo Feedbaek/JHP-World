@@ -2,7 +2,6 @@ package minskim2.JHP_World.domain.member.service;
 
 import minskim2.JHP_World.domain.member.dto.MemberDto;
 import minskim2.JHP_World.domain.member.entity.Member;
-import minskim2.JHP_World.domain.member.exception.MemberException;
 import minskim2.JHP_World.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,7 @@ public class MemberService {
 
     // 멤버 엔티티 생성
     @Transactional
-    public Member createMember(String phoneNumber, String kakaoId) throws MemberException {
+    public Member createMember(String phoneNumber, String kakaoId) {
         // todo: 중복 체크
 
 

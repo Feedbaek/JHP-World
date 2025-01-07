@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultLayout}"
+      layout:fragment="Content"
+>
+<head>
+    <title th:text="${title}"></title>
+    <style>
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .comment-section {
+            margin-top: 30px;
+        }
+
+        .comment-section h2 {
+            font-size: 1.2rem;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .comment-card {
+            background-color: #f9f9f9;
+            border-left: 4px solid #007BFF;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment-card p {
+            margin: 0;
+            color: #555;
+        }
+
+        .comment-card .author {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .add-comment {
+            margin-top: 30px;
+        }
+
+        .add-comment h2 {
+            font-size: 1.2rem;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .add-comment textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .add-comment button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-comment button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 th:text="${post.title}"></h1>
+    <p th:text="${post.body}"></p>
+
+    <div class="comment-section">
+        <h2>댓글</h2>
+        <div th:each="comment : ${commentList}" class="comment-card">
+            <p class="author" th:text="${comment.memberName}"></p>
+            <p th:text="${comment.body}"></p>
+        </div>
+    </div>
+
+    <div class="add-comment">
+        <form id="commentForm">
+            <input type="hidden" name="postId" th:value="${post.id}">
+            <textarea name="body" placeholder="댓글을 입력하세요..." required></textarea>
+            <button id="commentSubmit" type="button">댓글 등록</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById("commentSubmit").addEventListener("click", function () {
+        const form = document.getElementById("commentForm");
+        const formData = new FormData(form);
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+        const jsonData = {};
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
+
+        // JSON 데이터를 POST 요청으로 전송
+        fetch('/api/comment/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify(jsonData) // JSON 문자열로 변환
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('댓글 등록에 실패했습니다.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+    });
+</script>
+
+</body>
+</html>

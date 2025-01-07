@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Default Layout Import-->
 <html lang="ko"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/defaultLayout}"
@@ -7,69 +6,122 @@
 >
 <head>
     <title th:text="${title}"></title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
-
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px 0;
+            color: #333;
+        }
+
         .container {
             display: flex;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .left-section, .right-section {
+
+        .section {
             flex: 1;
-            padding: 10px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .left-section {
-            background-color: #f0f0f0;
+
+        .section h2 {
+            color: #444;
+            border-bottom: 2px solid #ff873a;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
         }
-        .right-section {
-            background-color: #f0f0f0;
+
+        .section ul {
+            list-style: none;
+            padding: 0 0 0 20px;
         }
+
+        .section ul li {
+            margin: 10px 0;
+        }
+
+        .section ul li a {
+            text-decoration: none;
+            color: #0663c6;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .section ul li a:hover {
+            color: #459fef;
+        }
+
+        .section a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .section a.more {
+            float: right;
+        }
+
     </style>
 </head>
 <body>
 
-<h1> 과제 및 토론 </h1>
+<h1>과제 및 토론</h1>
 <div class="container">
 
-    <div class="left-section">
-
-    <h2> 문제해결기법 </h2>
+    <div class="section left-section">
+        <h2>문제해결기법</h2>
+        <a th:href="'/lecture/1/assignmentList'" class="more">더보기</a>
         <ul>
             <li th:each="assignment : ${problemSolvingList}">
                 <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
             </li>
         </ul>
 
-    <h2> 자료구조 </h2>
+        <h2>자료구조</h2>
+        <a th:href="'/lecture/2/assignmentList'" class="more">더보기</a>
         <ul>
             <li th:each="assignment : ${dataStructureList}">
                 <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
             </li>
         </ul>
 
-    <h2> 오토마타 </h2>
-        <ul>
-            <li th:each="assignment : ${automataList}">
-                <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
-            </li>
-        </ul>
-
-    <h2> 알고리즘설계 </h2>
+        <h2>알고리즘설계</h2>
+        <a th:href="'/lecture/3/assignmentList'" class="more">더보기</a>
         <ul>
             <li th:each="assignment : ${algorithmDesignList}">
                 <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
             </li>
         </ul>
 
-    </div>
-
-    <div class="right-section">
-    <h2> 토론방 </h2>
+        <h2>오토마타</h2>
+        <a th:href="'/lecture/4/assignmentList'" class="more">더보기</a>
         <ul>
-            <li> 과제 1. 풀이비법 </li>
+            <li th:each="assignment : ${automataList}">
+                <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
+            </li>
         </ul>
-
     </div>
 
+    <div class="section right-section">
+        <h2>토론방</h2>
+        <a th:href="'/post/list'" class="more">더보기</a>
+        <ul>
+            <li th:each="post : ${postList}">
+                <a th:href="'/post/' + ${post.id}" th:text="${post.title}"></a>
+            </li>
+        </ul>
+    </div>
 </div>
 
 </body>

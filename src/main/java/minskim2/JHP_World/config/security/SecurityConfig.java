@@ -34,6 +34,14 @@ public class SecurityConfig {
         "/",
         // 소셜 로그인 페이지
         "/login/**",
+        // 정적 리소스
+        "/css/**",
+        "/js/**",
+
+        // Home 페이지
+        "/home",
+        // 강의 별 과제 목록 조회
+        "/lecture/*/assignmentList",
     };
 
     // 모든 사용자 허용 경로
@@ -68,7 +76,7 @@ public class SecurityConfig {
                     .invalidateHttpSession(true) // 세션 무효화
                     .deleteCookies("JSESSIONID") // 쿠키 삭제
                     .logoutSuccessHandler((request, response, authentication) ->
-                            response.sendRedirect("/")) // 로그아웃 성공 시 인덱스 페이지로 리다이렉트
+                            response.sendRedirect("/home")) // 로그아웃 성공 시 home 페이지로 리다이렉트
                     .permitAll()) // 로그아웃 페이지는 모든 사용자 허용
             // 로그인 예외 처리
             .exceptionHandling(exception -> exception

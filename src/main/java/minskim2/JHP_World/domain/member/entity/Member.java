@@ -1,17 +1,17 @@
 package minskim2.JHP_World.domain.member.entity;
 
+import lombok.*;
 import minskim2.JHP_World.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Table(name = "member")
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,12 +29,10 @@ public class Member extends BaseEntity {
     @Column(name = "is_enabled", nullable = false)
     private boolean isEnabled;
 
-    @Builder
-    public Member(Long id, String oauth2id, String name, Role role, boolean isEnabled) {
-        this.id = id;
-        this.oauth2id = oauth2id;
-        this.name = name;
-        this.role = role;
-        this.isEnabled = isEnabled;
+
+    public static Member ById(Long id) {
+        return Member.builder()
+                .id(id)
+                .build();
     }
 }

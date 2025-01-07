@@ -8,13 +8,76 @@
 >
 <head>
     <title th:text="${title}"></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .assignment-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .assignment-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .assignment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .assignment-card a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        .assignment-card a:hover {
+            color: #0056b3;
+        }
+
+        .assignment-card p {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    </style>
 </head>
 <body>
 
-<div th:each="assignment : ${assignmentList}">
-    <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
+<div class="container">
+    <h1 th:text="${title}"></h1>
+    <div class="assignment-list">
+        <div class="assignment-card" th:each="assignment : ${assignmentList}">
+            <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
+        </div>
+    </div>
 </div>
-
 
 </body>
 </html>

@@ -8,18 +8,131 @@
 >
 <head>
     <title th:text="${title}"></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .discussion-link {
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .discussion-link:hover {
+            color: #0056b3;
+        }
+
+        /* Sidebar styles */
+        .discussion-panel {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            transition: right 0.3s ease;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .discussion-panel.open {
+            right: 0;
+        }
+
+        .discussion-panel h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .discussion-panel a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        .discussion-panel a:hover {
+            color: #ff6600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #555;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+    </style>
 </head>
 <body>
 
+<<<<<<< HEAD
 <h1 th:text="${assignment.title}">안녕하세요</h1>
 
 <p th:text="${assignment.body}"></p>
 <h1> 토론방 </h1>
 <a th:href="'/post/list/lecture/' + ${assignment.lectureId}">더보기</a>
+=======
+<div class="container">
+    <h1 th:text="${assignment.title}"></h1>
+    <p th:text="${assignment.body}"></p>
 
-<p th:each="post : ${postList}">
-    <a th:href="'/post/' + ${post.id}" th:text="${post.title}"></a>
-</p>
+    <span class="discussion-link" onclick="toggleDiscussionPanel()">토론방 보기</span>
+</div>
+
+<div id="discussionPanel" class="discussion-panel">
+    <button class="close-btn" onclick="toggleDiscussionPanel()">×</button>
+    <h2>토론방</h2>
+    <div th:each="post : ${postList}">
+        <a th:href="'/post/' + ${post.id}" th:text="${post.title}"></a>
+    </div>
+</div>
+>>>>>>> 58a5c0a0796feae4cb51bb8f22e3627894eda735
+
+<script>
+    function toggleDiscussionPanel() {
+        const panel = document.getElementById('discussionPanel');
+        panel.classList.toggle('open');
+    }
+</script>
 
 </body>
 </html>

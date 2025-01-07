@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'DungGeunMo-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/wooin21/web/fonts/etc/DungGeunMo-Regular.woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'DungGeunMo-Regular';
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+
+.default-layout {
+    /*background-image: url('/img/background.jpg');*/
+    /*background-size: cover; !* 화면에 맞게 배경 크기 조정 *!*/
+    /*opacity: 0.9; !* 전체 컨테이너의 투명도를 설정 *!*/
+
+    /*height: 100vh; !* 화면 전체 높이 *!*/
+    /*width: 100%; !* 화면 전체 너비 *!*/
+}
