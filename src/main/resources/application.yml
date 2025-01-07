@@ -25,7 +25,7 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate # flyway가 실행되고 ddl-auto가 실행됨. validate로 설정하여 검증 모드로 설정.
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -54,6 +54,11 @@ spring:
     check-template-location: true
     prefix: classpath:/templates/
     suffix: .html
+
+  security:
+    user:
+      name: root
+      password: 1234
 
 
 

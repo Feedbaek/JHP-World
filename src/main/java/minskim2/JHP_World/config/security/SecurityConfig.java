@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,6 +43,9 @@ public class SecurityConfig {
         "/home",
         // 강의 별 과제 목록 조회
         "/lecture/*/assignmentList",
+        // 과제 상세 조회
+        "/assignment/*",
+        "/post/*"
     };
 
     // 모든 사용자 허용 경로
@@ -60,8 +64,9 @@ public class SecurityConfig {
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // 로그인 설정
         http
-//            .csrf(AbstractHttpConfigurer::disable) // csrf 비활성화
-            .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 비활성화
+            // .csrf(AbstractHttpConfigurer::disable) // csrf 비활성화
+//            .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 비활성화
+            .formLogin(AbstractAuthenticationFilterConfigurer::permitAll) // 로그인 페이지는 모든 사용자 허용
             // oauth2 로그인 설정
             .oauth2Login(oauth2 -> oauth2
                     .loginPage(envBean.getLoginUrl()) // 로그인 페이지

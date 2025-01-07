@@ -1,6 +1,7 @@
 package minskim2.JHP_World.router.api;
 
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
 import minskim2.JHP_World.config.login.oauth2.KakaoUser;
 import minskim2.JHP_World.domain.post.service.PostService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +24,7 @@ public class PostRestController {
      * 토론글 작성
      * */
     @PostMapping("/create")
-    public CreateRes createPost(@AuthenticationPrincipal KakaoUser member, @RequestBody CreateReq req) {
+    public CreateRes createPost(@AuthenticationPrincipal CustomOAuth2User member, @RequestBody CreateReq req) {
 
         return postService.createPost(member.getMemberId(), req);
     }

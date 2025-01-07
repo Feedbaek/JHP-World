@@ -1,6 +1,7 @@
 package minskim2.JHP_World.router.api;
 
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
 import minskim2.JHP_World.config.login.oauth2.KakaoUser;
 import minskim2.JHP_World.domain.comment.service.CommentService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +21,7 @@ public class CommentRestController {
     private final CommentService commentService;
 
     @PostMapping("/create")
-    public CreateRes createComment(@AuthenticationPrincipal KakaoUser member, @RequestBody CreateReq req) {
+    public CreateRes createComment(@AuthenticationPrincipal CustomOAuth2User member, @RequestBody CreateReq req) {
 
         return commentService.createComment(member.getMemberId(), req);
     }

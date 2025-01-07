@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/defaultLayout}"
       layout:fragment="Content"
->
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:text="${title}"></title>
     <style>
@@ -204,7 +204,7 @@
         </div>
 
         <!-- 게시물 등록 버튼 -->
-        <div class="toggle-button">
+        <div sec:authorize="isAuthenticated()" class="toggle-button">
             <button id="openPopupButton">게시물 등록</button>
         </div>
     </div>
@@ -239,15 +239,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const openPopupButton = document.getElementById("openPopupButton");
-        const closePopupButton = document.getElementById("closePopupButton");
-        const popupOverlay = document.getElementById("popupOverlay");
-        const postForm = document.getElementById("postForm");
-
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
-
-
 
         // 과목 탭 클릭 시 URL 업데이트 및 눌림 표시
         document.querySelectorAll('.subject-tabs button').forEach(button => {
@@ -269,6 +260,20 @@
                 window.location.href = url.toString();
             });
         });
+    });
+</script>
+
+<!-- 로그인한 사용자의 팝업 관련 스크립트 -->
+<script sec:authorize="isAuthenticated()">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const openPopupButton = document.getElementById("openPopupButton");
+        const closePopupButton = document.getElementById("closePopupButton");
+        const popupOverlay = document.getElementById("popupOverlay");
+        const postForm = document.getElementById("postForm");
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
         // 팝업 열기
         openPopupButton.addEventListener("click", function () {
@@ -287,6 +292,7 @@
                 popupOverlay.style.display = "none";
             }
         });
+
 
         // 폼 제출 처리
         postForm.addEventListener("submit", async function (event) {
