@@ -1,6 +1,7 @@
 package minskim2.JHP_World.router.view;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.domain.common.ModelSetter;
@@ -35,8 +36,12 @@ public class AssignmentController {
      * */
     @GetMapping("/{assignmentId}")
     public String getAssignment(@PathVariable Long assignmentId, HttpServletRequest request, Model model) {
-        // title 설정 && URI 설정
+
+        HttpSession session = request.getSession();
+        session.setAttribute("notification", "true");
+
         AssignmentDto assignmentDto = assignmentService.findById(assignmentId);
+        // title 설정 && URI 설정
         ModelSetter.setTitle(model, assignmentDto.getTitle());
         ModelSetter.setCurrentUri(model, request.getRequestURI());
 

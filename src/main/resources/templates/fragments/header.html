@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<!-- Thymeleaf 선언 / headerFragment 임을 선언-->
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="HeaderFragment">
-<!--    <div style="border: solid 1px yellow; display: flex; justify-content: space-between;">-->
-<!--        <h1 style="text-align: left; width: 50%;">JHP World</h1>-->
-
-<!--        <div style="text-align: right; width: 50%;">-->
-<!--            <a href="/myPage"> 마이 페이지 </a>-->
-<!--            <a href="/logout"> 로그아웃 </a>-->
-<!--        </div>-->
-<!--    </div>-->
 
     <nav class="navbar navbar-expand-lg" style="background-color: #f3f3f3 ">
         <a class="navbar-brand btn btn-link text-secondary" href="/home">홈 화면</a>
         <div class="ml-auto">
+            <!-- 알림 아이콘 -->
+            <div class="notification-icon" style="float: left; position: relative; top: 15px; opacity: 0.7; display: inline-block" sec:authorize="isAuthenticated()">
+                <a href="/notifications" style="text-decoration: none; color: inherit;">
+                    <span class="icon-bell" style="font-size: 20px">🔔</span>
+                    <!-- 빨간색 동그라미: 알림 여부에 따라 표시 -->
+                    <span th:if="${session.notification}"
+                          style="position: absolute; top: 0px; right: 0px; background: red; color: white;
+                                 border-radius: 50%; width: 12px; height: 12px; font-size: 10px; text-align: center; line-height: 12px;">
+                        !
+                    </span>
+                </a>
+            </div>
+
             <form style="float: left; padding:10px;" sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" th:action="@{/mypage}" method="get">
                 <button class="btn btn-link text-secondary mx-1" type="submit">마이 페이지</button>
             </form>
@@ -27,7 +31,6 @@
                 <button class="btn btn-link text-secondary my-1" type="submit">로그인</button>
             </form>
         </div>
-        <!-- other navbar content -->
     </nav>
 </div>
 </html>
