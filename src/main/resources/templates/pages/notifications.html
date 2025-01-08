@@ -43,8 +43,6 @@
         .notification-card img {
             width: 80px;
             height: 70px;
-            /*object-fit: cover;*/
-            /*border-radius: 8px;*/
             align-self: center;
         }
 
@@ -79,11 +77,22 @@
             font-size: 0.8rem;
             color: #aaa;
         }
+
+        .no-notifications {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #999;
+            margin-top: 50px;
+            font-family: 'Courier New', Courier, monospace;
+        }
     </style>
 </head>
 <body>
 <h1>알림 목록</h1>
 <div class="container">
+    <div th:if="${notificationList.empty}" class="no-notifications">
+        · · · 알림이 없습니다 · · ·
+    </div>
     <div class="notification-card" th:each="notification : ${notificationList}">
         <img src="/img/notification.jpg" alt="Profile Picture">
         <div class="notification-content">
