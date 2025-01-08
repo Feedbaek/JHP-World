@@ -66,7 +66,13 @@ public class SecurityConfig {
         http
             // .csrf(AbstractHttpConfigurer::disable) // csrf 비활성화
 //            .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 비활성화
-            .formLogin(AbstractAuthenticationFilterConfigurer::permitAll) // 로그인 페이지는 모든 사용자 허용
+            .formLogin(form -> form
+                    .successHandler((request, response, authentication) -> {
+                        // 로그인 성공 로깅
+                        successHandler.logLogin(authentication.getName(), request);
+                        response.sendRedirect("/home");
+                    })
+                    .permitAll()) // 로그인 페이지는 모든 사용자 허용
             // oauth2 로그인 설정
             .oauth2Login(oauth2 -> oauth2
                     .loginPage(envBean.getLoginUrl()) // 로그인 페이지
@@ -75,6 +81,14 @@ public class SecurityConfig {
                     .successHandler(successHandler) // 로그인 성공 핸들러
                     .failureHandler(failureHandler) // 로그인 실패 핸들러
                     .permitAll()) // 로그인 페이지는 모든 사용자 허용
+
+            // 세션 설정
+            .sessionManagement(session -> session
+                    .sessionFixation().migrateSession()
+                    .sessionAuthenticationStrategy(new CustomSessionFixationProtectionStrategy()) // 세션 고정 보호
+                    .maximumSessions(1) // 최대 세션 수
+                    .maxSessionsPreventsLogin(true) // 중복 로그인 방지
+            )
             // 로그아웃 설정
             .logout(logout -> logout
                     .logoutUrl(envBean.getLogoutUrl()) // 로그아웃 경로
