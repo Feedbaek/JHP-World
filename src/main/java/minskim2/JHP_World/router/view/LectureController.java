@@ -2,6 +2,7 @@ package minskim2.JHP_World.router.view;
 
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
 import minskim2.JHP_World.domain.common.ModelSetter;
 import org.springframework.stereotype.Controller;
@@ -25,9 +26,12 @@ public class LectureController {
     public String assignmentList(Model model, @PathVariable Long lecture_id,
                                  @Positive @RequestParam(defaultValue = "1", required = false) int page) {
 
-        var list = assignmentService.getAssignmentListByLectureId(lecture_id, page);
-        ModelSetter.init(model, "과제 목록", page, "/lecture/" + lecture_id + "/assignmentList");
-        model.addAttribute("assignmentList", list);
+        var AssignmentPage = assignmentService.getAssignmentListByLectureId(lecture_id, page);
+        var AssignmentList = AssignmentPage.map(AssignmentDto::from).toList();
+        var totalPage = AssignmentPage.getTotalPages();
+
+        ModelSetter.init(model, "과제 목록", page, totalPage, "/lecture/" + lecture_id + "/assignmentList");
+        model.addAttribute("assignmentList", AssignmentList);
 
         return "/pages/assignmentList";
     }

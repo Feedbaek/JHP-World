@@ -74,21 +74,15 @@ public class PostService {
                 .build();
     }
 
-    public List<GetPreviewRes> findAllByLectureId(Long lectureId, @Positive int page, int size) {
+    public Page<Post> findAllByLectureId(Long lectureId, @Positive int page, int size) {
 
         int pageNumber = page - 1;
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("createdDate"));
 
-        Page<Post> postList;
         if (lectureId == null) {
             // lectureId가 null이면 전체 게시글 조회
-            postList = postRepository.findAll(pageable);
-        } else {
-            postList = postRepository.findAllByLectureId(lectureId, pageable);
+            return postRepository.findAll(pageable);
         }
-
-        return postList.stream()
-                .map(GetPreviewRes::from)
-                .toList();
+        return postRepository.findAllByLectureId(lectureId, pageable);
     }
 }

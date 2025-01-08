@@ -37,19 +37,26 @@ public class HomeController {
         // 과제 목록 조회
         // 1. 문제해결기법 과제
         Lecture problemSolving = lectureService.findByName("문제해결기법");
-        List<AssignmentDto> problemSolvingList = assignmentService.getDtoListByLectureId(problemSolving.getId(), 1, DEFAULT_PREVIEW.getSize());
+        var problemSolvingPage = assignmentService.getDtoListByLectureId(problemSolving.getId(), 1, DEFAULT_PREVIEW.getSize());
+        var problemSolvingList = problemSolvingPage.map(AssignmentDto::from).toList();
         model.addAttribute("problemSolvingList", problemSolvingList);
+
         // 2. 자료구조 과제
         Lecture dataStructure = lectureService.findByName("자료구조");
-        List<AssignmentDto> dataStructureList = assignmentService.getDtoListByLectureId(dataStructure.getId(), 1, DEFAULT_PREVIEW.getSize());
+        var dataStructurePage = assignmentService.getDtoListByLectureId(dataStructure.getId(), 1, DEFAULT_PREVIEW.getSize());
+        var dataStructureList = dataStructurePage.map(AssignmentDto::from).toList();
         model.addAttribute("dataStructureList", dataStructureList);
+
         // 3. 알고리즘설계 과제
         Lecture algorithmDesign = lectureService.findByName("알고리즘설계");
-        List<AssignmentDto> algorithmDesignList = assignmentService.getDtoListByLectureId(algorithmDesign.getId(), 1, DEFAULT_PREVIEW.getSize());
+        var algorithmDesignPage = assignmentService.getDtoListByLectureId(algorithmDesign.getId(), 1, DEFAULT_PREVIEW.getSize());
+        var algorithmDesignList = algorithmDesignPage.map(AssignmentDto::from).toList();
         model.addAttribute("algorithmDesignList", algorithmDesignList);
+
         // 4. 오토마타 과제
         Lecture automata = lectureService.findByName("오토마타");
-        List<AssignmentDto> automataList = assignmentService.getDtoListByLectureId(automata.getId(), 1, DEFAULT_PREVIEW.getSize());
+        var automataPage = assignmentService.getDtoListByLectureId(automata.getId(), 1, DEFAULT_PREVIEW.getSize());
+        var automataList = automataPage.map(AssignmentDto::from).toList();
         model.addAttribute("automataList", automataList);
 
         // 토론방 조회

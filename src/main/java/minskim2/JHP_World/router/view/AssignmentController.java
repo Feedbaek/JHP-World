@@ -9,6 +9,7 @@ import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
 import minskim2.JHP_World.domain.lecture.dto.LectureDto;
 import minskim2.JHP_World.domain.lecture.service.LectureService;
+import minskim2.JHP_World.domain.post.dto.PostRes;
 import minskim2.JHP_World.domain.post.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,16 +38,14 @@ public class AssignmentController {
     @GetMapping("/{assignmentId}")
     public String getAssignment(@PathVariable Long assignmentId, HttpServletRequest request, Model model) {
 
-        HttpSession session = request.getSession();
-        session.setAttribute("notification", "true");
-
         AssignmentDto assignmentDto = assignmentService.findById(assignmentId);
         // title 설정 && URI 설정
         ModelSetter.setTitle(model, assignmentDto.getTitle());
         ModelSetter.setCurrentUri(model, request.getRequestURI());
 
         // 해당 강의 게시물 조회
-        var postList = postService.findAllByLectureId(assignmentId, 1, DEFAULT_PREVIEW.getSize());
+        var postPage = postService.findAllByLectureId(assignmentId, 1, DEFAULT_PREVIEW.getSize());
+        var postList = postPage.map(PostRes.GetPreviewRes::from).toList();
 
         // model에 추가
         model.addAttribute("assignment", assignmentDto);
@@ -66,13 +65,18 @@ public class AssignmentController {
 
         // title 설정 && URI 설정 && 페이징 처리
         LectureDto lectureDto = lectureService.findById(lectureId);
-        ModelSetter.setTitle(model, lectureDto.getName() + "과제 목록");
-        ModelSetter.setCurrentUri(model, request.getRequestURI());
-        ModelSetter.setPaging(model, page);
 
         // 해당 강의의 모든 과목 조회
-        List<AssignmentDto> assignmentList = assignmentService.getDtoListByLectureId(lectureId, page, ASSIGNMENT_LIST.getSize());
+        var assignmentPage = assignmentService.getDtoListByLectureId(lectureId, page, ASSIGNMENT_LIST.getSize());
+        var assignmentList = assignmentPage.map(AssignmentDto::from);
+        var totalPages = assignmentPage.getTotalPages();
+        var currentUri = request.getRequestURI();
+        var title = lectureDto.getName() + "과제 목록";
+
+        // model에 추가
+        ModelSetter.init(model, title, page, totalPages, currentUri);
         model.addAttribute("assignmentList", assignmentList);
+
         return "/pages/assignmentList";
     }
 }

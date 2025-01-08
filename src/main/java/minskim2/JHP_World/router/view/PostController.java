@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.domain.comment.service.CommentService;
 import minskim2.JHP_World.domain.common.ModelSetter;
 import minskim2.JHP_World.domain.lecture.service.LectureService;
+import minskim2.JHP_World.domain.post.dto.PostRes;
 import minskim2.JHP_World.domain.post.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +38,7 @@ public class PostController {
         var commentList = commentService.getCommentList(id);
 
         // 조회한 게시글을 Model에 담아서 post.html로 전달
-        ModelSetter.init(model, post.title(), null, "/post/" + id);
+        ModelSetter.init(model, post.title(), null, null, "/post/" + id);
         model.addAttribute("post", post);
         model.addAttribute("commentList", commentList);
 
@@ -53,13 +54,15 @@ public class PostController {
             Model model) {
 
         // lectureId에 해당하는 게시글 목록을 조회하는 서비스 호출
-        var postList = postService.findAllByLectureId(lectureId, page, POST_LIST_DEFAULT.getSize());
+        var postPage = postService.findAllByLectureId(lectureId, page, POST_LIST_DEFAULT.getSize());
+        var postList = postPage.map(PostRes.GetPreviewRes::from).toList();
+        var totalPages = postPage.getTotalPages();
 
         // 조회한 게시글 목록을 Model에 담아서 postList.html로 전달
         if (lectureId != null) {
-            ModelSetter.init(model, "Post List", page, "/post/list?lectureId=" + lectureId);
+            ModelSetter.init(model, "Post List", page, totalPages, "/post/list?lectureId=" + lectureId);
         } else {
-            ModelSetter.init(model, "Post List", page, "/post/list");
+            ModelSetter.init(model, "Post List", page, totalPages, "/post/list");
         }
         model.addAttribute("postList", postList);
 

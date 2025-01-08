@@ -36,18 +36,21 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
+            position: relative;
         }
 
         .notification-card img {
-            width: 50px;
-            /*height: 50px;*/
-            /*border-radius: 50%;*/
-            object-fit: cover;
+            width: 80px;
+            height: 70px;
+            /*object-fit: cover;*/
+            /*border-radius: 8px;*/
+            align-self: center;
         }
 
         .notification-content {
             flex: 1;
+            margin-left: 10px;
         }
 
         .notification-content h3 {
@@ -58,7 +61,7 @@
 
         .notification-content p {
             margin: 5px 0;
-            color: #666;
+            color: #2c92ff;
             font-size: 0.9rem;
         }
 
@@ -69,13 +72,16 @@
             transition: color 0.3s;
         }
 
-        .notification-content a:hover {
-            color: #459fef;
+        .created-date {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 0.8rem;
+            color: #aaa;
         }
     </style>
 </head>
 <body>
-
 <h1>알림 목록</h1>
 <div class="container">
     <div class="notification-card" th:each="notification : ${notificationList}">
@@ -83,10 +89,38 @@
         <div class="notification-content">
             <h3>새로운 메시지가 도착했습니다!</h3>
             <p th:text="${notification.message}"></p>
-            <a th:href="'/post/' + ${notification.postId}">자세히 보기</a>
+            <a th:onclick="'handleDetailsClick(' + ${notification.id} + ', ' + ${notification.postId} + ')'" type="button">자세히 보기</a>
         </div>
+        <div class="created-date" th:text="${notification.createdDate}"></div>
     </div>
 </div>
 
+<script>
+    async function handleDetailsClick(notificationId, postId) {
+        try {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+            // API 호출
+            const response = await fetch(`/api/notifications/read/${notificationId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('API 호출 실패');
+            }
+
+            // 페이지 이동
+            window.location.href = `/post/${postId}`;
+        } catch (error) {
+            console.error('Error:', error);
+            alert('문제가 발생했습니다. 다시 시도해주세요.');
+        }
+    }
+</script>
 </body>
 </html>
