@@ -1,10 +1,9 @@
 package minskim2.JHP_World.router.view;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import minskim2.JHP_World.domain.common.ModelSetter;
+import minskim2.JHP_World.global.utils.ModelSetter;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
 import minskim2.JHP_World.domain.lecture.dto.LectureDto;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 import static minskim2.JHP_World.global.enums.SizeEnum.ASSIGNMENT_LIST;
 import static minskim2.JHP_World.global.enums.SizeEnum.DEFAULT_PREVIEW;

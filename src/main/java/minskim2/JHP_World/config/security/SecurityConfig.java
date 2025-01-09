@@ -5,6 +5,7 @@ import minskim2.JHP_World.config.login.handler.FailureHandler;
 import minskim2.JHP_World.config.login.handler.SuccessHandler;
 import minskim2.JHP_World.config.login.oauth2.OAuth2Service;
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.domain.visitor_log.service.VisitorLogService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,10 +23,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity() // prePostEnabled 어노테이션 활성화
 public class SecurityConfig {
+
     private final EnvBean envBean;
     private final OAuth2Service oAuth2Service;
     private final SuccessHandler successHandler;
     private final FailureHandler failureHandler;
+
+    private final VisitorLogService visitorLogService;
 
     // GET 메소드 허용 경로
     private final String[] GET_LIST = {
@@ -69,7 +71,7 @@ public class SecurityConfig {
             .formLogin(form -> form
                     .successHandler((request, response, authentication) -> {
                         // 로그인 성공 로깅
-                        successHandler.logLogin(authentication.getName(), request);
+                        visitorLogService.loginLog(request, authentication.getName());
                         response.sendRedirect("/home");
                     })
                     .permitAll()) // 로그인 페이지는 모든 사용자 허용

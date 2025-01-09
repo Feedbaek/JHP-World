@@ -3,7 +3,7 @@ package minskim2.JHP_World.router.view;
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
-import minskim2.JHP_World.domain.common.ModelSetter;
+import minskim2.JHP_World.global.utils.ModelSetter;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.domain.lecture.service.LectureService;
 import minskim2.JHP_World.domain.post.service.PostService;
@@ -11,8 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 import static minskim2.JHP_World.global.enums.SizeEnum.DEFAULT_PREVIEW;
 import static minskim2.JHP_World.global.enums.SizeEnum.POST_LIST_PREVIEW;
