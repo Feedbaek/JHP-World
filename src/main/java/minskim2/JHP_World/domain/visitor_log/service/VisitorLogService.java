@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.domain.visitor_log.entity.VisitorLog;
 import minskim2.JHP_World.domain.visitor_log.repository.VisitorLogRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class VisitorLogService {
 
     private final VisitorLogRepository visitorLogRepository;
+
 
     public void visitLog(HttpServletRequest request) {
 
