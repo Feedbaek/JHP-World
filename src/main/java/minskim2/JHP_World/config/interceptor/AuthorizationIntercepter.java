@@ -45,11 +45,16 @@ public class AuthorizationIntercepter implements HandlerInterceptor {
         }
         // 사용자 ID 가져오기
         Long userId = member.getMemberId(); // Spring Security로 로그인된 사용자
-//        log.info("member = {}",member);
+        log.info("member = {}",member.toString());
 
         // Role 확인하기
         boolean isAdmin = roleService.isMemberAdmin(userId);
-//        log.info("is Admin = {}", isAdmin);
-        return isAdmin;
+
+        if (!isAdmin) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 Forbidden
+            return false;
+        }
+        return true;
+
     }
 }
