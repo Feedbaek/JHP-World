@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.config.login.defalult.DefaultUser;
 import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
 import minskim2.JHP_World.domain.member.service.RoleService;
+import minskim2.JHP_World.global.exception.CustomException;
+import minskim2.JHP_World.global.exception.ErrorCode;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -51,8 +53,7 @@ public class AuthorizationIntercepter implements HandlerInterceptor {
         boolean isAdmin = roleService.isMemberAdmin(userId);
 
         if (!isAdmin) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 Forbidden
-            return false;
+            throw CustomException.of(ErrorCode.ROLE_NOT_ADMIN);
         }
         return true;
 
