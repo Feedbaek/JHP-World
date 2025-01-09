@@ -2,6 +2,7 @@ package minskim2.JHP_World.config;
 
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.config.interceptor.AnonymousVisitInterceptor;
+import minskim2.JHP_World.config.interceptor.AuthorizationIntercepter;
 import minskim2.JHP_World.config.interceptor.NotificationInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -14,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final NotificationInterceptor notificationInterceptor;
     private final AnonymousVisitInterceptor anonymousVisitInterceptor;
+    private final AuthorizationIntercepter authorizationIntercepter;
 
     // CORS 설정
     @Override
@@ -35,5 +37,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(anonymousVisitInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/api/**");
+        // 어드민 계정 확인 인터셉터
+        registry.addInterceptor(authorizationIntercepter)
+                .addPathPatterns("/assignment/**");
+
     }
 }
