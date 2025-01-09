@@ -29,11 +29,14 @@ public class NotificationInterceptor implements HandlerInterceptor {
 
         // 로그인 사용자인 경우
         if (principal != null) {
+            // OAuth2 로그인 사용자
             if (principal instanceof OAuth2AuthenticationToken token) {
                 member = (CustomOAuth2User) token.getPrincipal();
-            } else if (principal instanceof UsernamePasswordAuthenticationToken token) {
+            } // 일반 로그인 사용자
+            else if (principal instanceof UsernamePasswordAuthenticationToken token) {
                 member = (DefaultUser) token.getPrincipal();
-            } else {
+            } // 로그인 사용자가 아닌 경우
+            else {
                 return true;
             }
 

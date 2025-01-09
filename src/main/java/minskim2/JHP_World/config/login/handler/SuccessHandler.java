@@ -1,6 +1,5 @@
 package minskim2.JHP_World.config.login.handler;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.config.EnvBean;
 import jakarta.servlet.FilterChain;
@@ -9,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.domain.visitor_log.service.VisitorLogService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -26,6 +26,7 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
     private final EnvBean envBean;
     // Spring Security에서는 RequestCache를 사용하여 로그인 전에 기존 요청을 저장한다.
     private final RequestCache requestCache = new HttpSessionRequestCache();
+    private final VisitorLogService visitorLogService;
 
 
     @Override
@@ -41,9 +42,8 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
             // 기존 요청이 있을 경우 해당 경로로 리다이렉트
             redirect = savedRequest.getRedirectUrl();
         }
-
         // 로그인 성공 로깅
-        logLogin(authentication.getName(), request);
+        visitorLogService.loginLog(request, authentication.getName());
 
         response.sendRedirect(redirect);
     }
@@ -53,20 +53,5 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         this.onAuthenticationSuccess(request, response, authentication);
         chain.doFilter(request, response);
-    }
-
-    public void logLogin(String username, HttpServletRequest request) {
-
-        String ip = request.getRemoteAddr();
-        String userAgent = request.getHeader("User-Agent");
-        HttpSession session = request.getSession();
-
-        // 세션 ID가 필요하다면
-        String sessionId = session.getId();
-        String oldSessionId = (String) session.getAttribute("OLD_SESSION_ID");
-
-        // 로그인 정보 로깅
-        // TODO: DB로 저장하는 로직 추가
-        log.info("Login success. Username: {}, IP: {}, User-Agent: {}, Session ID: {}, Old Session ID: {}", username, ip, userAgent, sessionId, oldSessionId);
     }
 }

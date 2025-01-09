@@ -1,9 +1,8 @@
-package minskim2.JHP_World.domain.common;
+package minskim2.JHP_World.global.utils;
 
 import org.springframework.ui.Model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ModelSetter {
