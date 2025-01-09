@@ -61,4 +61,18 @@ public class CommentService {
                 .map(GetRes::from)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public Long deleteComment(Long memberId, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 댓글이 없습니다."));
+
+        if (!comment.getMember().getId().equals(memberId)) {
+            throw new IllegalArgumentException("해당하는 댓글을 삭제할 권한이 없습니다.");
+        }
+
+        commentRepository.delete(comment);
+
+        return commentId;
+    }
 }

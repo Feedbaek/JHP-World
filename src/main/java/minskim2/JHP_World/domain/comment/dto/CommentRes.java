@@ -20,11 +20,12 @@ public class CommentRes {
     @Builder
     public record GetRes (
         Long id,
+        Long memberId,
         String memberName,
         String body
     ) {
         public static GetRes from(Comment comment) {
-            return new GetRes(comment.getId(), comment.getMember().getName(), comment.getBody());
+            return new GetRes(comment.getId(), comment.getMember().getId(), comment.getMember().getName(), comment.getBody());
         }
     }
 

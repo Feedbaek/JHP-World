@@ -1,13 +1,17 @@
 package minskim2.JHP_World.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.config.interceptor.AnonymousVisitInterceptor;
 import minskim2.JHP_World.config.interceptor.AuthorizationIntercepter;
 import minskim2.JHP_World.config.interceptor.NotificationInterceptor;
+import minskim2.JHP_World.config.interceptor.VisitorStatsInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.TimeZone;
 
 @Configuration
 @RequiredArgsConstructor
@@ -15,7 +19,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final NotificationInterceptor notificationInterceptor;
     private final AnonymousVisitInterceptor anonymousVisitInterceptor;
+<<<<<<< HEAD
     private final AuthorizationIntercepter authorizationIntercepter;
+=======
+    private final VisitorStatsInterceptor visitorStatsInterceptor;
+>>>>>>> bc0c361c3e391de4bbf14492efbb9799d78df9e9
 
     // CORS 설정
     @Override
@@ -37,9 +45,21 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(anonymousVisitInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/api/**");
+<<<<<<< HEAD
         // 어드민 계정 확인 인터셉터
         registry.addInterceptor(authorizationIntercepter)
                 .addPathPatterns("/assignment/**");
 
+=======
+        // 방문자 통계 인터셉터
+        registry.addInterceptor(visitorStatsInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/api/**");
+    }
+
+    @PostConstruct
+    public void setTimezone() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+>>>>>>> bc0c361c3e391de4bbf14492efbb9799d78df9e9
     }
 }

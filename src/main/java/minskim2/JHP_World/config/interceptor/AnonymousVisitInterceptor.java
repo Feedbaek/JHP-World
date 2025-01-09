@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import minskim2.JHP_World.domain.visitor_log.service.VisitorCountService;
 import minskim2.JHP_World.domain.visitor_log.service.VisitorLogService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class AnonymousVisitInterceptor implements HandlerInterceptor {
 
     private final VisitorLogService visitorLogService;
+    private final VisitorCountService visitorCountService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -25,6 +27,9 @@ public class AnonymousVisitInterceptor implements HandlerInterceptor {
         if (session.isNew()) {
             // 익명 사용자 최초 방문에 대한 로그 기록
             visitorLogService.visitLog(request);
+            // 방문자 수 증가
+            visitorCountService.updateTodayVisitors();
+            visitorCountService.updateTotalVisitors();
         }
 
         return true;  // 다음 단계(컨트롤러)로 진행

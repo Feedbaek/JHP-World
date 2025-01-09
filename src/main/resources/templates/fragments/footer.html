@@ -43,6 +43,16 @@
             </div>
         </div>
     </footer>
+
+    <!-- 방문자 수 표시 -->
+    <div class="visitor-stats text-center mt-4">
+        <p style="font-size: 1.1em; color: #666; margin: 0;">
+            총 방문자 수: <span th:text="${totalVisitors}" style="font-weight: bold; color: #333;"></span>명
+        </p>
+        <p style="font-size: 1.1em; color: #666; margin: 0;">
+            오늘의 방문자 수: <span th:text="${todayVisitors}" style="font-weight: bold; color: #333;"></span>명
+        </p>
+    </div>
 </div>
 
 </html>

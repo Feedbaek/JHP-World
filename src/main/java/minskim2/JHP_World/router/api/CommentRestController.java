@@ -5,10 +5,8 @@ import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
 import minskim2.JHP_World.config.login.oauth2.KakaoUser;
 import minskim2.JHP_World.domain.comment.service.CommentService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import static minskim2.JHP_World.domain.comment.dto.CommentReq.*;
 import static minskim2.JHP_World.domain.comment.dto.CommentRes.*;
@@ -20,9 +18,15 @@ public class CommentRestController {
 
     private final CommentService commentService;
 
-    @PostMapping("/create")
-    public CreateRes createComment(@AuthenticationPrincipal CustomOAuth2User member, @RequestBody CreateReq req) {
+    @PostMapping("")
+    public CreateRes createComment(@AuthenticationPrincipal CustomOAuth2User member, @Validated @RequestBody CreateReq req) {
 
         return commentService.createComment(member.getMemberId(), req);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public Long deleteComment(@AuthenticationPrincipal CustomOAuth2User member, @PathVariable Long commentId) {
+
+        return commentService.deleteComment(member.getMemberId(), commentId);
     }
 }

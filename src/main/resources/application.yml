@@ -8,7 +8,7 @@ spring:
   datasource:
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost:3306/jhp
+      jdbc-url: jdbc:mysql://localhost:3306/jhp?serverTimezone=Asia/Seoul
       username: root
       password: 1234
       maximum-pool-size: 10
@@ -41,6 +41,9 @@ spring:
       namespace: jhp
       repository-type: indexed
 
+  cache:
+    type: redis
+
   data:
     redis:
       host: localhost
@@ -61,6 +64,8 @@ spring:
       password: 1234
 
 
+  jackson:
+    time-zone: Asia/Seoul
 
 server:
   port: 8080
