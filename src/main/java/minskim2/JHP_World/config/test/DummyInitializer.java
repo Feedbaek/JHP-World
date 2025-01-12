@@ -1,3 +1,4 @@
+
 package minskim2.JHP_World.config.test;
 
 import lombok.RequiredArgsConstructor;
@@ -205,3 +206,4 @@ public class DummyInitializer implements CommandLineRunner {
         }
     }
 }
+
