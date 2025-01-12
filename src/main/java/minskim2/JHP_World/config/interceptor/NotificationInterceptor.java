@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
 import minskim2.JHP_World.config.login.defalult.DefaultUser;
 import minskim2.JHP_World.domain.notification.service.NotificationService;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -24,21 +25,12 @@ public class NotificationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
         // 로그인 사용자 확인
-        Principal principal = request.getUserPrincipal();
-        CustomOAuth2User member;
+        AbstractAuthenticationToken token = (AbstractAuthenticationToken) request.getUserPrincipal();
 
         // 로그인 사용자인 경우
-        if (principal != null) {
-            // OAuth2 로그인 사용자
-            if (principal instanceof OAuth2AuthenticationToken token) {
-                member = (CustomOAuth2User) token.getPrincipal();
-            } // 일반 로그인 사용자
-            else if (principal instanceof UsernamePasswordAuthenticationToken token) {
-                member = (DefaultUser) token.getPrincipal();
-            } // 로그인 사용자가 아닌 경우
-            else {
-                return true;
-            }
+        if (token != null) {
+            // OAuth2 로그인 사용자와 일반 로그인 사용자
+            CustomOAuth2User member = (CustomOAuth2User) token.getPrincipal();
 
             // 사용자 ID 가져오기
             Long userId = member.getMemberId(); // Spring Security로 로그인된 사용자

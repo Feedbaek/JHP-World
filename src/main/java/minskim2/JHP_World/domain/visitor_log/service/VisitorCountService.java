@@ -17,39 +17,36 @@ import org.springframework.stereotype.Service;
 @Slf4j(topic = "VISITOR_LOG")
 public class VisitorCountService {
 
-    private final VisitorLogRepository visitorLogRepository;
     private final VisitorQueryRepository visitorQueryRepository;
 
 
+    // 총 방문자 수를 조회
     @Cacheable(value = "totalVisitorsCache", key = "'totalVisitors'")
     public long getTotalVisitors() {
-        // 총 방문자 수를 조회
-        var r = visitorQueryRepository.countTotalVisitors();
-        log.info("totalVisitors: {}", r);
-        return r;
+        return visitorQueryRepository.countTotalVisitors();
     }
 
+    // 오늘 방문자 수를 조회
     @Cacheable(value = "todayVisitorsCache", key = "'todayVisitors'")
     public long getTodayVisitors() {
-        // 오늘 방문자 수를 조회
-        var r = visitorLogRepository.countTodayVisitors();
-        log.info("todayVisitors: {}", r);
-        return r;
+        return visitorQueryRepository.countTodayVisitors();
     }
 
+    // 총 방문자 수를 갱신
     @CachePut(value = "totalVisitorsCache", key = "'totalVisitors'")
     public long updateTotalVisitors() {
         return visitorQueryRepository.countTotalVisitors();
     }
 
+    // 오늘 방문자 수를 갱신
     @CachePut(value = "todayVisitorsCache", key = "'todayVisitors'")
     public long updateTodayVisitors() {
-        return visitorLogRepository.countTodayVisitors();
+        return visitorQueryRepository.countTodayVisitors();
     }
 
+    // 오늘 방문자 수 캐시 삭제
     @Scheduled(cron = "0 0 0 * * *")
     @CacheEvict(value = "todayVisitorsCache", key = "'todayVisitors'")
     public void clearTodayVisitorsCache() {
-        // 오늘 방문자 수 캐시 삭제
     }
 }

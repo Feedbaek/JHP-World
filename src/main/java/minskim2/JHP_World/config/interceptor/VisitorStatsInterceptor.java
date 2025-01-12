@@ -25,8 +25,6 @@ public class VisitorStatsInterceptor implements HandlerInterceptor {
 
             modelAndView.addObject("totalVisitors", totalVisitors);
             modelAndView.addObject("todayVisitors", todayVisitors);
-            System.out.println("totalVisitors = " + totalVisitors);
-            System.out.println("todayVisitors = " + todayVisitors);
         }
     }
 }

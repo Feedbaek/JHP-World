@@ -96,7 +96,7 @@ public class NotificationService {
     }
 
     public boolean hasUnreadNotifications(Long userId) {
-        return redisTemplate.hasKey("notifications:unread:" + userId);
+        return Boolean.TRUE.equals(redisTemplate.hasKey("notifications:unread:" + userId));
     }
 
     public List<GetRes> getNotifications(Long userId) {

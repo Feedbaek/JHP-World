@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class RoleService {
+
     private final RoleRepository roleRepository;
     private final MemberRepository memberRepository;
 
     @Transactional
     public boolean isMemberAdmin(Long memberId){
         Member member = memberRepository.findById(memberId).orElseThrow();
-        System.out.println(member.getRole().getName());
         return member.getRole().getName() == RoleName.ADMIN;
     }
 

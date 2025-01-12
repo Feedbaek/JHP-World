@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VisitorLogRepository extends JpaRepository<VisitorLog, Long> {
-    @Query("SELECT COUNT(DISTINCT v.ip) FROM VisitorLog v WHERE v.createdDate >= CURRENT_DATE")
-    long countTodayVisitors();
 }

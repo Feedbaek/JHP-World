@@ -19,6 +19,7 @@ public class VisitorLogService {
     private final VisitorLogRepository visitorLogRepository;
 
 
+    // 방문자 로그 기록
     public void visitLog(HttpServletRequest request) {
 
         String ip = request.getRemoteAddr();
@@ -31,6 +32,7 @@ public class VisitorLogService {
         logging(null, ip, userAgent, sessionId, null);
     }
 
+    // 로그인 로그 기록
     public void loginLog(HttpServletRequest request, String username) {
 
         String ip = request.getRemoteAddr();
@@ -45,6 +47,7 @@ public class VisitorLogService {
     }
 
 
+    // DB 저장
     private void logging(String username, String ip, String userAgent, String sessionId, String oldSessionId) {
 
         // 방문자 로그 저장

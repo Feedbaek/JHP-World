@@ -20,13 +20,13 @@ import java.security.Principal;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
-public class AuthorizationIntercepter implements HandlerInterceptor {
-
+@Slf4j(topic = "AUTHORIZATION")
+public class AuthorizationInterceptor implements HandlerInterceptor {
 
     private final RoleService roleService;
+
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
     {
         // 로그인 사용자 확인
         Principal principal = request.getUserPrincipal();
@@ -47,7 +47,7 @@ public class AuthorizationIntercepter implements HandlerInterceptor {
         }
         // 사용자 ID 가져오기
         Long userId = member.getMemberId(); // Spring Security로 로그인된 사용자
-        log.info("member = {}",member.toString());
+        log.info("login member = {}", member);
 
         // Role 확인하기
         boolean isAdmin = roleService.isMemberAdmin(userId);
