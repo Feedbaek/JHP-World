@@ -25,9 +25,8 @@ public class NotificationController {
         var notificationList = notificationService.getNotifications(member.getMemberId());
         model.addAttribute("notificationList", notificationList);
 
-        // 알림 표시 제거
+        // 세션에서 알림 표시 제거
         session.removeAttribute("notification");
-        notificationService.deleteRedisMarkAsRead(member.getMemberId());
 
         return "/pages/notifications";
     }

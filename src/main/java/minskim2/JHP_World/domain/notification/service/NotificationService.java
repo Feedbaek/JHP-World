@@ -8,11 +8,14 @@ import minskim2.JHP_World.domain.notification.entity.Notification;
 import minskim2.JHP_World.domain.notification.repository.NotificationRepository;
 import minskim2.JHP_World.domain.post.entity.Post;
 import minskim2.JHP_World.domain.post.repository.PostRepository;
-import org.springframework.data.redis.core.RedisTemplate;
+import minskim2.JHP_World.domain.visitor_log.repository.VisitorLogRepository;
+import org.springframework.session.Session;
+import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static minskim2.JHP_World.domain.notification.dto.NotificationRes.*;
 
@@ -23,10 +26,10 @@ import static minskim2.JHP_World.domain.notification.dto.NotificationRes.*;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
-
+    private final VisitorLogRepository visitorLogRepository;
+    private final RedisIndexedSessionRepository sessionRepository;
 
     /**
      * 댓글 작성 알림
@@ -59,18 +62,26 @@ public class NotificationService {
 
         notificationRepository.save(notification);
 
-        // 읽지 않은 알림 여부 저장/갱신 (Redis)
-        checkNotification(receiver.getId());
+        // 세션 id 조회
+        Optional<String> sessionId = visitorLogRepository.findSessionIdByMemberId(receiver.getId());
+        // 읽지 않은 알림 여부 저장/갱신
+        sessionId.ifPresent(this::checkNotification);
     }
 
-    // Redis에 읽지 않은 알림 여부 저장
-    public void checkNotification(Long memberId) {
-        redisTemplate.opsForValue().set("notifications:unread:" + memberId, true);
+    // 세션에 읽지 않은 알림 여부 저장
+    public void checkNotification(String sessionId) {
+        // 특정 멤버의 세션 가져오기
+        var redisSession = sessionRepository.findById(sessionId);
+
+        if (redisSession != null) {
+            // 세션에 읽지 않은 알림 여부 저장
+            ((Session) redisSession).setAttribute("notification", true);
+            sessionRepository.save(redisSession);
+        }
     }
 
     /**
      * 특정 알림 읽음 처리
-     * 알림 하나만 읽어도 모두 알림 표시는 삭제
      * */
     @Transactional
     public void markAsRead(Long notificationId, Long userId) {
@@ -89,21 +100,13 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    // Redis에서 읽지 않은 상태 제거
-    public void deleteRedisMarkAsRead(Long userId) {
-        String redisKey = "notifications:unread:" + userId;
-        redisTemplate.delete(redisKey);
-    }
-
+    // DB에서 읽지 않은 알림 여부 확인
     public boolean hasUnreadNotifications(Long userId) {
-        return Boolean.TRUE.equals(redisTemplate.hasKey("notifications:unread:" + userId));
+        return notificationRepository.existsByReceiverIdAndIsReadFalse(userId);
     }
 
     public List<GetRes> getNotifications(Long userId) {
-
-        List<Notification> notifications = notificationRepository.findUnreadNotifications(userId);
-
-        return notifications.stream()
+        return notificationRepository.findUnreadNotifications(userId).stream()
                 .map(GetRes::from)
                 .toList();
     }

@@ -12,4 +12,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     @Query("select n from Notification n where n.receiver.id = :userId and n.isRead = false order by n.createdDate desc")
     List<Notification> findUnreadNotifications(Long userId);
+
+    @Query("select exists(select 1 from Notification n where n.receiver.id = :userId and n.isRead = false) as isExists")
+    boolean existsByReceiverIdAndIsReadFalse(Long userId);
 }
