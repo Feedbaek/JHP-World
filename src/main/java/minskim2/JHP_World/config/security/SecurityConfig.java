@@ -71,7 +71,7 @@ public class SecurityConfig {
             .formLogin(form -> form
                     .successHandler((request, response, authentication) -> {
                         // 로그인 성공 로깅
-                        visitorLogService.loginLog(request, authentication.getName());
+                        visitorLogService.loginLog(request, authentication);
                         response.sendRedirect("/home");
                     })
                     .permitAll()) // 로그인 페이지는 모든 사용자 허용

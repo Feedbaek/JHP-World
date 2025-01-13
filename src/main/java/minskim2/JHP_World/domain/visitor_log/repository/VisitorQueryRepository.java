@@ -23,7 +23,7 @@ public class VisitorQueryRepository {
         // groupBy( DATE(createdDate), ip )
         // → 그룹의 개수 = 날짜 + IP 쌍의 유니크 개수
         var results = queryFactory
-                .select(visitorLog.id.count()) // 실제 필드는 어떤 것을 select해도 무방
+                .select(visitorLog.ip.count()) // 실제 필드는 어떤 것을 select해도 무방
                 .from(visitorLog)
                 .groupBy(
                         Expressions.stringTemplate("DATE({0})", visitorLog.createdDate),

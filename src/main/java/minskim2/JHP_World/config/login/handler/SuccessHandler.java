@@ -43,7 +43,7 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
             redirect = savedRequest.getRedirectUrl();
         }
         // 로그인 성공 로깅
-        visitorLogService.loginLog(request, authentication.getName());
+        visitorLogService.loginLog(request, authentication);
 
         response.sendRedirect(redirect);
     }

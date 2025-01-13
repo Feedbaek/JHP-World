@@ -2,6 +2,7 @@ package minskim2.JHP_World.domain.visitor_log.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import minskim2.JHP_World.domain.member.entity.Member;
 import minskim2.JHP_World.global.entity.BaseEntity;
 
 @Getter
@@ -27,6 +28,10 @@ public class VisitorLog extends BaseEntity {
 
     @Column(name = "user_agent")
     private String userAgent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Column(name = "user_name", length = 30)
     private String userName;
