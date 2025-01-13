@@ -69,11 +69,7 @@ public class SecurityConfig {
             // .csrf(AbstractHttpConfigurer::disable) // csrf 비활성화
 //            .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 비활성화
             .formLogin(form -> form
-                    .successHandler((request, response, authentication) -> {
-                        // 로그인 성공 로깅
-                        visitorLogService.loginLog(request, authentication);
-                        response.sendRedirect("/home");
-                    })
+                    .successHandler(successHandler) // 로그인 성공 핸들러
                     .permitAll()) // 로그인 페이지는 모든 사용자 허용
             // oauth2 로그인 설정
             .oauth2Login(oauth2 -> oauth2

@@ -45,7 +45,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         // 어드민 계정 확인 인터셉터
         registry.addInterceptor(authorizationInterceptor)
-                .addPathPatterns("/assignment/**");
+                .addPathPatterns("/api/admin/**");
 
         // 방문자 통계 인터셉터
         registry.addInterceptor(visitorStatsInterceptor)
