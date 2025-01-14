@@ -26,12 +26,12 @@ public class LectureController {
     public String assignmentList(Model model, @PathVariable Long lecture_id,
                                  @Positive @RequestParam(defaultValue = "1", required = false) int page) {
 
-        var AssignmentPage = assignmentService.getAssignmentListByLectureId(lecture_id, page);
-        var AssignmentList = AssignmentPage.map(AssignmentDto::from).toList();
-        var totalPage = AssignmentPage.getTotalPages();
+        var assignmentPage = assignmentService.getAssignmentListByLectureId(lecture_id, page);
+        var assignmentList = assignmentPage.map(AssignmentDto::from).toList();
+        var totalPage = assignmentPage.getTotalPages();
 
         ModelSetter.init(model, "과제 목록", page, totalPage, "/lecture/" + lecture_id + "/assignmentList");
-        model.addAttribute("assignmentList", AssignmentList);
+        model.addAttribute("assignmentList", assignmentList);
 
         return "/pages/assignmentList";
     }

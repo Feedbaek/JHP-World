@@ -49,13 +49,17 @@ public class LectureService {
         return convertToDto(lecture);
     }
 
-    public Lecture findByName(String name) {
-        return lectureRepository.findByName(name).orElseThrow(() -> new IllegalArgumentException("해당 강의가 존재하지 않습니다."));
+    public LectureDto findByName(String name) {
+        return LectureDto.from(
+                lectureRepository.findByName(name).orElseThrow(
+                        () -> new IllegalArgumentException("해당 강의가 존재하지 않습니다.")
+                )
+        );
     }
 
     public List<LectureDto> findAll() {
         return lectureRepository.findAll().stream()
-                .map(this::convertToDto)
+                .map(LectureDto::from)
                 .toList();
     }
 }

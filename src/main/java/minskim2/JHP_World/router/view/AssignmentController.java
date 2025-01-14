@@ -52,15 +52,14 @@ public class AssignmentController {
 
 
     /**
-     * @deprecated
-     * 특정 강의 모든 과제 조회
+     * 특정 강의의 모든 과제 조회
      * */
-    @GetMapping("/list/lecture/{lectureId}")
-    public String getAllList(@PathVariable Long lectureId,
+    @GetMapping("/list")
+    public String getAllList(@RequestParam Long lectureId,
             @Positive @RequestParam(defaultValue = "1", required = false) int page,
             HttpServletRequest request, Model model) {
 
-        // title 설정 && URI 설정 && 페이징 처리
+        // 해당 강의 조회
         LectureDto lectureDto = lectureService.findById(lectureId);
 
         // 해당 강의의 모든 과목 조회
@@ -68,10 +67,9 @@ public class AssignmentController {
         var assignmentList = assignmentPage.map(AssignmentDto::from);
         var totalPages = assignmentPage.getTotalPages();
         var currentUri = request.getRequestURI();
-        var title = lectureDto.getName() + "과제 목록";
 
         // model에 추가
-        ModelSetter.init(model, title, page, totalPages, currentUri);
+        ModelSetter.init(model, lectureDto.getName() + " 과제 목록", page, totalPages, currentUri);
         model.addAttribute("assignmentList", assignmentList);
 
         return "/pages/assignmentList";

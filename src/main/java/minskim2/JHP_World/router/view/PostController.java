@@ -58,9 +58,9 @@ public class PostController {
 
         // 조회한 게시글 목록을 Model에 담아서 postList.html로 전달
         if (lectureId != null) {
-            ModelSetter.init(model, "Post List", page, totalPages, "/post/list?lectureId=" + lectureId);
+            ModelSetter.init(model, "토론방", page, totalPages, "/post/list?lectureId=" + lectureId);
         } else {
-            ModelSetter.init(model, "Post List", page, totalPages, "/post/list");
+            ModelSetter.init(model, "토론방", page, totalPages, "/post/list");
         }
         model.addAttribute("postList", postList);
 

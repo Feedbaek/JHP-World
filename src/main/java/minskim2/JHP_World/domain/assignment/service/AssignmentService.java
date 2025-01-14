@@ -76,7 +76,7 @@ public class AssignmentService {
 
         // 페이지 번호와 사이즈로 Pageable 객체 생성
         int pageNumber = page - 1;
-        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("createdDate"));
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("createdDate").descending());
 
         return assignmentRepository.findAllByLectureId(lectureId, pageable);
     }
