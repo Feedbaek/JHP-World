@@ -1,14 +1,14 @@
-## PR Description🔍
+# PR Description🔍
 
 - 기능 :
 - Close #ISSUE_NUMBER
 
-## 변경 사항 📝
+# 변경 사항 📝
 
 - 변경 사항 1
 - 변경 사항 2
 
-## 참고 사항 📌
+# 참고 사항 📌
 
 <!--
 ## ScreenShot 📷
