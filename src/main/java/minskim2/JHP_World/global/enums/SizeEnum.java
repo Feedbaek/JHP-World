@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum SizeEnum {
 
-    ASSIGNMENT_LIST(10),
-    POST_LIST_DEFAULT(10),
+    ASSIGNMENT_LIST(9),
+    POST_LIST_DEFAULT(9),
 
     DEFAULT_PREVIEW(3),
     POST_LIST_PREVIEW(5),

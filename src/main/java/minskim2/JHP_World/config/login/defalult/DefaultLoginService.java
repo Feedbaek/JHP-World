@@ -20,7 +20,7 @@ public class DefaultLoginService implements UserDetailsService {
         return DefaultUser.builder()
                 .Username(username)
                 .Password(bCryptPasswordEncoder.encode("1234"))
-                .authorities(List.of(new SimpleGrantedAuthority("ROLE_USER")))
+                .authorities(List.of(new SimpleGrantedAuthority("ROLE_ADMIN")))
                 .build();
     }
 }

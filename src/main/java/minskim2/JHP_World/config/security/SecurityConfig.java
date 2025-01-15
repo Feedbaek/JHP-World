@@ -36,7 +36,7 @@ public class SecurityConfig {
         // 인덱스 페이지
         "/",
         // 소셜 로그인 페이지
-        "/login/**",
+        "/login",
         // 정적 리소스
         "/css/**",
         "/js/**",
@@ -68,9 +68,6 @@ public class SecurityConfig {
         http
             // .csrf(AbstractHttpConfigurer::disable) // csrf 비활성화
 //            .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 비활성화
-            .formLogin(form -> form
-                    .successHandler(successHandler) // 로그인 성공 핸들러
-                    .permitAll()) // 로그인 페이지는 모든 사용자 허용
             // oauth2 로그인 설정
             .oauth2Login(oauth2 -> oauth2
                     .loginPage(envBean.getLoginUrl()) // 로그인 페이지
@@ -79,6 +76,11 @@ public class SecurityConfig {
                     .successHandler(successHandler) // 로그인 성공 핸들러
                     .failureHandler(failureHandler) // 로그인 실패 핸들러
                     .permitAll()) // 로그인 페이지는 모든 사용자 허용
+            // 폼 로그인 설정
+            .formLogin(form -> form
+                    .loginPage("/admin/login") // 로그인 페이지
+                    .successHandler(successHandler) // 로그인 성공 핸들러
+                    ) // 로그인 페이지는 모든 사용자 허용
 
             // 세션 설정
             .sessionManagement(session -> session
