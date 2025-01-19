@@ -2,6 +2,8 @@ package minskim2.JHP_World.domain.assignment.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
+import minskim2.JHP_World.domain.assignment.dto.AssignmentReq;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.global.entity.BaseEntity;
 
@@ -26,4 +28,10 @@ public class Assignment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_id", nullable = false)
     private Lecture lecture;
+
+
+    public void update(AssignmentReq.Update assignmentDto) {
+        this.title = assignmentDto.title();
+        this.body = assignmentDto.body();
+    }
 }

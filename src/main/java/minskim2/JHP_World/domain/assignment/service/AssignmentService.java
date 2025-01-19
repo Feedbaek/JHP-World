@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentQ;
+import minskim2.JHP_World.domain.assignment.dto.AssignmentReq;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
 import minskim2.JHP_World.domain.assignment.repository.AssignmentQueryRepository;
 import minskim2.JHP_World.domain.assignment.repository.AssignmentRepository;
@@ -47,17 +48,29 @@ public class AssignmentService {
     /**
      * Assignment 저장 메소드
      * */
-    public Assignment createAssignment(AssignmentDto assignmentDto) {
-        // 해당 강의가 존재하지 않으면 예외 발생
-        Lecture lecture = lectureRepository.findById(assignmentDto.getLectureId()).orElseThrow(()
-                -> new IllegalArgumentException("해당 강의가 존재하지 않습니다."));
-        // Assignment 생성
-        Assignment assignment = Assignment.builder()
-                .title(assignmentDto.getTitle())
-                .body(assignmentDto.getBody())
+    @Transactional
+    public Long createAssignment(AssignmentReq.Create assignmentDto) {
+
+        Lecture lecture = Lecture.ById(assignmentDto.lectureId());
+
+        return assignmentRepository.save(Assignment.builder()
+                .title(assignmentDto.title())
+                .body(assignmentDto.body())
                 .lecture(lecture)
-                .build();
-        return assignmentRepository.save(assignment);
+                .build()).getId();
+    }
+
+    /**
+     * Assignment 수정 메소드
+     * */
+    @Transactional
+    public Long updateAssignment(AssignmentReq.Update assignmentDto) {
+        Assignment assignment = assignmentRepository.findById(assignmentDto.id()).orElseThrow(()
+                -> new IllegalArgumentException("해당 과제가 존재하지 않습니다."));
+
+        assignment.update(assignmentDto);
+
+        return assignment.getId();
     }
 
     /**
@@ -98,5 +111,14 @@ public class AssignmentService {
 
         int pageNumber = page - 1;
         return assignmentQueryRepository.findListByLectureId(lectureId, pageNumber);
+    }
+
+    /**
+     * Assignment 삭제 메소드
+     * */
+    public Long deleteAssignment(AssignmentReq.Delete req) {
+
+        assignmentRepository.deleteById(req.id());
+        return req.id();
     }
 }
