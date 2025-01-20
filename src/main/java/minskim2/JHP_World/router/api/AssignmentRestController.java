@@ -1,7 +1,6 @@
 package minskim2.JHP_World.router.api;
 
 import lombok.RequiredArgsConstructor;
-import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentReq;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
 import org.springframework.validation.annotation.Validated;
