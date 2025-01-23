@@ -10,6 +10,7 @@ import minskim2.JHP_World.domain.solution.entity.Solution;
 import minskim2.JHP_World.domain.solution.repository.SolutionRepository;
 import minskim2.JHP_World.domain.test_case.entity.TestCase;
 import minskim2.JHP_World.domain.test_case.repository.TestCaseRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,8 @@ public class GradeService {
     private final TestCaseRepository testCaseRepository;
     private final SolutionRepository solutionRepository;
 
+    private final RabbitTemplate rabbitTemplate;
+
 
     /**
      * 과제 테스트 실행
@@ -50,18 +53,20 @@ public class GradeService {
         // validateRequest(gradeRequest);\
 
         // Test Case와 Solution 조회
-        TestCase testCase = testCaseRepository.findById(gradeRequest.getTestCaseId()).orElseThrow();
-        Solution solution = solutionRepository.findByIdAndMemberId(gradeRequest.getSolutionId(), memberId).orElseThrow();
+//        TestCase testCase = testCaseRepository.findById(gradeRequest.getTestCaseId()).orElseThrow();
+//        Solution solution = solutionRepository.findByIdAndMemberId(gradeRequest.getSolutionId(), memberId).orElseThrow();
 
         // TODO: 컴파일 및 실행 결과 로직 분리 및 수정
         // 컴파일 명령어 실행
-        run(COMPILE_COMMAND, "2s", solution.getSourceCode());
+//        run(COMPILE_COMMAND, "2s", solution.getSourceCode());
 
         // 실행 명령어 실행
-        String executeResult = run(EXECUTE_COMMAND, "1s", testCase.getInput());
+//        String executeResult = run(EXECUTE_COMMAND, "1s", testCase.getInput());
+        rabbitTemplate.convertAndSend("jhp-exchange", "grading", "Hello, RabbitMQ!");
 
         // 결과 비교 후 저장 및 응답 반환
-        return saveGradeAndGetResponse(testCase, solution, executeResult);
+//        return saveGradeAndGetResponse(testCase, solution, "SUCCESS");
+        return null;
     }
 
 

@@ -29,14 +29,12 @@ public class SecurityConfig {
     private final SuccessHandler successHandler;
     private final FailureHandler failureHandler;
 
-    private final VisitorLogService visitorLogService;
-
     // GET 메소드 허용 경로
     private final String[] GET_LIST = {
         // 인덱스 페이지
         "/",
         // 소셜 로그인 페이지
-        "/login",
+        "/login/**",
         // 정적 리소스
         "/css/**",
         "/js/**",

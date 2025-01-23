@@ -23,7 +23,7 @@ public class GradeRestController {
         return gradeService.solutionGrade(oAuth2User.getMemberId(), gradeRequest);
     }
 
-    @PostMapping("/test")
+    @GetMapping("/test")
     public GradeResponse testGrade2() {
         return gradeService.solutionGrade(1L, new GradeRequest());
     }
