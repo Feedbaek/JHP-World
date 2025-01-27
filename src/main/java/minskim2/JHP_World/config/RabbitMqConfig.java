@@ -50,7 +50,6 @@ public class RabbitMqConfig {
     /**
      * 직렬화(메세지를 JSON 으로 변환하는 Message Converter)
      */
-    @Bean
     public MessageConverter jackson2JsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }

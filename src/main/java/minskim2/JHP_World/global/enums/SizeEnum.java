@@ -9,6 +9,7 @@ public enum SizeEnum {
 
     ASSIGNMENT_LIST(9),
     POST_LIST_DEFAULT(9),
+    TEST_CASE_LIST(10),
 
     DEFAULT_PREVIEW(3),
     POST_LIST_PREVIEW(5),

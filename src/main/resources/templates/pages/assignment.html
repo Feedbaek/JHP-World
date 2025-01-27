@@ -5,6 +5,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/defaultLayout}"
       layout:fragment="Content"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
     <title th:text="${title}"></title>
@@ -103,6 +104,10 @@
     </style>
 </head>
 <body>
+
+<div sec:authorize="isAuthenticated()" class="toggle-button">
+    <a th:href="'/assignment/submit?assignmentId=' + ${assignment.id}" th:text="'테스트 하기'"></a>
+</div>
 
 <div class="container">
     <h1 th:text="${assignment.title}"></h1>

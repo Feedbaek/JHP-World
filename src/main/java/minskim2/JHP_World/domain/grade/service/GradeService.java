@@ -10,6 +10,7 @@ import minskim2.JHP_World.domain.solution.entity.Solution;
 import minskim2.JHP_World.domain.solution.repository.SolutionRepository;
 import minskim2.JHP_World.domain.test_case.entity.TestCase;
 import minskim2.JHP_World.domain.test_case.repository.TestCaseRepository;
+import minskim2.JHP_World.router.api.GradeRestController;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Log4j2(topic = "GradeService")
@@ -62,10 +64,25 @@ public class GradeService {
 
         // 실행 명령어 실행
 //        String executeResult = run(EXECUTE_COMMAND, "1s", testCase.getInput());
-        rabbitTemplate.convertAndSend("jhp-exchange", "grading", "Hello, RabbitMQ!");
+//        rabbitTemplate.convertAndSend("jhp-exchange", "grading",
+//                "#include<iostream>\n" +
+//                "using namespace std;\n" +
+//                "int main() {\n" +
+//                "    int a, b;\n" +
+//                "    cin >> a >> b;\n" +
+//                "    cout << a + b;\n" +
+//                "    return 0;\n" +
+//                "}");
+        rabbitTemplate.convertAndSend("jhp-exchange", "grading", gradeRequest);
 
         // 결과 비교 후 저장 및 응답 반환
 //        return saveGradeAndGetResponse(testCase, solution, "SUCCESS");
+        return null;
+    }
+
+    @Transactional
+    public GradeResponse solutionGrade(Long memberId, GradeRequest.Test req) {
+        rabbitTemplate.convertAndSend("jhp-exchange", "grading", req.code());
         return null;
     }
 

@@ -10,4 +10,10 @@ public class GradeRequest {
     private Long solutionId;
     @NotBlank
     private Long testCaseId;
+
+    public record Test(
+            Long testCaseId,
+            String code
+    ) {
+    }
 }

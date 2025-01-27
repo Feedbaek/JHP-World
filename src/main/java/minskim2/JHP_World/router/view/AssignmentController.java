@@ -3,6 +3,7 @@ package minskim2.JHP_World.router.view;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.domain.test_case.service.TestCaseService;
 import minskim2.JHP_World.global.utils.ModelSetter;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
@@ -28,6 +29,7 @@ public class AssignmentController {
     private final AssignmentService assignmentService;
     private final LectureService lectureService;
     private final PostService postService;
+    private final TestCaseService testCaseService;
 
     /**
      * 특정 과제 내용 조회
@@ -73,5 +75,15 @@ public class AssignmentController {
         model.addAttribute("assignmentList", assignmentList);
 
         return "/pages/assignmentList";
+    }
+
+    /**
+     * 과제 제출 페이지
+     * */
+    @GetMapping("/submit")
+    public String submitAssignment(@RequestParam Long assignmentId, Model model) {
+
+        model.addAttribute("assignmentId", assignmentId);
+        return "/pages/submitAssignment";
     }
 }
