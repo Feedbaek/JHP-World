@@ -7,16 +7,29 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMqConfig {
 
+    @Value("${spring.rabbitmq.queue}")
+    private String queue;
+
+    @Value("${spring.rabbitmq.exchange}")
+    private String exchange;
+
+    @Value("${spring.rabbitmq.routing-key}")
+    private String routingKey;
+
+
+    /**
+     * 지정된 Queue 이름으로 Queue Bean 생성
+     */
     @Bean
     public Queue queue() {
-        return new Queue("jhp-queue");
+        return new Queue(queue);
     }
 
     /**
@@ -24,7 +37,7 @@ public class RabbitMqConfig {
      */
     @Bean
     public DirectExchange directExchange() {
-        return new DirectExchange("jhp-exchange");
+        return new DirectExchange(exchange);
     }
 
     /**
@@ -33,7 +46,7 @@ public class RabbitMqConfig {
      **/
     @Bean
     public Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("grading");
+        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
     }
 
     /**
@@ -43,14 +56,7 @@ public class RabbitMqConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(jackson2JsonMessageConverter());
+        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         return rabbitTemplate;
-    }
-
-    /**
-     * 직렬화(메세지를 JSON 으로 변환하는 Message Converter)
-     */
-    public MessageConverter jackson2JsonMessageConverter() {
-        return new Jackson2JsonMessageConverter();
     }
 }

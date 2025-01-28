@@ -72,6 +72,9 @@ spring:
     port: 5672
     username: guest
     password: guest
+    queue: jhp-queue
+    exchange: jhp-exchange
+    routing-key: grading
 
 
 server:
