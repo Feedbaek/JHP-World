@@ -72,9 +72,12 @@ spring:
     port: 5672
     username: guest
     password: guest
-    queue: jhp-queue
-    exchange: jhp-exchange
-    routing-key: grading
+    pub-queue: execute-queue
+    sub-queue: result-queue
+    pub-exchange: execute-exchange
+    sub-exchange: result-exchange
+    pub-routing-key: execute
+    sub-routing-key: result
 
 
 server:

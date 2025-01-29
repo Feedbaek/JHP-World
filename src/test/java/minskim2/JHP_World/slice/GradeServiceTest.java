@@ -25,7 +25,7 @@ public class GradeServiceTest {
 
 
     public GradeServiceTest() {
-        gradeService = new GradeService(null, null, null, null);
+        gradeService = new GradeService(null, null, null, null, null);
     }
 
     @Test

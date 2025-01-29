@@ -1,5 +1,7 @@
 package minskim2.JHP_World.domain.grade.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import minskim2.JHP_World.domain.grade.dto.GradeRequest;
@@ -10,8 +12,9 @@ import minskim2.JHP_World.domain.solution.entity.Solution;
 import minskim2.JHP_World.domain.solution.repository.SolutionRepository;
 import minskim2.JHP_World.domain.test_case.entity.TestCase;
 import minskim2.JHP_World.domain.test_case.repository.TestCaseRepository;
-import minskim2.JHP_World.router.api.GradeRestController;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,18 +29,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GradeService {
 
-    private final String COMPILE_COMMAND_STR = "g++ -xc++ - -o /usr/src/app/output";
-    private final String EXECUTE_COMMAND_STR = "/usr/src/app/output";
-
-    private final ArrayList<String> COMPILE_COMMAND = new ArrayList<>(List.of(COMPILE_COMMAND_STR.split(" ")));
-    private final ArrayList<String> EXECUTE_COMMAND = new ArrayList<>(List.of(EXECUTE_COMMAND_STR.split(" ")));
-
     private final GradeRepository gradeRepository;
     private final TestCaseRepository testCaseRepository;
     private final SolutionRepository solutionRepository;
 
     private final RabbitTemplate rabbitTemplate;
+    private final ObjectMapper mapper;
 
+    @Value("${spring.rabbitmq.pub-exchange}")
+    private String pubExchange;
+    @Value("${spring.rabbitmq.pub-routing-key}")
+    private String pubRoutingKey;
+    @Value("${spring.rabbitmq.sub-queue}")
+    private String subQueue;
 
     /**
      * 과제 테스트 실행
@@ -73,7 +77,7 @@ public class GradeService {
 //                "    cout << a + b;\n" +
 //                "    return 0;\n" +
 //                "}");
-        rabbitTemplate.convertAndSend("jhp-exchange", "grading", gradeRequest);
+        rabbitTemplate.convertAndSend(pubExchange, pubRoutingKey, gradeRequest);
 
         // 결과 비교 후 저장 및 응답 반환
 //        return saveGradeAndGetResponse(testCase, solution, "SUCCESS");
@@ -82,9 +86,15 @@ public class GradeService {
 
     @Transactional
     public GradeResponse solutionGrade(Long memberId, GradeRequest.Test req) {
-        rabbitTemplate.convertAndSend("jhp-exchange", "grading", req.code());
+        rabbitTemplate.convertAndSend(pubExchange, pubRoutingKey, req.code());
         return null;
     }
+
+    @RabbitListener(queues = "${spring.rabbitmq.sub-queue}")
+    public void receiveMessage(String message) {
+        log.info("<Received message>\n{}", message);
+    }
+
 
 
     /**

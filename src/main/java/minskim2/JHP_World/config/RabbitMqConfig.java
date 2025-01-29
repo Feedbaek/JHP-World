@@ -14,30 +14,43 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMqConfig {
 
-    @Value("${spring.rabbitmq.queue}")
-    private String queue;
-
-    @Value("${spring.rabbitmq.exchange}")
-    private String exchange;
-
-    @Value("${spring.rabbitmq.routing-key}")
-    private String routingKey;
+    @Value("${spring.rabbitmq.pub-queue}")
+    private String pubQueue;
+    @Value("${spring.rabbitmq.sub-queue}")
+    private String subQueue;
+    @Value("${spring.rabbitmq.pub-exchange}")
+    private String pubExchange;
+    @Value("${spring.rabbitmq.sub-exchange}")
+    private String subExchange;
+    @Value("${spring.rabbitmq.pub-routing-key}")
+    private String pubRoutingKey;
+    @Value("${spring.rabbitmq.sub-routing-key}")
+    private String subRoutingKey;
 
 
     /**
      * 지정된 Queue 이름으로 Queue Bean 생성
      */
     @Bean
-    public Queue queue() {
-        return new Queue(queue);
+    public Queue pubQueue() {
+        return new Queue(pubQueue, true);
+    }
+
+    @Bean
+    public Queue subQueue() {
+        return new Queue(subQueue, true);
     }
 
     /**
      * 지정된 Exchange 이름으로 Direct Exchange Bean 을 생성
      */
     @Bean
-    public DirectExchange directExchange() {
-        return new DirectExchange(exchange);
+    public DirectExchange pubExchange() {
+        return new DirectExchange(pubExchange);
+    }
+    @Bean
+    public DirectExchange subExchange() {
+        return new DirectExchange(subExchange);
     }
 
     /**
@@ -45,9 +58,14 @@ public class RabbitMqConfig {
      * Exchange 에 Queue 을 등록한다고 이해하면 됨
      **/
     @Bean
-    public Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+    public Binding bindingPub(Queue pubQueue, DirectExchange pubExchange) {
+        return BindingBuilder.bind(pubQueue).to(pubExchange).with(pubRoutingKey);
     }
+    @Bean
+    public Binding bindingSub(Queue subQueue, DirectExchange subExchange) {
+        return BindingBuilder.bind(subQueue).to(subExchange).with(subRoutingKey);
+    }
+
 
     /**
      * RabbitTemplate
