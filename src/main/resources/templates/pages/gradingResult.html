@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultLayout}"
+      layout:fragment="Content">
+
+<head>
+    <title th:text="${title}"></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px 0;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .grade-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .grade-card img {
+            width: 80px;
+            height: 70px;
+            align-self: center;
+        }
+
+        .grade-content {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .grade-content h3 {
+            margin: 0;
+            color: #444;
+            font-size: 1.2rem;
+        }
+
+        .grade-content p {
+            margin: 5px 0;
+            color: #2c92ff;
+            font-size: 0.9rem;
+        }
+
+        .grade-content a {
+            text-decoration: none;
+            color: #0663c6;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .created-date {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .no-grades {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #999;
+            margin-top: 50px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+<h1>테스트 실행 결과</h1>
+<div class="container">
+    <div th:if="${gradeList.empty}" class="no-grades">
+        · · · 테스트 결과가 없습니다 · · ·
+    </div>
+    <div class="grade-card" th:each="grade : ${gradeList}">
+        <div th:if="${grade.result}" class="grade-content">
+            <p th:text="'[' + ${grade.success ? '성공' : '실패'} + '] 테스트가 완료 되었습니다.'"></p>
+            <a th:data-grade-id="${grade.id}" th:data-grade-result="${grade.result}" onclick="handleDetailsClick(this)" type="button">결과 보기</a>
+        </div>
+        <div th:if="${grade.result == null}" class="grade-content">
+            <p th:text="채점 중..."></p>
+        </div>
+        <div class="created-date" th:text="${grade.createdDate}"></div>
+    </div>
+</div>
+
+<script>
+    async function handleDetailsClick(element) {
+        const gradeId = element.getAttribute('data-grade-id');
+        const result = element.getAttribute('data-grade-result');
+
+        alert('<< 테스트 결과 >>\n\n' + result);
+    }
+</script>
+</body>
+</html>

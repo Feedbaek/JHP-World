@@ -6,6 +6,7 @@ import minskim2.JHP_World.domain.grade.entity.Grade;
 @Builder
 public record GradeDto(
         Long id,
+        Long assignmentId,
         Long solutionId,
         Long testCaseId,
         Boolean success,
@@ -14,6 +15,7 @@ public record GradeDto(
     public static GradeDto from(Grade save) {
         return GradeDto.builder()
                 .id(save.getId())
+                .assignmentId(save.getAssignment().getId())
                 .solutionId(save.getSolution().getId())
                 .testCaseId(save.getTestCase().getId())
                 .success(save.getSuccess())

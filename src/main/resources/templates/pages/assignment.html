@@ -109,6 +109,10 @@
     <a th:href="'/assignment/submit?assignmentId=' + ${assignment.id}" th:text="'테스트 하기'"></a>
 </div>
 
+<div sec:authorize="isAuthenticated()" class="toggle-button">
+    <a th:href="'/grade/result?assignmentId=' + ${assignment.id}" th:text="'테스트 결과 보기'"></a>
+</div>
+
 <div class="container">
     <h1 th:text="${assignment.title}"></h1>
     <p th:text="${assignment.body}"></p>

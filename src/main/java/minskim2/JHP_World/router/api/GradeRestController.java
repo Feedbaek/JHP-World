@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
 import minskim2.JHP_World.domain.grade.dto.GradeRequest;
-import minskim2.JHP_World.domain.grade.dto.GradeResponse;
 import minskim2.JHP_World.domain.grade.service.GradeService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +18,6 @@ public class GradeRestController {
 
 
     // 과제 테스트 실행
-    @PostMapping
-    public GradeResponse solutionGrade(@AuthenticationPrincipal CustomOAuth2User oAuth2User,
-                                       @RequestBody @Valid GradeRequest gradeRequest) {
-        return gradeService.solutionGrade(oAuth2User.getMemberId(), gradeRequest);
-    }
-
     @PostMapping("/test")
     public void testGrade(@AuthenticationPrincipal CustomOAuth2User oAuth2User,
                                     @RequestBody @Valid GradeRequest.Test requestBody) {
