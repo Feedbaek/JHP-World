@@ -1,10 +1,7 @@
 package minskim2.JHP_World.domain.test_case.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
 import minskim2.JHP_World.domain.member.entity.Member;
 import minskim2.JHP_World.global.entity.BaseEntity;
@@ -43,5 +40,11 @@ public class TestCase extends BaseEntity {
         this.input = input;
         this.output = output;
         this.description = description;
+    }
+
+    public static TestCase ById(Long id) {
+        return TestCase.builder()
+                .id(id)
+                .build();
     }
 }

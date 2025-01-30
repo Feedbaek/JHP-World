@@ -11,12 +11,12 @@ import minskim2.JHP_World.domain.grade.entity.Grade;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class GradeResponse {
 
-    private String message;
+    private Boolean success;
     private String result;
 
     public static GradeResponse from(Grade grade) {
         return GradeResponse.builder()
-                .message(grade.getMessage())
+                .success(grade.getSuccess())
                 .result(grade.getResult())
                 .build();
     }

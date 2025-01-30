@@ -1,17 +1,20 @@
 package minskim2.JHP_World.domain.grade.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import minskim2.JHP_World.domain.grade.dto.ExecuteRequest;
+import minskim2.JHP_World.domain.grade.dto.GradeDto;
 import minskim2.JHP_World.domain.grade.dto.GradeRequest;
 import minskim2.JHP_World.domain.grade.dto.GradeResponse;
 import minskim2.JHP_World.domain.grade.entity.Grade;
 import minskim2.JHP_World.domain.grade.repository.GradeRepository;
+import minskim2.JHP_World.domain.solution.dto.SolutionDto;
 import minskim2.JHP_World.domain.solution.entity.Solution;
-import minskim2.JHP_World.domain.solution.repository.SolutionRepository;
+import minskim2.JHP_World.domain.solution.service.SolutionService;
+import minskim2.JHP_World.domain.test_case.dto.TestCaseReq;
 import minskim2.JHP_World.domain.test_case.entity.TestCase;
-import minskim2.JHP_World.domain.test_case.repository.TestCaseRepository;
+import minskim2.JHP_World.domain.test_case.service.TestCaseService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,14 +30,15 @@ import java.util.Map;
 @Service
 @Log4j2(topic = "GradeService")
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GradeService {
 
     private final GradeRepository gradeRepository;
-    private final TestCaseRepository testCaseRepository;
-    private final SolutionRepository solutionRepository;
+    private final SolutionService solutionService;
 
     private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper mapper;
+    private final TestCaseService testCaseService;
 
     @Value("${spring.rabbitmq.pub-exchange}")
     private String pubExchange;
@@ -84,15 +88,76 @@ public class GradeService {
         return null;
     }
 
-    @Transactional
-    public GradeResponse solutionGrade(Long memberId, GradeRequest.Test req) {
-        rabbitTemplate.convertAndSend(pubExchange, pubRoutingKey, req.code());
-        return null;
+    /**
+     * 과제 테스트 결과 조회
+     * */
+    public GradeDto findById(Long id) {
+        return GradeDto.from(gradeRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 테스트 결과가 존재하지 않습니다.")
+        ));
     }
 
+
+    @Transactional
+    public GradeDto save(Long solutionId, Long testCaseId) {
+        Solution solution = Solution.ById(solutionId);
+        TestCase testCase = TestCase.ById(testCaseId);
+
+        Grade grade = Grade.builder()
+                .solution(solution)
+                .testCase(testCase)
+                .build();
+
+        return GradeDto.from(gradeRepository.save(grade));
+    }
+
+    /**
+     * 과제 테스트 결과 업데이트
+     * */
+    @Transactional
+    public void update(Long id, Boolean success, String result) {
+
+        Grade grade = gradeRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 테스트 결과가 존재하지 않습니다.")
+        );
+        grade.update(success, result);
+
+        gradeRepository.save(grade);
+    }
+
+    /**
+     * 과제 테스트 실행
+     * RabbitMQ에 메시지 전송
+     * */
+    @Transactional
+    public void solutionGrade(Long memberId, GradeRequest.Test req) {
+
+        // Solution 생성
+        SolutionDto solutionDto = solutionService.save(memberId, req.assignmentId(), req.code());
+        // Grade 생성
+        GradeDto gradeDto = save(solutionDto.id(), req.testCaseId());
+        // Test Case 조회
+        TestCaseReq.Get testCase = testCaseService.findById(req.testCaseId());
+
+        // RabbitMQ에 전송할 메시지
+        ExecuteRequest.PubMessage pubMessage = ExecuteRequest.PubMessage.builder()
+                .gradeId(gradeDto.id())
+                .input(testCase.input())
+                .output(testCase.output())
+                .code(req.code())
+                .build();
+
+        // RabbitMQ에 메시지 전송
+        rabbitTemplate.convertAndSend(pubExchange, pubRoutingKey, pubMessage);
+    }
+
+    @Transactional
     @RabbitListener(queues = "${spring.rabbitmq.sub-queue}")
-    public void receiveMessage(String message) {
-        log.info("<Received message>\n{}", message);
+    public void receiveMessage(ExecuteRequest.SubMessage subMessage) {
+        log.info("<Received message>\n{}", subMessage.result());
+
+        // Grade 업데이트
+        update(subMessage.gradeId(), subMessage.success(), subMessage.result());
     }
 
 
@@ -106,7 +171,7 @@ public class GradeService {
                 .testCase(testCase)
                 .solution(solution)
                 .result(executeResult)
-                .message(executeResult.equals(testCase.getOutput()) ? "SUCCESS" : "FAIL")  // 결과 비교 후 메시지 설정
+                .success(executeResult.equals(testCase.getOutput()))  // 결과 비교 후 메시지 설정
                 .build();
 
         gradeRepository.save(grade);

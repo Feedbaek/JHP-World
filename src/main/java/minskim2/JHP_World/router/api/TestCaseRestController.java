@@ -19,7 +19,7 @@ public class TestCaseRestController {
     public List<TestCaseReq.Get> getTestCases(@RequestParam Long assignmentId,
                                           @Positive @RequestParam(defaultValue = "1", required = false) int page) {
 
-//        return testCaseService.getTestCases(assignmentId, page - 1);
-        return List.of(new TestCaseReq.Get(1L, 1L, 1L, "input", "output", "description"));
+        return testCaseService.findAllByAssignmentId(assignmentId, page - 1);
+//        return List.of(new TestCaseReq.Get(1L, 1L, 1L, "input", "output", "description"));
     }
 }

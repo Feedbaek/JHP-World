@@ -14,6 +14,8 @@ import minskim2.JHP_World.domain.member.repository.MemberRepository;
 import minskim2.JHP_World.domain.member.repository.RoleRepository;
 import minskim2.JHP_World.domain.post.entity.Post;
 import minskim2.JHP_World.domain.post.repository.PostRepository;
+import minskim2.JHP_World.domain.test_case.entity.TestCase;
+import minskim2.JHP_World.domain.test_case.repository.TestCaseRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class DummyInitializer implements CommandLineRunner {
+
     private final EnvBean envBean;
     private final LectureRepository lectureRepository;
     private final AssignmentRepository assignmentRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final RoleRepository roleRepository;
+    private final TestCaseRepository testCaseRepository;
 
     /**
     * 강의 데이터 생성
@@ -194,6 +198,29 @@ public class DummyInitializer implements CommandLineRunner {
     }
 
     /**
+     * 더미 테스트 케이스 생성
+     * */
+    private void initTestCase() {
+
+        for (long i=1; i<=3; ++i) {
+            testCaseRepository.findById(i).orElseGet(() -> {
+                Member member = Member.ById(1L);
+                Assignment assignment = Assignment.ById(1L);
+
+                TestCase testCase1 = TestCase.builder()
+                        .member(member)
+                        .assignment(assignment)
+                        .input("1 2")
+                        .output("3")
+                        .description("1과 2를 더하는 테스트.")
+                        .build();
+
+                return testCaseRepository.save(testCase1);
+            });
+        }
+    }
+
+    /**
      * 더미 데이터 생성 메소드
      * */
     @Transactional
@@ -203,6 +230,7 @@ public class DummyInitializer implements CommandLineRunner {
             initLecture();
             initAssignment();
             initPost();
+            initTestCase();
         }
     }
 }

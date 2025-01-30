@@ -74,7 +74,16 @@ public class RabbitMqConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        rabbitTemplate.setMessageConverter(converter());
         return rabbitTemplate;
+    }
+
+    /**
+     * MessageConverter
+     * RabbitTemplate 에서 사용할 MessageConverter 를 Bean 으로 등록
+     */
+    @Bean
+    public Jackson2JsonMessageConverter converter() {
+        return new Jackson2JsonMessageConverter();
     }
 }

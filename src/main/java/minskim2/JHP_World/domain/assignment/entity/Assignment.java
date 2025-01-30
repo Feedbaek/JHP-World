@@ -29,6 +29,12 @@ public class Assignment extends BaseEntity {
     @JoinColumn(name = "lecture_id", nullable = false)
     private Lecture lecture;
 
+    public static Assignment ById(Long assignmentId) {
+        return Assignment.builder()
+                .id(assignmentId)
+                .build();
+    }
+
 
     public void update(AssignmentReq.Update assignmentDto) {
         this.title = assignmentDto.title();

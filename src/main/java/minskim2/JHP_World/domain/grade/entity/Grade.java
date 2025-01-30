@@ -6,6 +6,8 @@ import minskim2.JHP_World.domain.solution.entity.Solution;
 import minskim2.JHP_World.domain.test_case.entity.TestCase;
 import minskim2.JHP_World.global.entity.BaseEntity;
 
+import java.util.Map;
+
 @Getter
 @Entity
 @Table(name = "grade_history")
@@ -25,9 +27,21 @@ public class Grade extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private TestCase testCase;
 
-    @Column(name = "message", nullable = false, columnDefinition = "varchar(30)")
-    private String message;
+    @Column(name = "success", columnDefinition = "boolean")
+    private Boolean success;
 
-    @Column(name = "result", nullable = false, columnDefinition = "text")
+    @Column(name = "result", columnDefinition = "text")
     private String result;
+
+
+    public static Grade ById(Long id) {
+        return Grade.builder()
+                .id(id)
+                .build();
+    }
+
+    public void update(Boolean success, String result) {
+        this.success = success;
+        this.result = result;
+    }
 }

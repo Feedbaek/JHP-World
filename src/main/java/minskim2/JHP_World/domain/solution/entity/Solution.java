@@ -36,4 +36,10 @@ public class Solution extends BaseEntity {
         this.member = member;
         this.assignment = assignment;
     }
+
+    public static Solution ById(Long id) {
+        return Solution.builder()
+                .id(id)
+                .build();
+    }
 }

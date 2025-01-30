@@ -147,6 +147,7 @@
   }
 
   function submitCode() {
+    const assignmentId = new URLSearchParams(window.location.search).get('assignmentId');
     const testCaseId = document.getElementById('testCase').value;
     const code = document.getElementById('codeEditor').value;
 
@@ -159,6 +160,7 @@
     }
 
     const payload = {
+      assignmentId: assignmentId,
       testCaseId: testCaseId,
       code: code
     };
