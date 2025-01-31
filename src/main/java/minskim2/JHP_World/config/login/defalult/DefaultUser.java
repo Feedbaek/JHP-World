@@ -19,7 +19,7 @@ public class DefaultUser implements UserDetails, CustomOAuth2User {
 
     @Override
     public String getOauth2Id() {
-        return "kakao:testOauth2id";
+        return "kakao:adminOauth2id";
     }
 
     @Override
@@ -34,7 +34,7 @@ public class DefaultUser implements UserDetails, CustomOAuth2User {
 
     @Override
     public String getName() {
-        return "test";
+        return this.Username;
     }
 
     @Override

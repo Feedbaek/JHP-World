@@ -1,0 +1,94 @@
+@font-face {
+    font-family: 'DungGeunMo-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/wooin21/web/fonts/etc/DungGeunMo-Regular.woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --bg-color: #f9fafb;
+    --primary-color: #1e3a8a;
+    --text-color: #374151;
+    --link-hover-color: #2563eb;
+}
+
+body {
+    font-family: 'DungGeunMo-Regular';
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.admin-dashboard {
+    width: 250px;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.admin-dashboard ul {
+    list-style: none;
+    padding: 0;
+}
+
+.admin-dashboard li {
+    margin: 15px 0;
+}
+
+.admin-dashboard .dashboard-link {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+.admin-dashboard .dashboard-link:hover {
+    background-color: var(--link-hover-color);
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #e5e7eb;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+tr:hover {
+    background-color: #e5e7eb;
+}

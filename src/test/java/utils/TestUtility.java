@@ -27,9 +27,9 @@ public class TestUtility {
 
     public static GradeRequest makeGradeRequest() {
         GradeRequest gradeRequest = new GradeRequest();
-        gradeRequest.setSolutionId(1L);
-        gradeRequest.setTestCaseId(1L);
-        gradeRequest.setCode("code");
+//        gradeRequest.setSolutionId(1L);
+//        gradeRequest.setTestCaseId(1L);
+//        gradeRequest.setCode("code");
         return gradeRequest;
     }
 

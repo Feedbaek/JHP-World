@@ -129,16 +129,16 @@ public class DummyInitializer implements CommandLineRunner {
     }
 
     /**
-     * 더미 Post 데이터 생성
+     * 더미 Admin, Post 데이터 생성
      * */
     private void initPost() {
         Member member = memberRepository.findById(1L).orElseGet(() -> {
-            Role userRole = roleRepository.findByName(RoleName.USER).orElseThrow();
+            Role adminRole = roleRepository.findByName(RoleName.ADMIN).orElseThrow();
             Member member1 = Member.builder()
                     .id(1L)
-                    .name("test")
-                    .oauth2id("kakao:testOauth2id")
-                    .role(userRole)
+                    .name("admin")
+                    .oauth2id("kakao:adminOauth2id")
+                    .role(adminRole)
                     .isEnabled(true)
                     .build();
             return memberRepository.save(member1);

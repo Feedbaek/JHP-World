@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 @Getter
 @ToString
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomException extends RuntimeException {
 
     private static final String EXCEPTION_INFO_BRACKET = "{ %s | %s }";
@@ -25,6 +24,12 @@ public class CustomException extends RuntimeException {
     }
     public static CustomException of(ErrorCode errorCode) {
         return new CustomException(errorCode, Map.of());
+    }
+
+    private CustomException(ErrorCode errorCode, Map<String, Object> property) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
+        this.property = property;
     }
 
     /**

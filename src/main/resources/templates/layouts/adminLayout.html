@@ -9,29 +9,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">JHP World</title>
     <!--Common JS-->
-<!--    <script th:inline="javascript" type="text/javascript" th:src="@{/lib/jquery-3.6.1.min.js}"></script>-->
-<!--    <script th:inline="javascript" type="text/javascript" th:src="@{/lib/jquery-ui.min.js}"></script>-->
 
     <!--Common CSS -->
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin_dashboard.css">
 
     <!-- CSRF Token -->
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 </head>
 
-<body class="default-layout">
-<!--Header 영역을 참조합니다.-->
-    <nav th:replace="~{fragments/header :: HeaderFragment}"></nav>
+<body class="admin-layout">
+    <!--Header 영역을 참조합니다.-->
+    <nav th:replace="~{fragments/header :: AdminHeader}"></nav>
 
     <!--Content 내용 영역을 참조합니다-->
     <th:block layout:fragment="Content"></th:block>
 
     <!--Footer 영역을 참조합니다.-->
-    <footer th:replace="~{fragments/footer :: FooterFragment}"></footer>
+    <footer th:replace="~{fragments/footer :: AdminFooter}"></footer>
 
     <!-- Bootstrap JS and its dependencies -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

@@ -3,13 +3,15 @@ package minskim2.JHP_World.router.api;
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentReq;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/assignment")
-public class AssignmentRestController {
+@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/api/admin")
+public class AdminRestController {
 
     private final AssignmentService assignmentService;
 

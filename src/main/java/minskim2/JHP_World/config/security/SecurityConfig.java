@@ -21,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableMethodSecurity() // prePostEnabled 어노테이션 활성화
+@EnableMethodSecurity // prePostEnabled 어노테이션 활성화
 public class SecurityConfig {
 
     private final EnvBean envBean;
@@ -35,6 +35,7 @@ public class SecurityConfig {
         "/",
         // 소셜 로그인 페이지
         "/login/**",
+        "/admin/login",
         // 정적 리소스
         "/css/**",
         "/js/**",
@@ -77,9 +78,10 @@ public class SecurityConfig {
             // 폼 로그인 설정
             .formLogin(form -> form
                     .loginPage("/admin/login") // 로그인 페이지
+                    .loginProcessingUrl("/admin/login") // 로그인 처리 경로
                     .successHandler(successHandler) // 로그인 성공 핸들러
-                    ) // 로그인 페이지는 모든 사용자 허용
-
+                    .failureHandler(failureHandler) // 로그인 실패 핸들러
+                    .permitAll()) // 로그인 페이지는 모든 사용자 허용
             // 세션 설정
             .sessionManagement(session -> session
                     .sessionFixation().migrateSession()

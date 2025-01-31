@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .login-container {
+          background-color: white;
+          padding: 40px;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          width: 100%;
+          max-width: 400px;
+          text-align: center;
+        }
+
+        .login-container h1 {
+          font-size: 1.75rem;
+          color: var(--primary-color);
+          margin-bottom: 20px;
+        }
+
+        .login-container form {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .login-container label {
+          text-align: left;
+          margin-bottom: 5px;
+          font-weight: bold;
+          color: #4b5563;
+        }
+
+        .login-container input {
+          padding: 10px;
+          margin-bottom: 15px;
+          border: 1px solid var(--input-border-color);
+          border-radius: 8px;
+          font-size: 1rem;
+        }
+
+        .login-container input:focus {
+          outline: none;
+          border-color: var(--primary-color);
+          box-shadow: 0 0 4px rgba(30, 58, 138, 0.4);
+        }
+
+        .login-container button {
+          background-color: var(--button-bg-color);
+          color: #7aa3ff;
+          font-weight: bold;
+          padding: 10px;
+          border: none;
+          border-radius: 8px;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+
+        .login-container button:hover {
+          background-color: var(--button-hover-bg-color);
+        }
+
+        .login-container .error-message {
+          color: red;
+          font-size: 0.875rem;
+          margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+  <h1>관리자 로그인</h1>
+
+  <!-- 로그인 폼 -->
+  <form th:action="@{/admin/login}" method="post">
+    <label for="username">아이디</label>
+    <input type="text" id="username" name="username" placeholder="아이디를 입력하세요" required />
+
+    <label for="password">비밀번호</label>
+    <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required />
+
+    <!-- 에러 메시지 표시 -->
+    <div th:if="${error}" class="error-message">
+      아이디 또는 비밀번호가 잘못되었습니다.
+    </div>
+
+    <button type="submit">로그인</button>
+  </form>
+</div>
+</body>
+</html>
