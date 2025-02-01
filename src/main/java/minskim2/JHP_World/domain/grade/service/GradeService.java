@@ -1,7 +1,6 @@
 package minskim2.JHP_World.domain.grade.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
@@ -25,12 +24,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import static minskim2.JHP_World.global.enums.SizeEnum.GRADE_LIST;
 
@@ -130,8 +123,8 @@ public class GradeService {
     /**
      * 과제별 테스트 결과 조회
      * */
-    public Page<GradeResponse> getGradeListByAssignmentId(Long assignmentId, @Positive int page) {
-        return gradeRepository.findAllByAssignmentId(assignmentId, PageRequest.of(page - 1, GRADE_LIST.getSize(), Sort.Direction.DESC, "createdDate"))
+    public Page<GradeResponse> getGradeListByAssignmentId(Long assignmentId, int page) {
+        return gradeRepository.findAllByAssignmentId(assignmentId, PageRequest.of(page, GRADE_LIST.getSize(), Sort.Direction.DESC, "createdDate"))
                 .map(GradeResponse::from);
     }
 }

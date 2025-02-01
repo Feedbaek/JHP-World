@@ -3,6 +3,7 @@ package minskim2.JHP_World.router.view;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.config.anotation.Page;
 import minskim2.JHP_World.domain.test_case.service.TestCaseService;
 import minskim2.JHP_World.global.utils.ModelSetter;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
@@ -57,7 +58,7 @@ public class AssignmentController {
      * 특정 강의의 모든 과제 조회
      * */
     @GetMapping("/list")
-    public String getAllList(@RequestParam Long lectureId, @Positive int page,
+    public String getAllList(@RequestParam Long lectureId, @Page int page,
             HttpServletRequest request, Model model) {
 
         // 해당 강의 조회

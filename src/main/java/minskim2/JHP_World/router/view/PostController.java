@@ -2,6 +2,7 @@ package minskim2.JHP_World.router.view;
 
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.config.anotation.Page;
 import minskim2.JHP_World.domain.comment.service.CommentService;
 import minskim2.JHP_World.global.utils.ModelSetter;
 import minskim2.JHP_World.domain.lecture.service.LectureService;
@@ -47,7 +48,7 @@ public class PostController {
      * lectureId에 해당하는 게시글 목록을 조회하는 메서드
      */
     @GetMapping("/list")
-    public String getPostListByLectureId(@RequestParam(required = false) Long lectureId, @Positive int page, Model model) {
+    public String getPostListByLectureId(@RequestParam(required = false) Long lectureId, @Page int page, Model model) {
 
         // lectureId에 해당하는 게시글 목록을 조회하는 서비스 호출
         var postPage = postService.findAllByLectureId(lectureId, page, POST_LIST_DEFAULT.getSize());

@@ -19,13 +19,14 @@ public class ModelSetter {
     }
     /**
      * 페이징 처리를 위한 메서드
+     * @param  currentPage 현재 페이지 0부터 시작
      * */
     public static void setPaging(Model model, Integer currentPage, Integer totalPages) {
         if (currentPage == null || totalPages == null) {
             return;
         }
         List<Integer> pageNums = new ArrayList<>();
-        int p = currentPage;
+        int p = ++currentPage;
 
         while (pageNums.size() < 5) {
             int num = p++ - 2;

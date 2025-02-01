@@ -2,6 +2,7 @@ package minskim2.JHP_World.router.view;
 
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.config.anotation.Page;
 import minskim2.JHP_World.domain.member.service.MemberService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -42,7 +43,7 @@ public class AdminController {
      * */
     @GetMapping("/member")
     @PreAuthorize("hasRole('ADMIN')")
-    public String getEditPage(Model model, @Positive int page) {
+    public String getEditPage(Model model, @Page int page) {
 
 //        model.addAttribute("memberList", memberService.getMemberList());
         return "/pages/admin/member";

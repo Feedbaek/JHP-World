@@ -1,6 +1,7 @@
 package minskim2.JHP_World.config.resolver;
 
 import jakarta.validation.constraints.Positive;
+import minskim2.JHP_World.config.anotation.Page;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -13,7 +14,7 @@ public class PageArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(Positive.class) &&
+        return parameter.hasParameterAnnotation(Page.class) &&
                 parameter.getParameterType().equals(int.class) &&
                 Objects.requireNonNull(parameter.getParameterName()).equals("page");
     }
@@ -32,6 +33,7 @@ public class PageArgumentResolver implements HandlerMethodArgumentResolver {
                 throw new IllegalArgumentException("Page parameter must be positive");
             }
         }
-        return page;
+        // 0부터 시작하는 페이지로 변환
+        return page - 1;
     }
 }

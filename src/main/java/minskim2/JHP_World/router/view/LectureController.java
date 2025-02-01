@@ -2,6 +2,7 @@ package minskim2.JHP_World.router.view;
 
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.config.anotation.Page;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
 import minskim2.JHP_World.global.utils.ModelSetter;
@@ -23,7 +24,7 @@ public class LectureController {
      * 강의별 과제 목록 조회
      * */
     @GetMapping("/{lecture_id}/assignmentList")
-    public String assignmentList(Model model, @PathVariable Long lecture_id, @Positive int page) {
+    public String assignmentList(Model model, @PathVariable Long lecture_id, @Page int page) {
 
         var assignmentPage = assignmentService.getAssignmentListByLectureId(lecture_id, page);
         var assignmentList = assignmentPage.map(AssignmentDto::from).toList();
