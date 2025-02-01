@@ -18,7 +18,7 @@
                 </a>
             </div>
 
-            <form style="float: left; padding:10px;" sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" th:action="@{/mypage}" method="get">
+            <form style="float: left; padding:10px;" sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" th:action="@{/myPage}" method="get">
                 <button class="btn btn-link text-secondary mx-1" type="submit">마이 페이지</button>
             </form>
             <form style="float: left; padding:10px;" sec:authorize="hasAuthority('ADMIN')" class="form-inline my-2 my-lg-0" th:action="@{/admin}" method="get">

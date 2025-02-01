@@ -23,8 +23,7 @@ public class LectureController {
      * 강의별 과제 목록 조회
      * */
     @GetMapping("/{lecture_id}/assignmentList")
-    public String assignmentList(Model model, @PathVariable Long lecture_id,
-                                 @Positive @RequestParam(defaultValue = "1", required = false) int page) {
+    public String assignmentList(Model model, @PathVariable Long lecture_id, @Positive int page) {
 
         var assignmentPage = assignmentService.getAssignmentListByLectureId(lecture_id, page);
         var assignmentList = assignmentPage.map(AssignmentDto::from).toList();

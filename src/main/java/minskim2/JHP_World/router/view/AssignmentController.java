@@ -57,8 +57,7 @@ public class AssignmentController {
      * 특정 강의의 모든 과제 조회
      * */
     @GetMapping("/list")
-    public String getAllList(@RequestParam Long lectureId,
-            @Positive @RequestParam(defaultValue = "1", required = false) int page,
+    public String getAllList(@RequestParam Long lectureId, @Positive int page,
             HttpServletRequest request, Model model) {
 
         // 해당 강의 조회

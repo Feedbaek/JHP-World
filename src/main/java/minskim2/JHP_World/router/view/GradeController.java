@@ -21,8 +21,7 @@ public class GradeController {
 
     // 과제 테스트 결과 조회
     @GetMapping("/result")
-    public String getGradeResult(@RequestParam Long assignmentId, Model model,
-                                 @Positive @RequestParam(defaultValue = "1", required = false) int page) {
+    public String getGradeResult(@RequestParam Long assignmentId, Model model, @Positive int page) {
 
         var gradeList = gradeService.getGradeListByAssignmentId(assignmentId, page);
         ModelSetter.init(model, "과제 테스트 결과 조회", page, gradeList.getTotalPages(), "/grade/result?assignmentId=" + assignmentId);

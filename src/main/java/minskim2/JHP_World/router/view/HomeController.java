@@ -75,8 +75,8 @@ public class HomeController {
         return "/pages/home";
     }
 
-    @GetMapping("/mypage")
-    public String mypage(Model model) {
+    @GetMapping("/myPage")
+    public String myPage(Model model) {
 
         ModelSetter.setTitle(model, "My Page");
         return "/pages/myPage";
