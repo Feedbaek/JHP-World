@@ -13,7 +13,7 @@
             background-color: #f9f9f9;
         }
 
-        .container {
+        .main-content {
             max-width: 800px;
             margin: 30px auto;
             padding: 20px;
@@ -28,29 +28,44 @@
             margin-bottom: 20px;
         }
 
-        p {
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 20px;
+        .member-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
 
-        .discussion-panel h2 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: #444;
+        .member-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .discussion-panel a {
-            color: #007BFF;
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .member-card a {
             text-decoration: none;
+            color: #007BFF;
+            font-size: 1.2rem;
             font-weight: bold;
             display: block;
             margin-bottom: 10px;
             transition: color 0.3s;
         }
 
-        .discussion-panel a:hover {
-            color: #ff6600;
+        .member-card a:hover {
+            color: #0056b3;
+        }
+
+        .member-card p {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -60,7 +75,8 @@
     <h1 th:text="${title}"></h1>
     <div class="member-list">
         <div class="member-card" th:each="member : ${memberList}">
-            <a th:href="'/member/' + ${member.id}" th:text="${member.title}"></a>
+            <a th:href="'/member/' + ${member.id}"
+               th:text="${member.id}+' '+${member.name}+' '+${member.role}"></a>
         </div>
     </div>
 </div>

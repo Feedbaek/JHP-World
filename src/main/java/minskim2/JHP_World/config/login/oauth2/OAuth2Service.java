@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.global.exception.CustomException;
 import minskim2.JHP_World.global.exception.ErrorCode;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -18,7 +17,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +49,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
         String name = profile.get("nickname").toString();
 
         Member member = findOrSaveMember(oAuth2User, "kakao", name);
-        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(member.getRole().getName().name()));
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(member.getRole().getRoleName().name()));
 
         return KakaoUser.builder()
                 .registrationId("kakao")
@@ -66,7 +64,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
     private Member findOrSaveMember(OAuth2User oAuth2User, String registrationId, String name) {
         String oauth2Id = registrationId + ":" + oAuth2User.getName();
         // 임시 유저로 역할 설정
-        Role role = roleRepository.findByName(RoleName.USER)
+        Role role = roleRepository.findByRoleName(RoleName.USER)
                 .orElseThrow(() -> CustomException.of(ErrorCode.ROLE_NOT_FOUND));
         // todo: member 엔티티 확정 후 수정
         return memberRepository.findByOauth2id(oauth2Id)

@@ -1,19 +1,22 @@
 package minskim2.JHP_World.router.view;
 
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import minskim2.JHP_World.config.anotation.Page;
+import minskim2.JHP_World.config.anotation.PageParam;
 import minskim2.JHP_World.domain.comment.service.CommentService;
+import minskim2.JHP_World.domain.lecture.dto.LectureDto;
 import minskim2.JHP_World.global.utils.ModelSetter;
 import minskim2.JHP_World.domain.lecture.service.LectureService;
 import minskim2.JHP_World.domain.post.dto.PostRes;
 import minskim2.JHP_World.domain.post.service.PostService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 import static minskim2.JHP_World.global.enums.SizeEnum.POST_LIST_DEFAULT;
 
@@ -48,12 +51,11 @@ public class PostController {
      * lectureId에 해당하는 게시글 목록을 조회하는 메서드
      */
     @GetMapping("/list")
-    public String getPostListByLectureId(@RequestParam(required = false) Long lectureId, @Page int page, Model model) {
+    public String getPostListByLectureId(@RequestParam(required = false) Long lectureId, @PageParam int page, Model model) {
 
         // lectureId에 해당하는 게시글 목록을 조회하는 서비스 호출
-        var postPage = postService.findAllByLectureId(lectureId, page, POST_LIST_DEFAULT.getSize());
-        var postList = postPage.map(PostRes.GetPreviewRes::from).toList();
-        var totalPages = postPage.getTotalPages();
+        Page<PostRes.GetPreviewRes> postList = postService.findAllByLectureId(lectureId, page, POST_LIST_DEFAULT.getSize());
+        int totalPages = postList.getTotalPages();
 
         // 조회한 게시글 목록을 Model에 담아서 postList.html로 전달
         if (lectureId != null) {
@@ -63,7 +65,7 @@ public class PostController {
         }
         model.addAttribute("postList", postList);
 
-        var lectureList = lectureService.findAll();
+        List<LectureDto> lectureList = lectureService.findAll();
         model.addAttribute("lectureList", lectureList);
 
         return "/pages/postList";

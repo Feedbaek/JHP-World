@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.domain.member.entity.Member;
 import minskim2.JHP_World.domain.post.dto.PostDto;
+import minskim2.JHP_World.domain.post.dto.PostRes;
 import minskim2.JHP_World.domain.post.entity.Post;
 import minskim2.JHP_World.domain.post.repository.PostRepository;
 import org.springframework.data.domain.Page;
@@ -65,14 +66,16 @@ public class PostService {
                 .build();
     }
 
-    public Page<Post> findAllByLectureId(Long lectureId, int page, int size) {
+    public Page<PostRes.GetPreviewRes> findAllByLectureId(Long lectureId, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate"));
 
         if (lectureId == null) {
             // lectureId가 null이면 전체 게시글 조회
-            return postRepository.findAll(pageable);
+            return postRepository.findAll(pageable)
+                    .map(GetPreviewRes::from);
         }
-        return postRepository.findAllByLectureId(lectureId, pageable);
+        return postRepository.findAllByLectureId(lectureId, pageable)
+                .map(GetPreviewRes::from);
     }
 }

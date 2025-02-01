@@ -133,7 +133,7 @@ public class DummyInitializer implements CommandLineRunner {
      * */
     private void initPost() {
         Member member = memberRepository.findById(1L).orElseGet(() -> {
-            Role adminRole = roleRepository.findByName(RoleName.ADMIN).orElseThrow();
+            Role adminRole = roleRepository.findByRoleName(RoleName.ADMIN).orElseThrow();
             Member member1 = Member.builder()
                     .id(1L)
                     .name("admin")

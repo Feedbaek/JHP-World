@@ -81,10 +81,10 @@ public class AssignmentService {
      * @param lectureId 강의 ID
      * @param page 페이지 번호.
      * */
-    public Page<Assignment> getDtoListByLectureId(Long lectureId, int page, int size) {
+    public Page<AssignmentDto> getDtoListByLectureId(Long lectureId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
 
-        return assignmentRepository.findAllByLectureId(lectureId, pageable);
+        return assignmentRepository.findAllByLectureId(lectureId, pageable).map(AssignmentDto::from);
     }
 
     /**

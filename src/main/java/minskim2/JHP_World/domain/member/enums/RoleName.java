@@ -10,5 +10,5 @@ public enum RoleName {
     ADMIN("ROLE_ADMIN"),
     ;
 
-    private final String roleName;
+    private final String value;
 }

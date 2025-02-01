@@ -20,16 +20,16 @@ public class RoleService {
     @Transactional
     public boolean isMemberAdmin(Long memberId){
         Member member = memberRepository.findById(memberId).orElseThrow();
-        return member.getRole().getName() == RoleName.ADMIN;
+        return member.getRole().getRoleName() == RoleName.ADMIN;
     }
 
     // RoleName enum에 있는 모든 RoleName으로 Role을 생성
     @PostConstruct
     protected void init() {
         for (RoleName roleName : RoleName.values()) {
-            if (!roleRepository.existsByName(roleName)) {
+            if (!roleRepository.existsByRoleName(roleName)) {
                 roleRepository.save(Role.builder()
-                        .name(roleName).build()
+                        .roleName(roleName).build()
                 );
             }
         }

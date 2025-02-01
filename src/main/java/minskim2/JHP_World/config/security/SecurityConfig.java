@@ -1,6 +1,7 @@
 package minskim2.JHP_World.config.security;
 
 import minskim2.JHP_World.config.EnvBean;
+import minskim2.JHP_World.config.login.handler.AdminSuccessHandler;
 import minskim2.JHP_World.config.login.handler.FailureHandler;
 import minskim2.JHP_World.config.login.handler.SuccessHandler;
 import minskim2.JHP_World.config.login.oauth2.OAuth2Service;
@@ -28,6 +29,7 @@ public class SecurityConfig {
     private final OAuth2Service oAuth2Service;
     private final SuccessHandler successHandler;
     private final FailureHandler failureHandler;
+    private final AdminSuccessHandler adminSuccessHandler;
 
     // GET 메소드 허용 경로
     private final String[] GET_LIST = {
@@ -79,7 +81,7 @@ public class SecurityConfig {
             .formLogin(form -> form
                     .loginPage("/admin/login") // 로그인 페이지
                     .loginProcessingUrl("/admin/login") // 로그인 처리 경로
-                    .successHandler(successHandler) // 로그인 성공 핸들러
+                    .successHandler(adminSuccessHandler) // 로그인 성공 핸들러
                     .failureHandler(failureHandler) // 로그인 실패 핸들러
                     .permitAll()) // 로그인 페이지는 모든 사용자 허용
             // 세션 설정
