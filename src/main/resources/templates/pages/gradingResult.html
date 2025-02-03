@@ -99,7 +99,7 @@
             <a th:data-grade-id="${grade.id}" th:data-grade-result="${grade.result}" onclick="handleDetailsClick(this)" type="button">결과 보기</a>
         </div>
         <div th:if="${grade.result == null}" class="grade-content">
-            <p th:text="채점 중..."></p>
+            <p th:text="'채점 중...'"></p>
         </div>
         <div class="created-date" th:text="${grade.createdDate}"></div>
     </div>

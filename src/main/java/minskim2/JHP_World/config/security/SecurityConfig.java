@@ -6,7 +6,6 @@ import minskim2.JHP_World.config.login.handler.FailureHandler;
 import minskim2.JHP_World.config.login.handler.SuccessHandler;
 import minskim2.JHP_World.config.login.oauth2.OAuth2Service;
 import lombok.RequiredArgsConstructor;
-import minskim2.JHP_World.domain.visitor_log.service.VisitorLogService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -63,6 +62,14 @@ public class SecurityConfig {
         "/error",
     };
 
+    // admin 페이지 허용 경로
+    private final String[] ADMIN_LIST = {
+        // admin 페이지
+        "/admin/**",
+        // api admin
+        "/api/admin/**"
+    };
+
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // 로그인 설정
@@ -114,6 +121,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(HttpMethod.GET, GET_LIST).permitAll() // GET 메소드 허용 경로 (GET 메소드)
                     .requestMatchers(WHITE_LIST).permitAll() // 모든 사용자 허용 경로 (모든 메소드)
+                    .requestMatchers(ADMIN_LIST).hasRole("ADMIN") // admin 페이지 허용 경로 (모든 메소드)
 //                    .anyRequest().permitAll() // 그 외 나머지 경로는 전부 모든 사용자 허용
                     .anyRequest().authenticated() // 그 외 나머지 경로는 전부 인증 필요
             );

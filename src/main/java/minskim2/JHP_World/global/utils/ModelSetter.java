@@ -33,9 +33,8 @@ public class ModelSetter {
             if (num > totalPages) {
                 break;
             }
-            pageNums.add(num);
-            if (pageNums.getLast() <= 0){
-                pageNums.removeLast();
+            if (num > 0){
+                pageNums.add(num);
             }
         }
 

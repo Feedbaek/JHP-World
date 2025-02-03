@@ -17,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static minskim2.JHP_World.global.enums.SizeEnum.ASSIGNMENT_LIST;
+
 
 @Service
 @Slf4j(topic = "AssignmentService")
@@ -85,6 +87,10 @@ public class AssignmentService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
 
         return assignmentRepository.findAllByLectureId(lectureId, pageable).map(AssignmentDto::from);
+    }
+
+    public Page<AssignmentDto> getDtoListByLectureId(Long lectureId, int page) {
+        return getDtoListByLectureId(lectureId, page,  ASSIGNMENT_LIST.getSize());
     }
 
     /**

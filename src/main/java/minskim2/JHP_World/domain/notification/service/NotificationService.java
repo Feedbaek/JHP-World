@@ -9,6 +9,8 @@ import minskim2.JHP_World.domain.notification.repository.NotificationRepository;
 import minskim2.JHP_World.domain.post.entity.Post;
 import minskim2.JHP_World.domain.post.repository.PostRepository;
 import minskim2.JHP_World.domain.visitor_log.repository.VisitorLogRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.session.Session;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static minskim2.JHP_World.domain.notification.dto.NotificationRes.*;
+import static minskim2.JHP_World.global.enums.SizeEnum.NOTIFICATION_LIST;
 
 @Service
 @RequiredArgsConstructor
@@ -105,9 +108,10 @@ public class NotificationService {
         return notificationRepository.existsByReceiverIdAndIsReadFalse(userId);
     }
 
-    public List<GetRes> getNotifications(Long userId) {
-        return notificationRepository.findUnreadNotifications(userId).stream()
-                .map(GetRes::from)
-                .toList();
+    // 읽지 않은 알림 목록 조회
+    public Page<GetRes> getNotifications(Long userId, int page) {
+        Pageable pageable = Pageable.ofSize(NOTIFICATION_LIST.getSize()).withPage(page);
+        return notificationRepository.findUnreadNotifications(userId, pageable)
+                .map(GetRes::from);
     }
 }

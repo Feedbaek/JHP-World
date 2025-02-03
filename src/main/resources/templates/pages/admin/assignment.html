@@ -8,64 +8,109 @@
     <title th:text="${title}"></title>
     <style>
         body {
+            font-family: 'Noto Sans', Arial, sans-serif;
+            background-color: #f0f8ff;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
+            color: #333;
         }
 
         .main-content {
-            max-width: 800px;
-            margin: 30px auto;
+            max-width: 900px;
+            margin: 40px auto;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
+            background-color: #ffffff;
+            border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #004b8d;
             margin-bottom: 20px;
         }
 
-        .assignment-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+        .action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ccc; /* 밑줄의 두께와 색상 설정 */
+            /*padding-bottom: 5px; !* 텍스트와 밑줄 사이의 간격 설정 *!*/
+            /* 투명도 설정 */
+            opacity: 0.8;
         }
 
-        .assignment-card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+        .subject-tabs {
+            display: flex;
+            /*gap: 0px;*/
+        }
+
+        .subject-tabs button {
+            padding: 5px 10px;
+            font-size: 1rem;
+            color: #217cff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: white;
+        }
+
+        .subject-tabs button:hover {
+            background-color: #64abff;
+            color: white;
+        }
+
+        .subject-tabs button.active {
+            background-color: #56a4ff;
+            color: white;
+        }
+
+        .toggle-button button {
+            padding: 5px 10px;
+            font-size: 1rem;
+            color: #217cff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .assignment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .assignment-table th, .assignment-table td {
+            padding: 12px 16px;
+            border: 1px solid #b3e0ff;
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .assignment-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .assignment-card a {
-            text-decoration: none;
-            color: #007BFF;
-            font-size: 1.2rem;
+        .assignment-table th {
+            background-color: #004b8d;
+            color: #ffffff;
             font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
-            transition: color 0.3s;
         }
 
-        .assignment-card a:hover {
-            color: #0056b3;
+        .assignment-table tr:nth-child(even) {
+            background-color: #e6f7ff;
         }
 
-        .assignment-card p {
-            color: #555;
-            font-size: 0.9rem;
-            line-height: 1.5;
+        .assignment-table tr:hover {
+            background-color: #d0e7ff;
+        }
+
+        .assignment-table a {
+            color: #004b8d;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .assignment-table a:hover {
+            color: #003366;
         }
     </style>
 </head>
@@ -73,15 +118,56 @@
 
 <div class="main-content">
     <h1 th:text="${title}"></h1>
-    <div class="assignment-list">
-        <div class="assignment-card" th:each="assignment : ${assignmentList}">
-            <a th:href="'/assignment/' + ${assignment.id}" th:text="${assignment.title}"></a>
+    <!-- 과목 선택과 게시물 등록 액션 바 -->
+    <div class="action-bar">
+        <!-- 과목 선택 탭 -->
+        <div class="subject-tabs">
+            <button th:each="lecture : ${lectureList}" class="lecture-click"
+                    th:data-lecture-url="'?lectureId=' + ${lecture.id}" th:text="${lecture.name}"></button>
         </div>
     </div>
+    <table class="assignment-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>제목</th>
+            <th>내용</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="assignment : ${assignmentList}" class="assignment-click" th:data-assignment-url="'/assignment/' + ${assignment.id}">
+            <td th:text="${assignment.id}"></td>
+            <td th:text="${assignment.title}"></td>
+            <td th:text="${assignment.body}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
-
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const baseUrl = '/admin/assignment';
+        const assignments = document.querySelectorAll('.assignment-table .assignment-click');
+        const lectures = document.querySelectorAll('.lecture-click');
+
+        assignments.forEach(row => {
+            row.addEventListener('click', function () {
+                const url = row.getAttribute('data-assignment-url');
+                if (url) {
+                    window.location.href = baseUrl + url;
+                }
+            });
+        });
+
+        lectures.forEach(row => {
+            row.addEventListener('click', function () {
+                const url = row.getAttribute('data-lecture-url');
+                if (url) {
+                    window.location.href = baseUrl + url;
+                }
+            });
+        });
+    });
 </script>
 
 </body>

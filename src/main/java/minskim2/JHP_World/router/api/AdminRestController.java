@@ -18,27 +18,24 @@ public class AdminRestController {
     /**
      * 과제 생성
      * */
-    @PostMapping("")
+    @PostMapping("/assignment")
     public Long createAssignment(@Validated @RequestBody AssignmentReq.Create req) {
-
         return assignmentService.createAssignment(req);
     }
 
     /**
      * 과제 수정
      * */
-    @PutMapping("")
+    @PutMapping("/assignment")
     public Long updateAssignment(@Validated @RequestBody AssignmentReq.Update req) {
-
         return assignmentService.updateAssignment(req);
     }
 
     /**
      * 과제 삭제
      * */
-    @DeleteMapping("")
+    @DeleteMapping("/assignment")
     public Long deleteAssignment(@Validated @RequestBody AssignmentReq.Delete req) {
-
         return assignmentService.deleteAssignment(req);
     }
 }

@@ -132,17 +132,7 @@ public class DummyInitializer implements CommandLineRunner {
      * 더미 Admin, Post 데이터 생성
      * */
     private void initPost() {
-        Member member = memberRepository.findById(1L).orElseGet(() -> {
-            Role adminRole = roleRepository.findByRoleName(RoleName.ADMIN).orElseThrow();
-            Member member1 = Member.builder()
-                    .id(1L)
-                    .name("admin")
-                    .oauth2id("kakao:adminOauth2id")
-                    .role(adminRole)
-                    .isEnabled(true)
-                    .build();
-            return memberRepository.save(member1);
-        });
+        Member member = memberRepository.findById(1L).orElseThrow();
         for (int i=1; i<=3; ++i) {
             Lecture lecture = lectureRepository.findByName("문제해결기법").orElseThrow();
             if (postRepository.countByLectureId(lecture.getId()) >= 3) {
@@ -221,12 +211,46 @@ public class DummyInitializer implements CommandLineRunner {
     }
 
     /**
+     * 더미 사용자 생성
+     * */
+    private void initMember() {
+        // Admin
+        memberRepository.findById(1L).orElseGet(() -> {
+            Role adminRole = roleRepository.findByRoleName(RoleName.ADMIN).orElseThrow();
+            Member member1 = Member.builder()
+                    .id(1L)
+                    .name("admin")
+                    .oauth2id("kakao:adminOauth2id")
+                    .role(adminRole)
+                    .isEnabled(true)
+                    .build();
+            return memberRepository.save(member1);
+        });
+
+        // User
+        for (long i=2; i<=5; ++i) {
+            if (memberRepository.findById(i).isEmpty()) {
+                Role userRole = roleRepository.findByRoleName(RoleName.USER).orElseThrow();
+                Member member1 = Member.builder()
+                        .id(i)
+                        .name("user" + i)
+                        .oauth2id("kakao:user" + i + "Oauth2id")
+                        .role(userRole)
+                        .isEnabled(true)
+                        .build();
+                memberRepository.save(member1);
+            }
+        }
+    }
+
+    /**
      * 더미 데이터 생성 메소드
      * */
     @Transactional
     @Override
     public void run(String... args) {
         if (envBean.getTestEnable().equals("true")) {
+            initMember();
             initLecture();
             initAssignment();
             initPost();

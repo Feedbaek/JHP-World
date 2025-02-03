@@ -29,14 +29,14 @@
                                style="text-decoration: none; font-size: 1.1em; color: gray; padding: 0 8px;"></a>
                         </li>
                         <!-- 다음 버튼 -->
-                        <li th:classappend="${currentPage == totalPages} ? 'disabled'" style="display: inline;">
+                        <li th:classappend="${currentPage >= totalPages} ? 'disabled'" style="display: inline;">
                             <a th:href="${currentUri} + '&page=' + (${currentPage + 1})"
                                aria-label="Next"
                                style="text-decoration: none; font-size: 1.1em; color: gray; padding: 0 8px;"
                                th:if="${currentPage < totalPages}">
                                 &raquo;
                             </a>
-                            <span th:if="${currentPage == totalPages}" style="font-size: 1.1em; color: lightgray; padding: 0 8px;">&raquo;</span>
+                            <span th:if="${currentPage >= totalPages}" style="font-size: 1.1em; color: lightgray; padding: 0 8px;">&raquo;</span>
                         </li>
                     </ul>
                 </nav>

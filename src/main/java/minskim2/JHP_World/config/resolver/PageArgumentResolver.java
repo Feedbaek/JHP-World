@@ -1,6 +1,7 @@
 package minskim2.JHP_World.config.resolver;
 
 import minskim2.JHP_World.config.anotation.PageParam;
+import minskim2.JHP_World.global.exception.CustomException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -8,6 +9,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.Objects;
+
+import static minskim2.JHP_World.global.exception.ErrorCode.PAGE_NOT_POSITIVE;
 
 public class PageArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -29,7 +32,7 @@ public class PageArgumentResolver implements HandlerMethodArgumentResolver {
             page = Integer.parseInt(pageParam);
             // 기본값이 1보다 작을 경우 예외 처리
             if (page <= 0) {
-                throw new IllegalArgumentException("Page parameter must be positive");
+                throw CustomException.of(PAGE_NOT_POSITIVE);
             }
         }
         // 0부터 시작하는 페이지로 변환
