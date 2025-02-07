@@ -13,7 +13,7 @@ import minskim2.JHP_World.domain.grade.repository.GradeRepository;
 import minskim2.JHP_World.domain.solution.dto.SolutionDto;
 import minskim2.JHP_World.domain.solution.entity.Solution;
 import minskim2.JHP_World.domain.solution.service.SolutionService;
-import minskim2.JHP_World.domain.test_case.dto.TestCaseReq;
+import minskim2.JHP_World.domain.test_case.dto.TestCaseRes;
 import minskim2.JHP_World.domain.test_case.entity.TestCase;
 import minskim2.JHP_World.domain.test_case.service.TestCaseService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -98,7 +98,7 @@ public class GradeService {
         // Grade 생성
         GradeDto gradeDto = save(req.assignmentId(), solutionDto.id(), req.testCaseId());
         // Test Case 조회
-        TestCaseReq.Get testCase = testCaseService.findById(req.testCaseId());
+        TestCaseRes.Get testCase = testCaseService.findById(req.testCaseId());
 
         // RabbitMQ에 전송할 메시지
         ExecuteRequest.PubMessage pubMessage = ExecuteRequest.PubMessage.builder()

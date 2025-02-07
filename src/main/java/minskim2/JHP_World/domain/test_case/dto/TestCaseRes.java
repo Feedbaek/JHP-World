@@ -2,12 +2,14 @@ package minskim2.JHP_World.domain.test_case.dto;
 
 import minskim2.JHP_World.domain.test_case.entity.TestCase;
 
-public abstract class TestCaseReq {
+public abstract class TestCaseRes {
 
     public record Get(
             Long id,
             Long assignmentId,
+            String assignment,
             Long memberId,
+            String member,
             String input,
             String output,
             String description
@@ -16,7 +18,9 @@ public abstract class TestCaseReq {
             return new Get(
                     testCase.getId(),
                     testCase.getAssignment().getId(),
+                    testCase.getAssignment().getTitle(),
                     testCase.getMember().getId(),
+                    testCase.getMember().getName(),
                     testCase.getInput(),
                     testCase.getOutput(),
                     testCase.getDescription()

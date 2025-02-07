@@ -27,44 +27,34 @@
         h1 {
             text-align: center;
             color: #004b8d;
-            margin-bottom: 20px;
+            margin-bottom: 35px;
         }
 
-        .action-bar {
+        .lecture-tabs {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ccc; /* 밑줄의 두께와 색상 설정 */
-            /*padding-bottom: 5px; !* 텍스트와 밑줄 사이의 간격 설정 *!*/
-            /* 투명도 설정 */
-            opacity: 0.8;
+            /*gap: 8px; !* 버튼 사이 간격 *!*/
+            /*margin-bottom: 0px;*/
         }
 
-        .subject-tabs {
-            display: flex;
-            /*gap: 0px;*/
-        }
-
-        .subject-tabs button {
-            padding: 5px 10px;
-            font-size: 1rem;
-            color: #217cff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .lecture-click {
+            padding: 8px 16px;
+            border-radius: 2px;
+            color: white;
+            background-color: #2563eb; /* 기본 블루 색상 */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-            background-color: white;
+            /*transition: background-color 0.3s ease-in-out;*/
         }
 
-        .subject-tabs button:hover {
-            background-color: #64abff;
-            color: white;
+        .lecture-click:hover {
+            background-color: #2563eb; /* 호버 시 더 진한 블루 */
         }
 
-        .subject-tabs button.active {
-            background-color: #56a4ff;
-            color: white;
+        .lecture-click:active {
+            background-color: #1d4ed8; /* 클릭 시 더욱 진한 블루 */
         }
 
         .toggle-button button {
@@ -80,7 +70,7 @@
         .assignment-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 0px;
         }
 
         .assignment-table th, .assignment-table td {
@@ -118,13 +108,10 @@
 
 <div class="main-content">
     <h1 th:text="${title}"></h1>
-    <!-- 과목 선택과 게시물 등록 액션 바 -->
-    <div class="action-bar">
-        <!-- 과목 선택 탭 -->
-        <div class="subject-tabs">
-            <button th:each="lecture : ${lectureList}" class="lecture-click"
-                    th:data-lecture-url="'?lectureId=' + ${lecture.id}" th:text="${lecture.name}"></button>
-        </div>
+    <!-- 과목 선택 탭 -->
+    <div class="lecture-tabs">
+        <button th:each="lecture : ${lectureList}" class="lecture-click"
+                th:data-lecture-url="'?lectureId=' + ${lecture.id}" th:text="${lecture.name}"></button>
     </div>
     <table class="assignment-table">
         <thead>
@@ -132,6 +119,7 @@
             <th>ID</th>
             <th>제목</th>
             <th>내용</th>
+            <th>테스트 케이스</th>
         </tr>
         </thead>
         <tbody>
@@ -139,6 +127,9 @@
             <td th:text="${assignment.id}"></td>
             <td th:text="${assignment.title}"></td>
             <td th:text="${assignment.body}"></td>
+            <td>
+                <a th:href="'/admin/testcase?assignmentId=' + ${assignment.id}">보기</a>
+            </td>
         </tr>
         </tbody>
     </table>

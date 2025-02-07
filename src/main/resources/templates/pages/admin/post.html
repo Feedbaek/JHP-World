@@ -8,64 +8,99 @@
     <title th:text="${title}"></title>
     <style>
         body {
+            font-family: 'Noto Sans', Arial, sans-serif;
+            background-color: #f0f8ff;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
+            color: #333;
         }
 
         .main-content {
-            max-width: 800px;
-            margin: 30px auto;
+            max-width: 900px;
+            margin: 40px auto;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
+            background-color: #ffffff;
+            border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+            color: #004b8d;
+            margin-bottom: 35px;
         }
 
-        .post-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+        .lecture-tabs {
+            display: flex;
+            /*gap: 8px; !* 버튼 사이 간격 *!*/
+            /*margin-bottom: 0px;*/
         }
 
-        .post-card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+        .lecture-click {
+            padding: 8px 16px;
+            border-radius: 2px;
+            color: white;
+            background-color: #2563eb; /* 기본 블루 색상 */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            /*transition: background-color 0.3s ease-in-out;*/
+        }
+
+        .lecture-click:hover {
+            background-color: #2563eb; /* 호버 시 더 진한 블루 */
+        }
+
+        .lecture-click:active {
+            background-color: #1d4ed8; /* 클릭 시 더욱 진한 블루 */
+        }
+
+        .toggle-button button {
+            padding: 5px 10px;
+            font-size: 1rem;
+            color: #217cff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .post-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0px;
+        }
+
+        .post-table th, .post-table td {
+            padding: 12px 16px;
+            border: 1px solid #b3e0ff;
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .post-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .post-card a {
-            text-decoration: none;
-            color: #007BFF;
-            font-size: 1.2rem;
+        .post-table th {
+            background-color: #004b8d;
+            color: #ffffff;
             font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
-            transition: color 0.3s;
         }
 
-        .post-card a:hover {
-            color: #0056b3;
+        .post-table tr:nth-child(even) {
+            background-color: #e6f7ff;
         }
 
-        .post-card p {
-            color: #555;
-            font-size: 0.9rem;
-            line-height: 1.5;
+        .post-table tr:hover {
+            background-color: #d0e7ff;
+        }
+
+        .post-table a {
+            color: #004b8d;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .post-table a:hover {
+            color: #003366;
         }
     </style>
 </head>
@@ -73,15 +108,53 @@
 
 <div class="main-content">
     <h1 th:text="${title}"></h1>
-    <div class="post-list">
-        <div class="post-card" th:each="post : ${postList}">
-            <a th:href="'/post/' + ${post.id}" th:text="${post.title}"></a>
-        </div>
+    <!-- 과목 선택 탭 -->
+    <div class="lecture-tabs">
+        <button th:each="lecture : ${lectureList}" class="lecture-click"
+                th:data-lecture-url="'?lectureId=' + ${lecture.id}" th:text="${lecture.name}"></button>
     </div>
+    <table class="post-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>제목</th>
+            <th>내용</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${postList}" class="post-click" th:data-post-url="'/post/' + ${post.id}">
+            <td th:text="${post.id}"></td>
+            <td th:text="${post.title}"></td>
+            <td th:text="${post.body}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
-
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const baseUrl = '/admin/post';
+        const posts = document.querySelectorAll('.post-table .post-click');
+        const lectures = document.querySelectorAll('.lecture-click');
+
+        posts.forEach(row => {
+            row.addEventListener('click', function () {
+                const url = row.getAttribute('data-post-url');
+                if (url) {
+                    window.location.href = baseUrl + url;
+                }
+            });
+        });
+
+        lectures.forEach(row => {
+            row.addEventListener('click', function () {
+                const url = row.getAttribute('data-lecture-url');
+                if (url) {
+                    window.location.href = baseUrl + url;
+                }
+            });
+        });
+    });
 </script>
 
 </body>
