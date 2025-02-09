@@ -187,6 +187,30 @@
         .popup .close-button:hover {
             color: red;
         }
+
+        .popup-buttons {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .popup-buttons button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .popup-buttons .btn-save {
+            background-color: #004b8d;
+            color: #fff;
+        }
+
+        .popup-buttons .btn-delete {
+            background-color: #ff4d4d;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -216,7 +240,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="assignment : ${assignmentList}" class="assignment-click" th:data-assignment-url="'/assignment/' + ${assignment.id}">
+        <tr th:each="assignment : ${assignmentList}" class="assignment-click" th:data-assignment-id="${assignment.id}">
             <td th:text="${assignment.id}"></td>
             <td th:text="${assignment.title}"></td>
             <td th:text="${assignment.body}"></td>
@@ -228,9 +252,9 @@
     </table>
 
     <!-- 팝업 오버레이 -->
-    <div class="popup-overlay" id="popupOverlay">
+    <div class="popup-overlay" id="addPopup">
         <div class="popup">
-            <button class="close-button" id="closePopupButton">&times;</button>
+            <button class="close-button" id="closeAddPopupButton">&times;</button>
             <h2>새 과제 등록</h2>
             <form id="postForm">
                 <input type="text" name="title" placeholder="제목을 입력하세요" required>
@@ -246,10 +270,129 @@
             </form>
         </div>
     </div>
+
+    <!-- 과제 관리 팝업 -->
+    <div class="popup-overlay" id="editPopup">
+        <div class="popup">
+            <button class="close-button" id="closeEditPopupButton">&times;</button>
+            <h2>과제 관리</h2>
+            <form id="assignmentForm">
+                <input type="hidden" name="assignmentId" id="popup-assignment-id">
+                <input type="text" name="title" id="popup-assignment-title" placeholder="제목을 입력하세요" required>
+                <textarea name="body" id="popup-assignment-body" placeholder="내용을 입력하세요" rows="5" required></textarea>
+            </form>
+
+            <div class="popup-buttons">
+                <button class="btn-save" id="saveAssignmentButton">저장</button>
+                <button class="btn-delete" id="deleteAssignmentButton">삭제</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
+<!-- 과제 관리 팝업 -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const closePopupButton = document.getElementById("closeEditPopupButton");
+        const popupOverlay = document.getElementById("editPopup");
+        const saveAssignmentButton = document.getElementById("saveAssignmentButton");
+        const deleteAssignmentButton = document.getElementById("deleteAssignmentButton");
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+        // 과제 클릭 시 팝업에 데이터 표시
+        document.querySelectorAll('.assignment-table .assignment-click').forEach(row => {
+            row.addEventListener('click', function () {
+                const assignmentId = row.getAttribute('data-assignment-id');
+
+                fetch(`/api/admin/assignment?assignmentId=${assignmentId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('popup-assignment-id').value = data.id;
+                        document.getElementById('popup-assignment-title').value = data.title;
+                        document.getElementById('popup-assignment-body').value = data.body;
+
+                        popupOverlay.style.display = "block";
+                    });
+            });
+        });
+
+        // 팝업 닫기
+        closePopupButton.addEventListener("click", function () {
+            popupOverlay.style.display = "none";
+        });
+
+        // 오버레이 클릭 시 닫기
+        popupOverlay.addEventListener("click", function (event) {
+            if (event.target === popupOverlay) {
+                popupOverlay.style.display = "none";
+            }
+        });
+
+        // 수정 저장 버튼 클릭 시 API 요청
+        saveAssignmentButton.addEventListener("click", async function () {
+            const assignmentData = {
+                id: document.getElementById('popup-assignment-id').value,
+                title: document.getElementById('popup-assignment-title').value,
+                body: document.getElementById('popup-assignment-body').value
+            };
+
+            try {
+                const response = await fetch('/api/admin/assignment', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                    body: JSON.stringify(assignmentData)
+                });
+
+                if (response.ok) {
+                    alert('과제가 저장되었습니다.');
+                    location.reload();
+                } else {
+                    const errorData = await response.json();
+                    alert('저장 실패: ' + errorData.message);
+                }
+            } catch (error) {
+                console.error('API 요청 중 오류 발생:', error);
+                alert('알 수 없는 오류가 발생했습니다.');
+            }
+        });
+
+        // 삭제 버튼 클릭 시 API 요청
+        deleteAssignmentButton.addEventListener("click", async function () {
+            const assignmentId = document.getElementById('popup-assignment-id').value;
+
+            if (confirm('정말로 삭제하시겠습니까?')) {
+                try {
+                    const response = await fetch(`/api/admin/assignment?assignmentId=${assignmentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            [csrfHeader]: csrfToken
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert('과제가 삭제되었습니다.');
+                        location.reload();
+                    } else {
+                        const errorData = await response.json();
+                        alert('삭제 실패: ' + errorData.message);
+                    }
+                } catch (error) {
+                    console.error('API 요청 중 오류 발생:', error);
+                    alert('알 수 없는 오류가 발생했습니다.');
+                }
+            }
+        });
+    });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
         // 과목 탭 클릭 시 URL 업데이트 및 눌림 표시
         document.querySelectorAll('.lecture-tabs button').forEach(button => {
@@ -275,27 +418,11 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const baseUrl = '/admin/assignment';
-        const assignments = document.querySelectorAll('.assignment-table .assignment-click');
-
-        assignments.forEach(row => {
-            row.addEventListener('click', function () {
-                const url = row.getAttribute('data-assignment-url');
-                if (url) {
-                    window.location.href = baseUrl + url;
-                }
-            });
-        });
-    });
-</script>
-
-<script>
     document.addEventListener("DOMContentLoaded", function () {
 
         const openPopupButton = document.getElementById("openPopupButton");
-        const closePopupButton = document.getElementById("closePopupButton");
-        const popupOverlay = document.getElementById("popupOverlay");
+        const closePopupButton = document.getElementById("closeAddPopupButton");
+        const popupOverlay = document.getElementById("addPopup");
         const postForm = document.getElementById("postForm");
 
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
@@ -310,7 +437,6 @@
         closePopupButton.addEventListener("click", function () {
             popupOverlay.style.display = "none";
         });
-
 
         // 오버레이 클릭 시 닫기
         popupOverlay.addEventListener("click", function (event) {
@@ -335,7 +461,7 @@
             };
 
             try {
-                const response = await fetch('/admin/api/post/create', {
+                const response = await fetch('/api/admin/assignment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

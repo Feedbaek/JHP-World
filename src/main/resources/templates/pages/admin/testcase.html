@@ -127,5 +127,96 @@
     });
 </script>
 
+<script>
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll('.member-table .clickable');
+        const popupOverlay = document.querySelector('.popup-overlay');
+        const popupClose = document.querySelector('.popup-close');
+        const saveButton = document.querySelector('.btn-save');
+        const deleteButton = document.querySelector('.btn-delete');
+
+        // 사용자 정보 불러오기
+        rows.forEach(row => {
+            row.addEventListener('click', function () {
+                const memberId = row.getAttribute('data-member-id');
+
+                fetch(`/api/admin/member?memberId=${memberId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('popup-member-id').textContent = data.id;
+                        document.getElementById('popup-member-name').value = data.name;
+                        document.getElementById('popup-member-role').value = data.role;
+                        document.getElementById('popup-member-status').value = data.isEnabled;
+
+                        popupOverlay.style.display = 'flex';
+                    });
+            });
+        });
+
+        // 사용자 정보 수정
+        saveButton.addEventListener('click', function () {
+            const updatedData = {
+                id: document.getElementById('popup-member-id').textContent,
+                name: document.getElementById('popup-member-name').value,
+                role: document.getElementById('popup-member-role').value,
+                isEnabled: document.getElementById('popup-member-status').value === 'true'
+            };
+
+            fetch(`/api/admin/member`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify(updatedData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('수정이 완료되었습니다.');
+                        location.reload();
+                    } else {
+                        alert('수정에 실패했습니다.');
+                    }
+                });
+        });
+
+        // 사용자 정보 삭제
+        deleteButton.addEventListener('click', function () {
+            const memberId = document.getElementById('popup-member-id').textContent;
+
+            if (confirm('정말로 삭제하시겠습니까?')) {
+                fetch(`/api/admin/member?memberId=${memberId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('삭제가 완료되었습니다.');
+                            location.reload();
+                        } else {
+                            alert('삭제에 실패했습니다.');
+                        }
+                    });
+            }
+        });
+
+        popupClose.addEventListener('click', function () {
+            popupOverlay.style.display = 'none';
+        });
+
+        popupOverlay.addEventListener('click', function (event) {
+            if (event.target === popupOverlay) {
+                popupOverlay.style.display = 'none';
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

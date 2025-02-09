@@ -37,7 +37,11 @@ public class Assignment extends BaseEntity {
 
 
     public void update(AssignmentReq.Update assignmentDto) {
-        this.title = assignmentDto.title();
-        this.body = assignmentDto.body();
+        if (assignmentDto.title() != null && !assignmentDto.title().isBlank()) {
+            this.title = assignmentDto.title();
+        }
+        if (assignmentDto.body() != null && !assignmentDto.body().isBlank()) {
+            this.body = assignmentDto.body();
+        }
     }
 }

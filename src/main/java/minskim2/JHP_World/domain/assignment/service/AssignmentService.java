@@ -74,6 +74,7 @@ public class AssignmentService {
     /**
      * Assignment 삭제 메소드
      * */
+    @Transactional
     public void deleteById(Long assignmentId) {
         assignmentRepository.deleteById(assignmentId);
     }
@@ -113,9 +114,10 @@ public class AssignmentService {
     /**
      * Assignment 삭제 메소드
      * */
-    public Long deleteAssignment(AssignmentReq.Delete req) {
-        assignmentRepository.deleteById(req.id());
-        return req.id();
+    @Transactional
+    public Long deleteAssignment(Long assignmentId) {
+        assignmentRepository.deleteById(assignmentId);
+        return assignmentId;
     }
 }
 

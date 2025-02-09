@@ -2,7 +2,9 @@ package minskim2.JHP_World.router.api;
 
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
+import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentReq;
+import minskim2.JHP_World.domain.assignment.dto.AssignmentRes;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
 import minskim2.JHP_World.domain.member.dto.MemberReq;
 import minskim2.JHP_World.domain.member.dto.MemberRes;
@@ -22,6 +24,14 @@ public class AdminRestController {
     private final MemberService memberService;
 
     /**
+     * 과제 조회
+     * */
+    @GetMapping("/assignment")
+    public AssignmentDto getAssignment(@RequestParam Long assignmentId) {
+        return assignmentService.findById(assignmentId);
+    }
+
+    /**
      * 과제 생성
      * */
     @PostMapping("/assignment")
@@ -32,7 +42,7 @@ public class AdminRestController {
     /**
      * 과제 수정
      * */
-    @PutMapping("/assignment")
+    @PatchMapping("/assignment")
     public Long updateAssignment(@Validated @RequestBody AssignmentReq.Update req) {
         return assignmentService.updateAssignment(req);
     }
@@ -41,8 +51,8 @@ public class AdminRestController {
      * 과제 삭제
      * */
     @DeleteMapping("/assignment")
-    public Long deleteAssignment(@Validated @RequestBody AssignmentReq.Delete req) {
-        return assignmentService.deleteAssignment(req);
+    public Long deleteAssignment(@RequestParam Long assignmentId) {
+        return assignmentService.deleteAssignment(assignmentId);
     }
 
     /**

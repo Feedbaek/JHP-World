@@ -181,6 +181,7 @@
         const saveButton = document.querySelector('.btn-save');
         const deleteButton = document.querySelector('.btn-delete');
 
+        // 사용자 정보 불러오기
         rows.forEach(row => {
             row.addEventListener('click', function () {
                 const memberId = row.getAttribute('data-member-id');
@@ -198,6 +199,7 @@
             });
         });
 
+        // 사용자 정보 수정
         saveButton.addEventListener('click', function () {
             const updatedData = {
                 id: document.getElementById('popup-member-id').textContent,
@@ -224,6 +226,7 @@
                 });
         });
 
+        // 사용자 정보 삭제
         deleteButton.addEventListener('click', function () {
             const memberId = document.getElementById('popup-member-id').textContent;
 
