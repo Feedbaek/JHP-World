@@ -1,8 +1,11 @@
 package minskim2.JHP_World.domain.member.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import minskim2.JHP_World.domain.member.entity.Member;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberRes {
 
     @Builder
@@ -18,7 +21,7 @@ public class MemberRes {
                 member.getId(),
                 member.getOauth2id(),
                 member.getName(),
-                member.getRole().getRoleName().getValue(),
+                member.getRole().getRoleName().name(),
                 member.isEnabled()
             );
         }

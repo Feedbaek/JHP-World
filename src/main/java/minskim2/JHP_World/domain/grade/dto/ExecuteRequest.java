@@ -1,8 +1,11 @@
 package minskim2.JHP_World.domain.grade.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
-public abstract class ExecuteRequest {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ExecuteRequest {
 
     /**
      * 과제 테스트 실행 요청 메시지

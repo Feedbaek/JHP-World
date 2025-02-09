@@ -1,6 +1,8 @@
 package minskim2.JHP_World.domain.member.entity;
 
 import lombok.*;
+import minskim2.JHP_World.domain.member.dto.MemberReq;
+import minskim2.JHP_World.domain.member.enums.RoleName;
 import minskim2.JHP_World.global.entity.BaseEntity;
 import jakarta.persistence.*;
 
@@ -34,5 +36,23 @@ public class Member extends BaseEntity {
         return Member.builder()
                 .id(id)
                 .build();
+    }
+
+    private boolean equalRole(String roleName) {
+        return this.role.getRoleName().getValue().equals(roleName);
+    }
+
+    public void update(MemberReq.AdminUpdate req) {
+        if (req.name() != null && !req.name().isBlank()) {
+            this.name = req.name();
+        }
+        if (req.role() != null && !req.role().isBlank() && !equalRole(req.role())) {
+            this.role = Role.builder()
+                    .roleName(RoleName.valueOf(req.role()))
+                    .build();
+        }
+        if (req.isEnabled() != null) {
+            this.isEnabled = req.isEnabled();
+        }
     }
 }

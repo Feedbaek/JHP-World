@@ -36,25 +36,25 @@
             /*margin-bottom: 0px;*/
         }
 
-        .lecture-click {
-            padding: 8px 16px;
-            border-radius: 2px;
-            color: white;
-            background-color: #2563eb; /* 기본 블루 색상 */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
-            font-weight: 500;
-            border: none;
+        .lecture-tabs button {
+            padding: 5px 10px;
+            font-size: 1rem;
+            color: #2563eb;
+            border: 1px solid #ccc;
+            border-radius: 5px;
             cursor: pointer;
-            /*transition: background-color 0.3s ease-in-out;*/
+            transition: background-color 0.3s, color 0.3s;
+            background-color: white;
         }
 
-        .lecture-click:hover {
-            background-color: #2563eb; /* 호버 시 더 진한 블루 */
+        .lecture-tabs button:hover {
+            background-color: #1d4ed8;
+            color: white;
         }
 
-        .lecture-click:active {
-            background-color: #1d4ed8; /* 클릭 시 더욱 진한 블루 */
+        .lecture-tabs button.active {
+            background-color: #173eaa;
+            color: white;
         }
 
         .toggle-button button {
@@ -65,6 +65,11 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+        }
+
+        .toggle-button button:hover {
+            background-color: #1d4ed8;
+            color: white;
         }
 
         .post-table {
@@ -102,16 +107,102 @@
         .post-table a:hover {
             color: #003366;
         }
+
+        .action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /*padding-bottom: 5px; !* 텍스트와 밑줄 사이의 간격 설정 *!*/
+            /* 투명도 설정 */
+            opacity: 0.8;
+        }
+
+        /* 팝업 스타일 */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 600px;
+            max-width: 90%;
+            z-index: 1001;
+        }
+
+        .popup h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .popup form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .popup input, .popup textarea {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .popup button {
+            padding: 5px 20px;
+            font-size: 1rem;
+            border: none;
+            background: none;
+            color: #007BFF;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .popup .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .popup .close-button:hover {
+            color: red;
+        }
     </style>
 </head>
 <body>
 
 <div class="main-content">
     <h1 th:text="${title}"></h1>
-    <!-- 과목 선택 탭 -->
-    <div class="lecture-tabs">
-        <button th:each="lecture : ${lectureList}" class="lecture-click"
-                th:data-lecture-url="'?lectureId=' + ${lecture.id}" th:text="${lecture.name}"></button>
+    <div class="action-bar">
+        <!-- 과목 선택 탭 -->
+        <div class="lecture-tabs">
+            <button th:each="lecture : ${lectureList}" class="lecture-click"
+                    th:data-id="${lecture.id}" th:text="${lecture.name}"></button>
+        </div>
+        <!-- 게시물 등록 버튼 -->
+        <div class="toggle-button">
+            <button id="openPopupButton">토론글 등록</button>
+        </div>
     </div>
     <table class="post-table">
         <thead>
@@ -129,13 +220,58 @@
         </tr>
         </tbody>
     </table>
+
+    <!-- 팝업 오버레이 -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <button class="close-button" id="closePopupButton">&times;</button>
+            <h2>새 과제 등록</h2>
+            <form id="postForm">
+                <input type="text" name="title" placeholder="제목을 입력하세요" required>
+                <!-- 과목 선택 드롭다운 -->
+                <label>
+                    <select name="lecture" required>
+                        <option value="" disabled selected>과목을 선택하세요</option>
+                        <option th:each="lecture : ${lectureList}" th:value="${lecture.id}" th:text="${lecture.name}"></option>
+                    </select>
+                </label>
+                <textarea name="body" placeholder="내용을 입력하세요" rows="5" required></textarea>
+                <button type="submit">등록</button>
+            </form>
+        </div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // 과목 탭 클릭 시 URL 업데이트 및 눌림 표시
+        document.querySelectorAll('.lecture-tabs button').forEach(button => {
+            // 현재 URL에서 쿼리 파라미터 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentLectureId = urlParams.get("lectureId");
+
+            const lectureId = button.getAttribute("data-id");
+
+            // 쿼리 파라미터와 버튼의 lectureId가 같으면 active 클래스 추가
+            if (lectureId === currentLectureId) {
+                button.classList.add("active");
+            }
+
+            // 버튼 클릭 시 URL 업데이트
+            button.addEventListener('click', function () {
+                const url = new URL(window.location.href);
+                url.searchParams.set('lectureId', lectureId);
+                window.location.href = url.toString();
+            });
+        });
+    });
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const baseUrl = '/admin/post';
         const posts = document.querySelectorAll('.post-table .post-click');
-        const lectures = document.querySelectorAll('.lecture-click');
 
         posts.forEach(row => {
             row.addEventListener('click', function () {
@@ -145,14 +281,75 @@
                 }
             });
         });
+    });
+</script>
 
-        lectures.forEach(row => {
-            row.addEventListener('click', function () {
-                const url = row.getAttribute('data-lecture-url');
-                if (url) {
-                    window.location.href = baseUrl + url;
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const openPopupButton = document.getElementById("openPopupButton");
+        const closePopupButton = document.getElementById("closePopupButton");
+        const popupOverlay = document.getElementById("popupOverlay");
+        const postForm = document.getElementById("postForm");
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+        // 팝업 열기
+        openPopupButton.addEventListener("click", function () {
+            popupOverlay.style.display = "block";
+        });
+
+        // 팝업 닫기
+        closePopupButton.addEventListener("click", function () {
+            popupOverlay.style.display = "none";
+        });
+
+
+        // 오버레이 클릭 시 닫기
+        popupOverlay.addEventListener("click", function (event) {
+            if (event.target === popupOverlay) {
+                popupOverlay.style.display = "none";
+            }
+        });
+
+
+        // 폼 제출 처리
+        postForm.addEventListener("submit", async function (event) {
+            event.preventDefault(); // 기본 폼 제출 막기
+
+            const title = postForm.title.value;
+            const lecture = postForm.lecture.value;
+            const body = postForm.body.value;
+
+            const postData = {
+                lectureId: lecture,
+                title: title,
+                body: body
+            };
+
+            try {
+                const response = await fetch('/admin/api/post/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                if (response.ok) {
+                    popupOverlay.style.display = "none";
+                    // 필요한 경우 게시물 목록을 갱신하거나 페이지를 리로드
+                    location.reload();
+                } else {
+                    const errorData = await response.json();
+                    alert('등록 실패: ' + errorData.message);
                 }
-            });
+            } catch (error) {
+                console.error('API 요청 중 오류 발생:', error);
+                alert('알 수 없는 오류가 발생했습니다.');
+            }
         });
     });
 </script>

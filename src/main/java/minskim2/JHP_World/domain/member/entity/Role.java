@@ -22,8 +22,8 @@ public class Role extends BaseEntity {
     private RoleName roleName;
 
     @Builder
-    public Role(Long id, RoleName roleName) {
-        this.id = id;
+    public Role(RoleName roleName) {
+        this.id = roleName.getId();
         this.roleName = roleName;
     }
 }
