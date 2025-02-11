@@ -2,6 +2,7 @@ package minskim2.JHP_World.router.view;
 
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.config.anotation.PageParam;
+import minskim2.JHP_World.domain.comment.dto.CommentRes;
 import minskim2.JHP_World.domain.comment.service.CommentService;
 import minskim2.JHP_World.domain.lecture.dto.LectureDto;
 import minskim2.JHP_World.global.utils.ModelSetter;
@@ -36,8 +37,8 @@ public class PostController {
     public String getPostById(@PathVariable Long id, Model model) {
 
         // id에 해당하는 게시글을 조회하는 서비스 호출
-        var post = postService.findById(id);
-        var commentList = commentService.getCommentList(id);
+        PostRes.GetPreviewRes post = postService.findById(id);
+        List<CommentRes.GetRes> commentList = commentService.getCommentList(id);
 
         // 조회한 게시글을 Model에 담아서 post.html로 전달
         ModelSetter.init(model, post.title(), null, null, "/post/" + id);

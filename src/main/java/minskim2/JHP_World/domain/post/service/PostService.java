@@ -50,10 +50,16 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
-    public PostDto findById(Long id) {
+//    public PostDto findById(Long id) {
+//        Post post = postRepository.findById(id).orElseThrow(()
+//                -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+//        return convertToDto(post);
+//    }
+
+    public PostRes.GetPreviewRes findById(Long id) {
         Post post = postRepository.findById(id).orElseThrow(()
                 -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-        return convertToDto(post);
+        return GetPreviewRes.from(post);
     }
 
     public PostDto convertToDto(Post post) {

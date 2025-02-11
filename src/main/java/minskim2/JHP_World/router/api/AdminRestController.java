@@ -9,6 +9,8 @@ import minskim2.JHP_World.domain.assignment.service.AssignmentService;
 import minskim2.JHP_World.domain.member.dto.MemberReq;
 import minskim2.JHP_World.domain.member.dto.MemberRes;
 import minskim2.JHP_World.domain.member.service.MemberService;
+import minskim2.JHP_World.domain.post.dto.PostRes;
+import minskim2.JHP_World.domain.post.service.PostService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +24,7 @@ public class AdminRestController {
 
     private final AssignmentService assignmentService;
     private final MemberService memberService;
+    private final PostService postService;
 
     /**
      * 과제 조회
@@ -78,4 +81,13 @@ public class AdminRestController {
     public Long deleteMember(@RequestParam Long memberId) {
         return memberService.deleteMember(memberId);
     }
+
+    /**
+     * 토론글 정보 조회
+     * */
+    @GetMapping("/post")
+    public PostRes.GetPreviewRes getPost(@RequestParam Long postId) {
+        return postService.findById(postId);
+    }
+
 }

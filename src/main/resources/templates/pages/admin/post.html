@@ -117,75 +117,69 @@
             opacity: 0.8;
         }
 
-        /* 팝업 스타일 */
+        /* Popup styles */
         .popup-overlay {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
             z-index: 1000;
         }
 
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            width: 600px;
-            max-width: 90%;
-            z-index: 1001;
+        .popup-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
-        .popup h2 {
-            margin-top: 0;
-            color: #333;
+        .popup-content h2 {
+            margin: 0 0 20px;
+            color: #004b8d;
         }
 
-        .popup form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .popup input, .popup textarea {
-            padding: 10px;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .popup button {
-            padding: 5px 20px;
-            font-size: 1rem;
-            border: none;
-            background: none;
-            color: #007BFF;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .popup .close-button {
+        .popup-close {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
+            font-size: 18px;
             cursor: pointer;
-            transition: color 0.3s;
+            color: #666;
         }
 
-        .popup .close-button:hover {
-            color: red;
+        .popup-close:hover {
+            color: #000;
+        }
+
+        .popup-buttons {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .popup-buttons button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .popup-buttons .btn-save {
+            background-color: #004b8d;
+            color: #fff;
+        }
+
+        .popup-buttons .btn-delete {
+            background-color: #ff4d4d;
+            color: #fff;
         }
     </style>
 </head>
@@ -199,10 +193,6 @@
             <button th:each="lecture : ${lectureList}" class="lecture-click"
                     th:data-id="${lecture.id}" th:text="${lecture.name}"></button>
         </div>
-        <!-- 게시물 등록 버튼 -->
-        <div class="toggle-button">
-            <button id="openPopupButton">토론글 등록</button>
-        </div>
     </div>
     <table class="post-table">
         <thead>
@@ -213,7 +203,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="post : ${postList}" class="post-click" th:data-post-url="'/post/' + ${post.id}">
+        <tr th:each="post : ${postList}" class="post-click" th:data-post-id="${post.id}">
             <td th:text="${post.id}"></td>
             <td th:text="${post.title}"></td>
             <td th:text="${post.body}"></td>
@@ -221,23 +211,20 @@
         </tbody>
     </table>
 
-    <!-- 팝업 오버레이 -->
-    <div class="popup-overlay" id="popupOverlay">
-        <div class="popup">
-            <button class="close-button" id="closePopupButton">&times;</button>
-            <h2>새 과제 등록</h2>
-            <form id="postForm">
-                <input type="text" name="title" placeholder="제목을 입력하세요" required>
-                <!-- 과목 선택 드롭다운 -->
-                <label>
-                    <select name="lecture" required>
-                        <option value="" disabled selected>과목을 선택하세요</option>
-                        <option th:each="lecture : ${lectureList}" th:value="${lecture.id}" th:text="${lecture.name}"></option>
-                    </select>
-                </label>
-                <textarea name="body" placeholder="내용을 입력하세요" rows="5" required></textarea>
-                <button type="submit">등록</button>
+    <!-- 관리 팝업 -->
+    <div class="popup-overlay">
+        <div class="popup-content">
+            <span class="popup-close">&times;</span>
+            <h2>게시물 정보</h2>
+            <form id="post-form">
+                <p><strong>ID:</strong> <span id="popup-post-id"></span></p>
+                <p><label>제목: <input type="text" id="popup-post-title" /></label></p>
+                <p>내용:</p><label><textarea id="popup-post-body" rows="10" cols="40"></textarea></label>
             </form>
+            <div class="popup-buttons">
+                <button class="btn-save">저장</button>
+                <button class="btn-delete">삭제</button>
+            </div>
         </div>
     </div>
 </div>
@@ -269,130 +256,43 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const baseUrl = '/admin/post';
-        const posts = document.querySelectorAll('.post-table .post-click');
-
-        posts.forEach(row => {
-            row.addEventListener('click', function () {
-                const url = row.getAttribute('data-post-url');
-                if (url) {
-                    window.location.href = baseUrl + url;
-                }
-            });
-        });
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-
-        const openPopupButton = document.getElementById("openPopupButton");
-        const closePopupButton = document.getElementById("closePopupButton");
-        const popupOverlay = document.getElementById("popupOverlay");
-        const postForm = document.getElementById("postForm");
-
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
-
-        // 팝업 열기
-        openPopupButton.addEventListener("click", function () {
-            popupOverlay.style.display = "block";
-        });
-
-        // 팝업 닫기
-        closePopupButton.addEventListener("click", function () {
-            popupOverlay.style.display = "none";
-        });
-
-
-        // 오버레이 클릭 시 닫기
-        popupOverlay.addEventListener("click", function (event) {
-            if (event.target === popupOverlay) {
-                popupOverlay.style.display = "none";
-            }
-        });
-
-
-        // 폼 제출 처리
-        postForm.addEventListener("submit", async function (event) {
-            event.preventDefault(); // 기본 폼 제출 막기
-
-            const title = postForm.title.value;
-            const lecture = postForm.lecture.value;
-            const body = postForm.body.value;
-
-            const postData = {
-                lectureId: lecture,
-                title: title,
-                body: body
-            };
-
-            try {
-                const response = await fetch('/admin/api/post/create', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        [csrfHeader]: csrfToken
-                    },
-                    body: JSON.stringify(postData)
-                });
-
-                if (response.ok) {
-                    popupOverlay.style.display = "none";
-                    // 필요한 경우 게시물 목록을 갱신하거나 페이지를 리로드
-                    location.reload();
-                } else {
-                    const errorData = await response.json();
-                    alert('등록 실패: ' + errorData.message);
-                }
-            } catch (error) {
-                console.error('API 요청 중 오류 발생:', error);
-                alert('알 수 없는 오류가 발생했습니다.');
-            }
-        });
-    });
-</script>
-
-<script>
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
     document.addEventListener('DOMContentLoaded', function () {
-        const rows = document.querySelectorAll('.member-table .clickable');
+        const rows = document.querySelectorAll('.post-table .post-click');
         const popupOverlay = document.querySelector('.popup-overlay');
         const popupClose = document.querySelector('.popup-close');
         const saveButton = document.querySelector('.btn-save');
         const deleteButton = document.querySelector('.btn-delete');
 
-        // 사용자 정보 불러오기
+        // 게시물 정보 불러오기
         rows.forEach(row => {
             row.addEventListener('click', function () {
-                const memberId = row.getAttribute('data-member-id');
+                const postId = row.getAttribute('data-post-id');
 
-                fetch(`/api/admin/member?memberId=${memberId}`)
+                fetch(`/api/admin/post?postId=${postId}`)
                     .then(response => response.json())
                     .then(data => {
-                        document.getElementById('popup-member-id').textContent = data.id;
-                        document.getElementById('popup-member-name').value = data.name;
-                        document.getElementById('popup-member-role').value = data.role;
-                        document.getElementById('popup-member-status').value = data.isEnabled;
+                        document.getElementById('popup-post-id').textContent = data.id;
+                        document.getElementById('popup-post-title').value = data.title;
+                        document.getElementById('popup-post-body').value = data.body;
 
                         popupOverlay.style.display = 'flex';
                     });
             });
         });
 
-        // 사용자 정보 수정
+        // 게시물 정보 수정
         saveButton.addEventListener('click', function () {
             const updatedData = {
-                id: document.getElementById('popup-member-id').textContent,
-                name: document.getElementById('popup-member-name').value,
-                role: document.getElementById('popup-member-role').value,
-                isEnabled: document.getElementById('popup-member-status').value === 'true'
+                id: document.getElementById('popup-post-id').textContent,
+                name: document.getElementById('popup-post-name').value,
+                role: document.getElementById('popup-post-role').value,
+                isEnabled: document.getElementById('popup-post-status').value === 'true'
             };
 
-            fetch(`/api/admin/member`, {
+            fetch(`/api/admin/post`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -410,12 +310,12 @@
                 });
         });
 
-        // 사용자 정보 삭제
+        // 게시물 정보 삭제
         deleteButton.addEventListener('click', function () {
-            const memberId = document.getElementById('popup-member-id').textContent;
+            const postId = document.getElementById('popup-post-id').textContent;
 
             if (confirm('정말로 삭제하시겠습니까?')) {
-                fetch(`/api/admin/member?memberId=${memberId}`, {
+                fetch(`/api/admin/post?postId=${postId}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',

@@ -278,8 +278,8 @@
             <h2>과제 관리</h2>
             <form id="assignmentForm">
                 <input type="hidden" name="assignmentId" id="popup-assignment-id">
-                <input type="text" name="title" id="popup-assignment-title" placeholder="제목을 입력하세요" required>
-                <textarea name="body" id="popup-assignment-body" placeholder="내용을 입력하세요" rows="5" required></textarea>
+                <label for="popup-assignment-title"></label><input type="text" name="title" id="popup-assignment-title" placeholder="제목을 입력하세요" required>
+                <label for="popup-assignment-body"></label><textarea name="body" id="popup-assignment-body" placeholder="내용을 입력하세요" rows="5" required></textarea>
             </form>
 
             <div class="popup-buttons">
@@ -293,6 +293,10 @@
 
 <!-- 과제 관리 팝업 -->
 <script>
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         const closePopupButton = document.getElementById("closeEditPopupButton");
         const popupOverlay = document.getElementById("editPopup");
@@ -304,7 +308,8 @@
 
         // 과제 클릭 시 팝업에 데이터 표시
         document.querySelectorAll('.assignment-table .assignment-click').forEach(row => {
-            row.addEventListener('click', function () {
+            row.addEventListener('click', async function () {
+                await sleep(100);
                 const assignmentId = row.getAttribute('data-assignment-id');
 
                 fetch(`/api/admin/assignment?assignmentId=${assignmentId}`)
