@@ -30,8 +30,4 @@ public class EnvBean {
     // test
     @Value("${test.enable}")
     private String testEnable;
-
-    // Github
-    @Value("${github.token}")
-    private String githubToken;
 }

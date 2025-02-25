@@ -1,6 +1,7 @@
 package minskim2.JHP_World.config;
 
 import lombok.RequiredArgsConstructor;
+import minskim2.JHP_World.config.properties.GithubProperties;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class BeanConfig {
 
-    private final EnvBean envBean;
+    private final GithubProperties properties;
 
     @Bean
     public RestClient restClient() {
@@ -22,6 +23,6 @@ public class BeanConfig {
 
     @Bean
     public GitHub gitHub() throws IOException {
-        return new GitHubBuilder().withOAuthToken(envBean.getGithubToken()).build();
+        return new GitHubBuilder().withOAuthToken(properties.getToken()).build();
     }
 }

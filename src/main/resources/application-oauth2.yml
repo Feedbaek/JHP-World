@@ -20,3 +20,5 @@ spring:
 
 github:
   token: ${GITHUB_TOKEN}
+  repository: ${GITHUB_REPOSITORY}
+  branch: ${GITHUB_BRANCH}
