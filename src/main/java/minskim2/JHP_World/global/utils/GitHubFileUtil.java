@@ -67,10 +67,16 @@ public class GitHubFileUtil implements FileUtil {
         String authenticityToken = getAuthenticityToken(html, "input[name=authenticity_token]");
         System.out.println("authenticity_token: " + authenticityToken);
 
+        // multipart/form-data로 전송할 form-data 생성
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        formData.add("login", properties.getId());
+        formData.add("password", properties.getPassword());
+        formData.add("authenticity_token", authenticityToken);
+
         // 로그인 요청
         ResponseEntity<Void> res = restClient.post().uri("/session")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .body("login=" + properties.getId() + "&password=" + properties.getPassword() + "&authenticity_token=" + authenticityToken)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE)
+                .body(formData)
                 .retrieve()
                 .toBodilessEntity();
 
