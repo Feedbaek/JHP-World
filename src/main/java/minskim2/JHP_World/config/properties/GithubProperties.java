@@ -11,10 +11,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "github")
 public class GithubProperties {
 
-    private String token;
-    private String repository;
-    private String branch;
-
     private String id;
     private String password;
+    private String repository;
 }

@@ -62,9 +62,6 @@ dependencies {
 	// RabbitMQ
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
-	// Github API
-	implementation 'org.kohsuke:github-api:1.327'
-
 	// HTML Parser
 	implementation 'org.jsoup:jsoup:1.18.3'
 
