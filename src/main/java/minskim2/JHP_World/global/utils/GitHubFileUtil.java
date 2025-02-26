@@ -2,6 +2,7 @@ package minskim2.JHP_World.global.utils;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.config.properties.GithubProperties;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j(topic = "GitHubFileUtil")
 @Component
 @RequiredArgsConstructor
 public class GitHubFileUtil implements FileUtil {
@@ -31,7 +33,6 @@ public class GitHubFileUtil implements FileUtil {
     private final GithubProperties properties;
 
     private final RestClient restClient = RestClient.builder()
-            .defaultHeader(HttpHeaders.ACCEPT, MediaType.TEXT_HTML_VALUE)
             .baseUrl("https://github.com")  // base URL 설정
             .build();
 
@@ -40,16 +41,16 @@ public class GitHubFileUtil implements FileUtil {
     private String hostUserSessionSameSite;
 
     private GHRepository repo;
-    private GHRef mainBranch;
-    private GHRef PRBranch;
+//    private GHRef mainBranch;
+//    private GHRef PRBranch;
 
 
     @PostConstruct
     public void init () {
         try {
             repo = gitHub.getRepository(properties.getRepository());
-            mainBranch = repo.getRef("heads/main");
-            PRBranch = repo.getRef(properties.getBranch());
+//            mainBranch = repo.getRef("heads/main");
+//            PRBranch = repo.getRef(properties.getBranch());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,28 +61,31 @@ public class GitHubFileUtil implements FileUtil {
      * */
     public void loginGitHub() {
         // HTML 파싱해서 authenticity_token 가져오기
-        String html = restClient.get().uri("/login")
+        ResponseEntity<String> respHtml = restClient.get().uri("/login")
                 .retrieve()
-                .body(String.class);
+                .toEntity(String.class);
 
+        String html = respHtml.getBody();
         String authenticityToken = getAuthenticityToken(html, "input[name=authenticity_token]");
-        System.out.println("authenticity_token: " + authenticityToken);
+        log.info("authenticity_token: {}", authenticityToken);
 
         // multipart/form-data로 전송할 form-data 생성
         MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
         formData.add("login", properties.getId());
         formData.add("password", properties.getPassword());
         formData.add("authenticity_token", authenticityToken);
+        List<String> cookies = respHtml.getHeaders().get("Set-Cookie");
 
         // 로그인 요청
         ResponseEntity<Void> res = restClient.post().uri("/session")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE)
+                .header(HttpHeaders.COOKIE, (cookies == null) ? "" : String.join("; ", cookies))
                 .body(formData)
                 .retrieve()
                 .toBodilessEntity();
 
         // 쿠키 저장
-        List<String> cookies = res.getHeaders().get("Set-Cookie");
+        cookies = res.getHeaders().get("Set-Cookie");
         if (cookies == null) {
             throw new RuntimeException("로그인에 실패했습니다.");
         }
@@ -96,6 +100,8 @@ public class GitHubFileUtil implements FileUtil {
                 hostUserSessionSameSite = cookie.substring(30, endIdx);  // __Host-user_session_same_site= 부터 ; 전까지
             }
         });
+
+        log.info("로그인 성공");
     }
 
     /**
@@ -110,7 +116,8 @@ public class GitHubFileUtil implements FileUtil {
                 .body(String.class);
 
         String authenticityToken = getAuthenticityToken(html, "input[class=js-data-upload-policy-url-csrf]");
-        System.out.println("authenticity_token: " + authenticityToken);
+
+        log.info("authenticity_token: {}", authenticityToken);
 
         // 파일 업로드 정보 가져오기
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
@@ -134,6 +141,8 @@ public class GitHubFileUtil implements FileUtil {
 
         // file url 가져오기
         Map<String, Object> asset = (Map<String, Object>) jsonMap.get("asset");
+        log.info("파일 업로드 성공");
+        log.info("jsonMap: {}", jsonMap);
         return (String) asset.get("href");
     }
 
@@ -154,6 +163,27 @@ public class GitHubFileUtil implements FileUtil {
         // 파일 업로드 실패 시 예외 발생
         if (!res.getStatusCode().is2xxSuccessful()) {
             throw new RuntimeException("파일 업로드에 실패했습니다.");
+        }
+
+        String assetUploadUrl = (String) jsonMap.get("asset_upload_url");
+        log.info("assetUploadUrl: {}", assetUploadUrl);
+        MultiValueMap<String, String> assetAuthenticityToken = new LinkedMultiValueMap<>();
+        assetAuthenticityToken.add("authenticity_token", (String) jsonMap.get("asset_upload_authenticity_token"));
+
+        ResponseEntity<Map> assetRes = restClient.put().uri(assetUploadUrl)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE)
+                .header(HttpHeaders.COOKIE,
+                        "user_session=" + userSession + "; __Host-user_session_same_site=" + hostUserSessionSameSite)
+                .body(assetAuthenticityToken)
+                .retrieve()
+                .toEntity(Map.class);
+
+        // Map<String, Object> json = assetRes.getBody();
+
+        // 에셋 등록 실패 시 예외 발생
+        if (!assetRes.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("에셋 등록에 실패했습니다.");
         }
     }
 
@@ -192,11 +222,52 @@ public class GitHubFileUtil implements FileUtil {
         return tokenElement.attr("value");
     }
 
+    /**
+     * 코멘트 작성
+     * */
+    public void writeComment(String fileUrl) {
+        // PR 페이지에서 authenticity_token 가져오기
+        ResponseEntity<String> respHtml = restClient.get().uri(repo.getHtmlUrl() + "/pull/1")
+                .header(HttpHeaders.COOKIE,
+                        "user_session=" + userSession + "; __Host-user_session_same_site=" + hostUserSessionSameSite)
+                .retrieve()
+                .toEntity(String.class);
+
+        String html = respHtml.getBody();
+        String authenticityToken = getAuthenticityToken(html, "form[id=new_comment_form] input[name=authenticity_token]");
+        log.info("authenticity_token: {}", authenticityToken);
+
+        // 코멘트 작성 정보 가져오기
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("comment[body]", "[과제](" + fileUrl + ")를 업로드했습니다.");
+        formData.add("issue", "1");
+        formData.add("authenticity_token", authenticityToken);
+        List<String> cookies = respHtml.getHeaders().get("Set-Cookie");
+
+        // 코멘트 작성 요청
+        ResponseEntity<Void> res = restClient.post().uri(repo.getHtmlUrl() + "/pull/1/comment?sticky=true")
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE)
+                .header(HttpHeaders.COOKIE,
+                        "user_session=" + userSession + "; __Host-user_session_same_site=" + hostUserSessionSameSite,
+                        (cookies == null) ? ";" : String.join("; ", cookies))
+                .body(formData)
+                .retrieve()
+                .toBodilessEntity();
+
+        // 코멘트 작성 실패 시 예외 발생
+        if (!res.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("코멘트 작성에 실패했습니다.");
+        }
+    }
+
 
     @Override
     public String upload(MultipartFile file) throws IOException {
         loginGitHub();
-        return uploadGitHub(file);
+        String fileUrl = uploadGitHub(file);
+        writeComment(fileUrl);
+        return fileUrl;
     }
 
     @Override

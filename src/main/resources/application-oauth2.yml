@@ -22,3 +22,5 @@ github:
   token: ${GITHUB_TOKEN}
   repository: ${GITHUB_REPOSITORY}
   branch: ${GITHUB_BRANCH}
+  id: ${GITHUB_ID}
+  password: ${GITHUB_PASSWORD}
