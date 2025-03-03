@@ -11,7 +11,7 @@ public interface FileUtil {
      * @param file 파일
      * @return 파일 경로
      * */
-    String upload(MultipartFile file) throws IOException;
+    String upload(MultipartFile file, String contentType) throws IOException;
 
     /**
      * 파일 삭제

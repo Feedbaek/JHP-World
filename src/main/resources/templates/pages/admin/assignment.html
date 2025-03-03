@@ -257,15 +257,17 @@
         <div class="popup">
             <button class="close-button" id="closeAddPopupButton">&times;</button>
             <h2>새 과제 등록</h2>
-            <form id="postForm">
+            <form id="postForm" enctype="multipart/form-data">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <input type="text" name="title" placeholder="제목을 입력하세요" required>
                 <!-- 과목 선택 드롭다운 -->
                 <label>
-                    <select name="lecture" required>
+                    <select name="lectureId" required>
                         <option value="" disabled selected>과목을 선택하세요</option>
                         <option th:each="lecture : ${lectureList}" th:value="${lecture.id}" th:text="${lecture.name}"></option>
                     </select>
                 </label>
+                <input type="file" id="fileInput" name="file">
                 <textarea name="body" placeholder="내용을 입력하세요" rows="5" required></textarea>
                 <button type="submit">등록</button>
             </form>
@@ -284,7 +286,7 @@
             </form>
 
             <h3>과제 파일</h3>
-            <iframe src="http://docs.google.com/gview?url=https://github.com/user-attachments/files/18808858/Rmd_beamer.pdf&embedded=true" width="100%" height="500px"></iframe>
+            <iframe id="popup-assignment-file" src="http://docs.google.com/gview?url=https://github.com/user-attachments/files/18808858/Rmd_beamer.pdf&embedded=true" width="100%" height="500px"></iframe>
             <div class="popup-buttons">
                 <button class="btn-save" id="saveAssignmentButton">저장</button>
                 <button class="btn-delete" id="deleteAssignmentButton">삭제</button>
@@ -323,6 +325,7 @@
                         document.getElementById('popup-assignment-id').value = data.id;
                         document.getElementById('popup-assignment-title').value = data.title;
                         document.getElementById('popup-assignment-body').value = data.body;
+                        document.getElementById('popup-assignment-file').src = data.fileUrl;
 
                         popupOverlay.style.display = "block";
                     });
@@ -460,24 +463,13 @@ document.addEventListener("DOMContentLoaded", function () {
         postForm.addEventListener("submit", async function (event) {
             event.preventDefault(); // 기본 폼 제출 막기
 
-            const title = postForm.title.value;
-            const lecture = postForm.lecture.value;
-            const body = postForm.body.value;
-
-            const postData = {
-                lectureId: lecture,
-                title: title,
-                body: body
-            };
-
             try {
                 const response = await fetch('/api/admin/assignment', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        [csrfHeader]: csrfToken
-                    },
-                    body: JSON.stringify(postData)
+                    // headers: {
+                    //     [csrfHeader]: csrfToken
+                    // },
+                    body: new FormData(postForm)
                 });
 
                 if (response.ok) {

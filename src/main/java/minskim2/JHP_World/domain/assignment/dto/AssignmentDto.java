@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
+import minskim2.JHP_World.domain.file.entity.File;
 
 @Getter
 @Builder
@@ -15,6 +16,11 @@ public class AssignmentDto {
     private final String title;
     private final String body;
     private final Long lectureId;
+    private final String fileUrl;
+
+    public static String convertPdfUrl(String url) {
+        return "http://docs.google.com/gview?url=" + url + "&embedded=true";
+    }
 
     public static AssignmentDto from(AssignmentQ query) {
         return AssignmentDto.builder()
@@ -31,6 +37,7 @@ public class AssignmentDto {
                 .title(entity.getTitle())
                 .body(entity.getBody())
                 .lectureId(entity.getLecture().getId())
+                .fileUrl(entity.getFile() != null ? convertPdfUrl(entity.getFile().getUrl()) : null)
                 .build();
     }
 }

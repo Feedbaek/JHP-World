@@ -85,7 +85,7 @@ public class GitHubFileUtil implements FileUtil {
     /**
      * GitHub 에 파일 업로드
      * */
-    public String uploadGitHub(MultipartFile file) throws IOException {
+    public String uploadGitHub(MultipartFile file, String contentType) throws IOException {
         // PR 페이지에서 authenticity_token 가져오기
         String html = restClient.get().uri(properties.getRepository() + "/pull/1")
                 .header(HttpHeaders.COOKIE,
@@ -100,7 +100,7 @@ public class GitHubFileUtil implements FileUtil {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("name", file.getOriginalFilename());
         formData.add("size", String.valueOf(file.getSize()));
-        formData.add("content_type", "application/pdf");
+        formData.add("content_type", contentType);
         formData.add("authenticity_token", authenticityToken);
         formData.add("repository_id", repositoryId);
 
@@ -240,9 +240,9 @@ public class GitHubFileUtil implements FileUtil {
 
 
     @Override
-    public String upload(MultipartFile file) throws IOException {
+    public String upload(MultipartFile file, String contentType) throws IOException {
         loginGitHub();
-        return uploadGitHub(file);
+        return uploadGitHub(file, contentType);
     }
 
     @Override

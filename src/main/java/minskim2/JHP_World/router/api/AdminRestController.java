@@ -38,7 +38,7 @@ public class AdminRestController {
      * 과제 생성
      * */
     @PostMapping("/assignment")
-    public Long createAssignment(@Validated @RequestBody AssignmentReq.Create req) {
+    public Long createAssignment(@Validated @ModelAttribute AssignmentReq.Create req) {
         return assignmentService.createAssignment(req);
     }
 

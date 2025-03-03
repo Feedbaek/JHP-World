@@ -2,6 +2,7 @@ package minskim2.JHP_World.domain.assignment.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 public class AssignmentReq {
 
@@ -11,7 +12,8 @@ public class AssignmentReq {
             @NotBlank
             String title,
             @NotBlank
-            String body
+            String body,
+            MultipartFile file
     ) {
     }
 

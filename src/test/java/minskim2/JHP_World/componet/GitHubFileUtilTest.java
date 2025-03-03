@@ -26,7 +26,7 @@ public class GitHubFileUtilTest {
          MultipartFile file = new MockMultipartFile("file", "test.pdf", "application/pdf", "Test Data".getBytes());
 
         // When
-         String filePath = gitHubFileUtil.upload(file);
+         String filePath = gitHubFileUtil.upload(file, "application/pdf");
 
          log.info("filePath: {}", filePath);
         // Then

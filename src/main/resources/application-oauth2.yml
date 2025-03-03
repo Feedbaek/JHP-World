@@ -19,6 +19,6 @@ spring:
             user-name-attribute: id
 
 github:
-  repository: ${GITHUB_REPOSITORY}
   id: ${GITHUB_ID}
   password: ${GITHUB_PASSWORD}
+  repository: ${GITHUB_REPOSITORY}

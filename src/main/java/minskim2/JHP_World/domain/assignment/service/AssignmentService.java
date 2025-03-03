@@ -8,8 +8,12 @@ import minskim2.JHP_World.domain.assignment.dto.AssignmentReq;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
 import minskim2.JHP_World.domain.assignment.repository.AssignmentQueryRepository;
 import minskim2.JHP_World.domain.assignment.repository.AssignmentRepository;
+import minskim2.JHP_World.domain.file.dto.FileDto;
+import minskim2.JHP_World.domain.file.entity.File;
+import minskim2.JHP_World.domain.file.service.FileService;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
-import minskim2.JHP_World.domain.lecture.repository.LectureRepository;
+import minskim2.JHP_World.global.exception.CustomException;
+import minskim2.JHP_World.global.utils.GitHubFileUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static minskim2.JHP_World.global.enums.SizeEnum.ASSIGNMENT_LIST;
+import static minskim2.JHP_World.global.exception.ErrorCode.ASSIGNMENT_FILE_UPLOAD_FAILED;
 
 
 @Service
@@ -28,7 +33,8 @@ public class AssignmentService {
 
     private final AssignmentRepository assignmentRepository;
     private final AssignmentQueryRepository assignmentQueryRepository;
-    private final LectureRepository lectureRepository;
+    private final GitHubFileUtil gitHubFileUtil;
+    private final FileService fileService;
 
     /**
      * Assignment 엔티티를 AssignmentDto로 변환하는 메소드
@@ -51,11 +57,25 @@ public class AssignmentService {
 
         Lecture lecture = Lecture.ById(assignmentDto.lectureId());
 
-        return assignmentRepository.save(Assignment.builder()
+        Assignment.AssignmentBuilder assignment = Assignment.builder()
                 .title(assignmentDto.title())
                 .body(assignmentDto.body())
-                .lecture(lecture)
-                .build()).getId();
+                .lecture(lecture);
+
+        // 파일이 존재할 경우 파일 업로드
+        if (assignmentDto.file() != null) {
+            try {
+                String filePath = gitHubFileUtil.upload(assignmentDto.file(), "application/pdf");
+                FileDto fileDto = fileService.createFile(
+                        assignmentDto.file().getOriginalFilename(), filePath, assignmentDto.file().getContentType());
+                assignment.file(File.ById(fileDto.getId()));
+            } catch (Exception e) {
+                log.error("파일 업로드 중 오류 발생: {}", e.getMessage());
+                throw CustomException.of(ASSIGNMENT_FILE_UPLOAD_FAILED);
+            }
+        }
+
+        return assignmentRepository.save(assignment.build()).getId();
     }
 
     /**
@@ -100,7 +120,7 @@ public class AssignmentService {
     public AssignmentDto findById(Long assignmentId) {
         Assignment assignment = assignmentRepository.findById(assignmentId).orElseThrow(()
                 -> new IllegalArgumentException("해당 과제가 존재하지 않습니다."));
-        return convertToDto(assignment);
+        return AssignmentDto.from(assignment);
     }
 
 
