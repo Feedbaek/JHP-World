@@ -19,7 +19,7 @@ public class AssignmentDto {
     private final String fileUrl;
 
     public static String convertPdfUrl(String url) {
-        return "http://docs.google.com/gview?url=" + url + "&embedded=true";
+        return "https://docs.google.com/gview?url=" + url + "&embedded=true";
     }
 
     public static AssignmentDto from(AssignmentQ query) {

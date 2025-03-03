@@ -29,7 +29,7 @@ public class Assignment extends BaseEntity {
     @JoinColumn(name = "lecture_id", nullable = false)
     private Lecture lecture;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "file_id")
     private File file;
 
