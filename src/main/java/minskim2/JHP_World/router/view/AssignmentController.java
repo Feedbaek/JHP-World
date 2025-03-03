@@ -2,6 +2,7 @@ package minskim2.JHP_World.router.view;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.config.anotation.PageParam;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
 import minskim2.JHP_World.domain.test_case.service.TestCaseService;
@@ -20,10 +21,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static minskim2.JHP_World.global.enums.SizeEnum.ASSIGNMENT_LIST;
-import static minskim2.JHP_World.global.enums.SizeEnum.DEFAULT_PREVIEW;
+import static minskim2.JHP_World.global.enums.SizeEnum.*;
 
 @Controller
+@Slf4j(topic = "AssignmentController")
 @RequiredArgsConstructor
 @RequestMapping("/assignment")
 public class AssignmentController {
@@ -45,7 +46,9 @@ public class AssignmentController {
         ModelSetter.setCurrentUri(model, request.getRequestURI());
 
         // 해당 강의 게시물 조회
-        Page<PostRes. GetPreviewRes> postList = postService.findAllByLectureId(assignmentId, 1, DEFAULT_PREVIEW.getSize());
+        Page<PostRes. GetPreviewRes> postList = postService.findAllByLectureId(assignmentDto.getLectureId(), 0, POST_LIST_PREVIEW.getSize());
+
+        log.info("postList: {}", postList);
 
         // model에 추가
         model.addAttribute("assignment", assignmentDto);

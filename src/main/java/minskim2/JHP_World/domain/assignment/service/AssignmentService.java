@@ -67,7 +67,7 @@ public class AssignmentService {
             try {
                 String filePath = gitHubFileUtil.upload(assignmentDto.file(), "application/pdf");
                 FileDto fileDto = fileService.createFile(
-                        assignmentDto.file().getOriginalFilename(), filePath, assignmentDto.file().getContentType());
+                        assignmentDto.file().getOriginalFilename(), filePath, "pdf");
                 assignment.file(File.ById(fileDto.getId()));
             } catch (Exception e) {
                 log.error("파일 업로드 중 오류 발생: {}", e.getMessage());

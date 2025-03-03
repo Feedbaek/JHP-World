@@ -104,6 +104,7 @@ public class GitHubFileUtil implements FileUtil {
         formData.add("authenticity_token", authenticityToken);
         formData.add("repository_id", repositoryId);
 
+        @SuppressWarnings("unchecked")
         Map<String, Object> jsonMap = (Map<String, Object>) restClient.post().uri("/upload/policies/assets")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE)
                 .header(HttpHeaders.COOKIE,
