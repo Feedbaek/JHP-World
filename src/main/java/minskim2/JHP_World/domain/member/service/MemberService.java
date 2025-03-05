@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.global.exception.CustomException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import static minskim2.JHP_World.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final RedisIndexedSessionRepository sessionRepository;
 
     // 멤버 엔티티 생성
     @Transactional
@@ -69,6 +71,11 @@ public class MemberService {
                 .orElseThrow(() -> CustomException.of(MEMBER_NOT_FOUND));
         //  사용자 정보 수정
         member.update(req);
+
+        // 멤버 세션 삭제
+        sessionRepository.findByPrincipalName(member.getName())
+                .keySet()
+                .forEach(sessionRepository::deleteById);
 
         return member.getId();
     }

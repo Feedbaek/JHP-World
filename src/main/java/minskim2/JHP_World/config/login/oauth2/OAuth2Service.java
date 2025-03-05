@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.global.exception.CustomException;
 import minskim2.JHP_World.global.exception.ErrorCode;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -33,10 +34,10 @@ public class OAuth2Service extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        return saveOrUpdate(oAuth2User, registrationId);
+        return getOAuth2User(oAuth2User, registrationId);
     }
 
-    private OAuth2User saveOrUpdate(OAuth2User oAuth2User, String registrationId) {
+    private OAuth2User getOAuth2User(OAuth2User oAuth2User, String registrationId) {
         return switch (registrationId) {  // 나중에 다른 OAuth2 공급자 추가 가능
             case "kakao" -> saveOrUpdateKakaoUser(oAuth2User);
             default -> throw new OAuth2AuthenticationException("지원하지 않는 OAuth2 공급자입니다.");
@@ -49,6 +50,10 @@ public class OAuth2Service extends DefaultOAuth2UserService {
         String name = profile.get("nickname").toString();
 
         Member member = findOrSaveMember(oAuth2User, "kakao", name);
+        // 비활성화 된 계정은 로그인 불가
+        if (!member.isEnabled()) {
+            throw new DisabledException("비활성화 된 계정입니다.");
+        }
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(member.getRole().getRoleName().name()));
 
         return KakaoUser.builder()

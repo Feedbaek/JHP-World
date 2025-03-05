@@ -11,12 +11,16 @@ import minskim2.JHP_World.domain.post.repository.PostRepository;
 import minskim2.JHP_World.domain.visitor_log.repository.VisitorLogRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.session.FlushMode;
 import org.springframework.session.Session;
+import org.springframework.session.SessionRepository;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static minskim2.JHP_World.domain.notification.dto.NotificationRes.*;
@@ -65,22 +69,19 @@ public class NotificationService {
 
         notificationRepository.save(notification);
 
-        // 세션 id 조회
-        Optional<String> sessionId = visitorLogRepository.findSessionIdByMemberId(receiver.getId());
-        // 읽지 않은 알림 여부 저장/갱신
-        sessionId.ifPresent(this::checkNotification);
+        // 세션에 읽지 않은 알림 여부 저장
+        checkNotification(receiver.getName());
     }
 
     // 세션에 읽지 않은 알림 여부 저장
-    public void checkNotification(String sessionId) {
+    public void checkNotification(String username) {
         // 특정 멤버의 세션 가져오기
-        var redisSession = sessionRepository.findById(sessionId);
+        Map<String, ? extends Session> sessions = sessionRepository.findByPrincipalName(username);
 
-        if (redisSession != null) {
-            // 세션에 읽지 않은 알림 여부 저장
-            ((Session) redisSession).setAttribute("notification", true);
-            sessionRepository.save(redisSession);
-        }
+        // 세션에 읽지 않은 알림 여부 저장
+        sessions.forEach((sessionId, session) -> {
+            session.setAttribute("notification", true);
+        });
     }
 
     /**
