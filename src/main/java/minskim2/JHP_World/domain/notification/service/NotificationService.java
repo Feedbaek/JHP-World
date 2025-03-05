@@ -11,6 +11,7 @@ import minskim2.JHP_World.domain.post.repository.PostRepository;
 import minskim2.JHP_World.domain.visitor_log.repository.VisitorLogRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.FlushMode;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
@@ -77,10 +78,13 @@ public class NotificationService {
     public void checkNotification(String username) {
         // 특정 멤버의 세션 가져오기
         Map<String, ? extends Session> sessions = sessionRepository.findByPrincipalName(username);
+        FindByIndexNameSessionRepository<? extends Session> tmp = sessionRepository;
+        SessionRepository<Session> superSessionRepository = (SessionRepository<Session>) tmp;
 
         // 세션에 읽지 않은 알림 여부 저장
         sessions.forEach((sessionId, session) -> {
             session.setAttribute("notification", true);
+            superSessionRepository.save(session);
         });
     }
 

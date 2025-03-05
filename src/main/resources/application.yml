@@ -40,7 +40,6 @@ spring:
     redis:
       namespace: jhp
       repository-type: indexed
-      flush-mode: immediate
 
   cache:
     type: redis
