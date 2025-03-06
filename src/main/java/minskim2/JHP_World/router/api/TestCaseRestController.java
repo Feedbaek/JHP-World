@@ -19,14 +19,32 @@ public class TestCaseRestController {
     private final TestCaseService testCaseService;
 
     @GetMapping("")
-    public List<TestCaseRes.Get> getTestCases(@RequestParam Long assignmentId, @PageParam int page) {
+    public List<TestCaseRes.Get> getTestCasesByAssigmentId(@RequestParam Long assignmentId, @PageParam int page) {
 
         return testCaseService.findAllByAssignmentId(assignmentId, page).toList();
+    }
+
+    @GetMapping("")
+    public TestCaseRes.Get getTestCaseById(@RequestParam Long testCaseId) {
+
+        return testCaseService.findById(testCaseId);
     }
 
     @PostMapping("")
     public TestCaseRes.Get createTestCase(@AuthenticationPrincipal CustomOAuth2User member, @RequestBody TestCaseReq.Create req) {
 
         return testCaseService.createTestCase(member.getMemberId(), req);
+    }
+
+    @PutMapping("")
+    public TestCaseRes.Get updateTestCase(@AuthenticationPrincipal CustomOAuth2User member, @RequestBody TestCaseReq.Update req) {
+
+        return testCaseService.updateTestCase(member.getMemberId(), req);
+    }
+
+    @DeleteMapping("")
+    public void deleteTestCase(@AuthenticationPrincipal CustomOAuth2User member, @RequestParam Long testCaseId) {
+
+        testCaseService.deleteTestCase(member.getMemberId(), testCaseId);
     }
 }

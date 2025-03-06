@@ -21,6 +21,9 @@ public enum ErrorCode {
     // 13000 ~ 13999: Assignment
     ASSIGNMENT_FILE_UPLOAD_FAILED(13401, "과제 파일 업로드 실패", HttpStatus.INTERNAL_SERVER_ERROR),
 
+    // 14000 ~ 14999: TestCase
+    TEST_CASE_NOT_FOUND(14404, "테스트 케이스를 찾을 수 없습니다", HttpStatus.NOT_FOUND),
+
     // 90000 ~ 99999: Common
     PAGE_NOT_POSITIVE(90400, "페이지는 1 이상이어야 합니다", HttpStatus.BAD_REQUEST);
 

@@ -9,4 +9,12 @@ public abstract class TestCaseReq {
             String description
     ) {
     }
+
+    public record Update(
+            Long testCaseId,
+            String input,
+            String output,
+            String description
+    ) {
+    }
 }
