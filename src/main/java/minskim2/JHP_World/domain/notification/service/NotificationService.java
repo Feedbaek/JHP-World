@@ -19,10 +19,7 @@ import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static minskim2.JHP_World.domain.notification.dto.NotificationRes.*;
 import static minskim2.JHP_World.global.enums.SizeEnum.NOTIFICATION_LIST;
@@ -36,7 +33,6 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
-    private final VisitorLogRepository visitorLogRepository;
     private final RedisIndexedSessionRepository sessionRepository;
 
     /**
@@ -78,7 +74,8 @@ public class NotificationService {
     public void checkNotification(String username) {
         // 특정 멤버의 세션 가져오기
         Map<String, ? extends Session> sessions = sessionRepository.findByPrincipalName(username);
-        FindByIndexNameSessionRepository<? extends Session> tmp = sessionRepository;
+        SessionRepository<? extends Session> tmp = sessionRepository;
+        @SuppressWarnings("unchecked") // 세션 타입이 Session 의 하위 클래스이므로 형변환 가능
         SessionRepository<Session> superSessionRepository = (SessionRepository<Session>) tmp;
 
         // 세션에 읽지 않은 알림 여부 저장

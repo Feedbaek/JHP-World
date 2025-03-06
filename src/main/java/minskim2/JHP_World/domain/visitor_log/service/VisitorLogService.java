@@ -5,13 +5,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
-import minskim2.JHP_World.config.login.oauth2.KakaoUser;
 import minskim2.JHP_World.domain.member.entity.Member;
 import minskim2.JHP_World.domain.visitor_log.entity.VisitorLog;
 import minskim2.JHP_World.domain.visitor_log.repository.VisitorLogRepository;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
