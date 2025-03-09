@@ -93,7 +93,7 @@
         <tbody>
         <tr th:each="testcase : ${testcaseList}" class="testcase-click" th:data-testcase-url="'/testcase/' + ${testcase.id}">
             <td th:text="${testcase.id}"></td>
-            <td th:text="${testcase.assignment()}"></td>
+            <td th:text="${testcase.assignmentTitle()}"></td>
             <td th:text="${testcase.description}"></td>
             <td th:text="${testcase.member()}"></td>
         </tr>

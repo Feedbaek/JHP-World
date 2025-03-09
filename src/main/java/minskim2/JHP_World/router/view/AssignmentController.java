@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.config.anotation.PageParam;
-import minskim2.JHP_World.domain.assignment.entity.Assignment;
+import minskim2.JHP_World.domain.test_case.dto.TestCaseRes;
 import minskim2.JHP_World.domain.test_case.service.TestCaseService;
 import minskim2.JHP_World.global.utils.ModelSetter;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
@@ -48,8 +48,6 @@ public class AssignmentController {
         // 해당 강의 게시물 조회
         Page<PostRes. GetPreviewRes> postList = postService.findAllByLectureId(assignmentDto.getLectureId(), 0, POST_LIST_PREVIEW.getSize());
 
-        log.info("postList: {}", postList);
-
         // model에 추가
         model.addAttribute("assignment", assignmentDto);
         model.addAttribute("postList", postList);
@@ -87,5 +85,23 @@ public class AssignmentController {
 
         model.addAttribute("assignmentId", assignmentId);
         return "/pages/submitAssignment";
+    }
+
+    /**
+     * 과제 id 기반으로 테스트 케이스 조회
+     * */
+    @GetMapping("/{assignmentId}/test-cases")
+    public String getTestCase(@PathVariable Long assignmentId, @PageParam int page, Model model) {
+
+        // 테스트 케이스 조회
+        Page<TestCaseRes.Get> testcaseList = testCaseService.findAllByAssignmentId(assignmentId, page);
+        int totalPages = testcaseList.getTotalPages();
+
+        // model에 추가
+        ModelSetter.init(model, "테스트 케이스 관리", page, totalPages, "/assignment/" + assignmentId + "/test-cases");
+        model.addAttribute("assignmentId", assignmentId);
+        model.addAttribute("testcaseList", testcaseList);
+
+        return "pages/testcaseList";
     }
 }

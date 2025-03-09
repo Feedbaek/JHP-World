@@ -7,7 +7,7 @@ public abstract class TestCaseRes {
     public record Get(
             Long id,
             Long assignmentId,
-            String assignment,
+            String assignmentTitle,
             Long memberId,
             String member,
             String input,

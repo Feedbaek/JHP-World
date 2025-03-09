@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static minskim2.JHP_World.global.enums.SizeEnum.ASSIGNMENT_LIST;
 import static minskim2.JHP_World.global.exception.ErrorCode.ASSIGNMENT_FILE_UPLOAD_FAILED;
+import static minskim2.JHP_World.global.exception.ErrorCode.ASSIGNMENT_NOT_FOUND;
 
 
 @Service
@@ -119,7 +120,7 @@ public class AssignmentService {
      * */
     public AssignmentDto findById(Long assignmentId) {
         Assignment assignment = assignmentRepository.findById(assignmentId).orElseThrow(()
-                -> new IllegalArgumentException("해당 과제가 존재하지 않습니다."));
+                -> CustomException.of(ASSIGNMENT_NOT_FOUND));
         return AssignmentDto.from(assignment);
     }
 

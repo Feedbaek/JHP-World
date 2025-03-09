@@ -2,14 +2,13 @@ package minskim2.JHP_World.router.api;
 
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
-import minskim2.JHP_World.config.login.oauth2.KakaoUser;
 import minskim2.JHP_World.domain.comment.service.CommentService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static minskim2.JHP_World.domain.comment.dto.CommentReq.*;
-import static minskim2.JHP_World.domain.comment.dto.CommentRes.*;
+import static minskim2.JHP_World.domain.comment.dto.CommentReq.CreateReq;
+import static minskim2.JHP_World.domain.comment.dto.CommentRes.CreateRes;
 
 @RestController
 @RequiredArgsConstructor

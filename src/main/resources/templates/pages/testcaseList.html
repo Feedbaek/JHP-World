@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultLayout}"
+      layout:fragment="Content"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title th:text="${title}"></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .testcase-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .testcase-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .testcase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .testcase-card a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        .testcase-card a:hover {
+            color: #0056b3;
+        }
+
+        .testcase-card p {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ccc; /* 밑줄의 두께와 색상 설정 */
+            /*padding-bottom: 5px; !* 텍스트와 밑줄 사이의 간격 설정 *!*/
+            /* 투명도 설정 */
+            opacity: 0.8;
+        }
+
+        .toggle-button button {
+            padding: 5px 10px;
+            font-size: 1rem;
+            color: #217cff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-button button:hover {
+            background-color: #64abff;
+        }
+
+        /* 팝업 스타일 */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .popup {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 600px;
+            max-width: 90%;
+            z-index: 1001;
+            position: relative;
+        }
+
+        .popup h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .popup form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .popup input, .popup textarea {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .popup button {
+            padding: 5px 20px;
+            font-size: 1rem;
+            border: none;
+            background: none;
+            color: #007BFF;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .popup .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .popup .close-button:hover {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 th:text="${title}"></h1>
+
+    <!-- 테스트 케이스 등록 액션 바 -->
+    <div class="action-bar">
+        <!-- 등록 버튼 -->
+        <div sec:authorize="isAuthenticated()" class="toggle-button">
+            <button id="openPopupButton">테스트 등록</button>
+        </div>
+    </div>
+
+    <!-- 팝업 오버레이 -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <button class="close-button" id="closePopupButton">&times;</button>
+            <h2>새 테스트 등록</h2>
+            <form id="postForm">
+                <input hidden="hidden" name="assignmentId" th:value="${assignmentId}">
+                <textarea name="description" placeholder="내용을 입력하세요" rows="5" required></textarea>
+                <input type="text" name="input" placeholder="입력 값" required>
+                <input type="text" name="output" placeholder="출력 값" required>
+                <button type="submit">등록</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="testcase-list">
+        <div class="testcase-card" th:each="testcase : ${testcaseList}">
+            <a th:href="'/test-case/' + ${testcase.id}" th:text="${testcase.member} + '-' + ${testcase.id}"></a>
+        </div>
+    </div>
+</div>
+
+<!-- 로그인한 사용자의 팝업 관련 스크립트 -->
+<script sec:authorize="isAuthenticated()">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const openPopupButton = document.getElementById("openPopupButton");
+        const closePopupButton = document.getElementById("closePopupButton");
+        const popupOverlay = document.getElementById("popupOverlay");
+        const postForm = document.getElementById("postForm");
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+        // 팝업 열기
+        openPopupButton.addEventListener("click", function () {
+            popupOverlay.style.display = "block";
+        });
+
+        // 팝업 닫기
+        closePopupButton.addEventListener("click", function () {
+            popupOverlay.style.display = "none";
+        });
+
+        // 오버레이 클릭 시 닫기
+        popupOverlay.addEventListener("click", function (event) {
+            if (event.target === popupOverlay) {
+                popupOverlay.style.display = "none";
+            }
+        });
+
+        // 폼 제출 처리
+        postForm.addEventListener("submit", async function (event) {
+            event.preventDefault(); // 기본 폼 제출 막기
+
+            const assignmentId = postForm.assignmentId.value;
+            const description = postForm.description.value;
+            const input = postForm.input.value;
+            const output = postForm.output.value;
+
+            const postData = {
+                assignmentId: assignmentId,
+                description: description,
+                input: input,
+                output: output
+            };
+
+            try {
+                const response = await fetch('/api/test-case', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                if (response.ok) {
+                    popupOverlay.style.display = "none";
+                    // 필요한 경우 게시물 목록을 갱신하거나 페이지를 리로드
+                    location.reload();
+                } else {
+                    const errorData = await response.json();
+                    alert('등록 실패: ' + errorData.message);
+                }
+            } catch (error) {
+                console.error('API 요청 중 오류 발생:', error);
+                alert('알 수 없는 오류가 발생했습니다.');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

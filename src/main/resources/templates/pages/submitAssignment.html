@@ -124,7 +124,7 @@
   });
 
   function fetchTestCases(assignmentId) {
-    fetch(`/api/test-case?assignmentId=${assignmentId}`)
+    fetch(`/api/assignment/${assignmentId}/test-cases`)
             .then(response => {
               if (!response.ok) {
                 throw new Error('Failed to fetch test cases');
