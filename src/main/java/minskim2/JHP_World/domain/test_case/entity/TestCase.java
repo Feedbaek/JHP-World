@@ -9,8 +9,10 @@ import minskim2.JHP_World.global.entity.BaseEntity;
 
 @Getter
 @Entity
+@Builder
 @Table(name = "test_case")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TestCase extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,15 +35,8 @@ public class TestCase extends BaseEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Builder
-    public TestCase(Long id, Assignment assignment, Member member, String input, String output, String description) {
-        this.id = id;
-        this.assignment = assignment;
-        this.member = member;
-        this.input = input;
-        this.output = output;
-        this.description = description;
-    }
+    @Column(name = "is_public", nullable = false)
+    private boolean isPublic;
 
     public static TestCase ById(Long id) {
         return TestCase.builder()
@@ -58,6 +53,21 @@ public class TestCase extends BaseEntity {
         }
         if (req.description() != null && !req.description().isBlank()) {
             this.description = req.description();
+        }
+    }
+
+    public void update(TestCaseReq.UpdateByAdmin req) {
+        if (req.input() != null && !req.input().isBlank()) {
+            this.input = req.input();
+        }
+        if (req.output() != null && !req.output().isBlank()) {
+            this.output = req.output();
+        }
+        if (req.description() != null && !req.description().isBlank()) {
+            this.description = req.description();
+        }
+        if (req.isPublic() != null) {
+            this.isPublic = req.isPublic();
         }
     }
 }

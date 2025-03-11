@@ -29,6 +29,12 @@ public class TestCaseService {
         ));
     }
 
+    public TestCaseRes.Get findById(Long id, Long memberId) {
+        return TestCaseRes.Get.of(testCaseRepository.findById(id).orElseThrow(
+                () -> CustomException.of(TEST_CASE_NOT_FOUND)
+        ));
+    }
+
     public Page<TestCaseRes.Get> findAllByAssignmentId(Long assignmentId, int page) {
         return testCaseRepository.findAllByAssignmentId(assignmentId, Pageable.ofSize(TEST_CASE_LIST.getSize()).withPage(page))
                 .map(TestCaseRes.Get::of);
@@ -53,7 +59,37 @@ public class TestCaseService {
     }
 
     @Transactional
+    public TestCaseRes.Get createTestCase(Long AdminId, TestCaseReq.CreateByAdmin req) {
+        TestCase testCase = TestCase.builder()
+                .assignment(Assignment.ById(req.assignmentId()))
+                .member(Member.ById(AdminId))
+                .input(req.input())
+                .output(req.output())
+                .description(req.description())
+                .build();
+
+        testCaseRepository.save(testCase);
+
+        return TestCaseRes.Get.of(testCase);
+    }
+
+    @Transactional
     public TestCaseRes.Get updateTestCase(Long memberId, TestCaseReq.Update req) {
+        TestCase testCase = testCaseRepository.findById(req.testCaseId()).orElseThrow(
+                () -> CustomException.of(TEST_CASE_NOT_FOUND)
+        );
+
+        if (!testCase.getMember().getId().equals(memberId)) {
+            throw new IllegalArgumentException("해당 테스트 케이스에 대한 권한이 없습니다.");
+        }
+
+        testCase.update(req);
+
+        return TestCaseRes.Get.of(testCase);
+    }
+
+    @Transactional
+    public TestCaseRes.Get updateTestCase(Long memberId, TestCaseReq.UpdateByAdmin req) {
         TestCase testCase = testCaseRepository.findById(req.testCaseId()).orElseThrow(
                 () -> CustomException.of(TEST_CASE_NOT_FOUND)
         );

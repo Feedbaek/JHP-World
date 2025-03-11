@@ -13,12 +13,31 @@ public abstract class TestCaseReq {
     ) {
     }
 
+    public record CreateByAdmin(
+            @NonNull
+            Long assignmentId,
+            String input,
+            String output,
+            String description,
+            Boolean isPublic
+    ) {
+    }
+
     public record Update(
             @NonNull
             Long testCaseId,
             String input,
             String output,
             String description
+    ) {
+    }
+    public record UpdateByAdmin(
+            @NonNull
+            Long testCaseId,
+            String input,
+            String output,
+            String description,
+            Boolean isPublic
     ) {
     }
 }

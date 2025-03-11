@@ -1,16 +1,18 @@
 package minskim2.JHP_World.router.api;
 
 import lombok.RequiredArgsConstructor;
-import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
+import minskim2.JHP_World.config.login.defalult.DefaultUser;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentReq;
-import minskim2.JHP_World.domain.assignment.dto.AssignmentRes;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
 import minskim2.JHP_World.domain.member.dto.MemberReq;
 import minskim2.JHP_World.domain.member.dto.MemberRes;
 import minskim2.JHP_World.domain.member.service.MemberService;
 import minskim2.JHP_World.domain.post.dto.PostRes;
 import minskim2.JHP_World.domain.post.service.PostService;
+import minskim2.JHP_World.domain.test_case.dto.TestCaseReq;
+import minskim2.JHP_World.domain.test_case.dto.TestCaseRes;
+import minskim2.JHP_World.domain.test_case.service.TestCaseService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +27,7 @@ public class AdminRestController {
     private final AssignmentService assignmentService;
     private final MemberService memberService;
     private final PostService postService;
+    private final TestCaseService testCaseService;
 
     /**
      * 과제 조회
@@ -90,4 +93,29 @@ public class AdminRestController {
         return postService.findById(postId);
     }
 
+    /**
+     * 테스트 케이스 조회
+     * */
+    @GetMapping("/test-case")
+    public TestCaseRes.Get getTestCase(@RequestParam Long testCaseId) {
+        return testCaseService.findById(testCaseId);
+    }
+
+    /**
+     * 테스트 케이스 생성
+     * */
+    @PostMapping("/test-case")
+    public TestCaseRes.Get createTestCase(@AuthenticationPrincipal DefaultUser admin,
+                                          @Validated @RequestBody TestCaseReq.CreateByAdmin req) {
+        return testCaseService.createTestCase(admin.getMemberId(), req);
+    }
+
+    /**
+     * 테스트 케이스 수정
+     * */
+    @PatchMapping("/test-case")
+    public TestCaseRes.Get updateTestCase(@AuthenticationPrincipal DefaultUser admin,
+                                          @Validated @RequestBody TestCaseReq.UpdateByAdmin req) {
+        return testCaseService.updateTestCase(admin.getMemberId(), req);
+    }
 }
