@@ -12,7 +12,8 @@ public abstract class TestCaseRes {
             String member,
             String input,
             String output,
-            String description
+            String description,
+            Boolean isPublic
     ) {
         public static Get of(TestCase testCase) {
             return new Get(
@@ -23,7 +24,8 @@ public abstract class TestCaseRes {
                     testCase.getMember().getName(),
                     testCase.getInput(),
                     testCase.getOutput(),
-                    testCase.getDescription()
+                    testCase.getDescription(),
+                    testCase.getIsPublic()
             );
         }
     }

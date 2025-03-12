@@ -36,7 +36,7 @@ public class TestCase extends BaseEntity {
     private String description;
 
     @Column(name = "is_public", nullable = false)
-    private boolean isPublic;
+    private Boolean isPublic;
 
     public static TestCase ById(Long id) {
         return TestCase.builder()
