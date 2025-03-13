@@ -24,6 +24,7 @@ public enum ErrorCode {
 
     // 14000 ~ 14999: TestCase
     TEST_CASE_NOT_FOUND(14404, "테스트 케이스를 찾을 수 없습니다", HttpStatus.NOT_FOUND),
+    TEST_CASE_AUTHORITY_DENIED(14403, "테스트 케이스 권한이 없습니다", HttpStatus.FORBIDDEN),
 
     // 90000 ~ 99999: Common
     PAGE_NOT_POSITIVE(90400, "페이지는 1 이상이어야 합니다", HttpStatus.BAD_REQUEST);

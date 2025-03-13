@@ -1,7 +1,6 @@
 package minskim2.JHP_World.domain.test_case.service;
 
 import lombok.RequiredArgsConstructor;
-import minskim2.JHP_World.config.login.oauth2.CustomOAuth2User;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
 import minskim2.JHP_World.domain.member.entity.Member;
 import minskim2.JHP_World.domain.test_case.dto.TestCaseReq;
@@ -13,11 +12,11 @@ import minskim2.JHP_World.global.utils.AuthenticationUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static minskim2.JHP_World.global.enums.SizeEnum.TEST_CASE_LIST;
+import static minskim2.JHP_World.global.exception.ErrorCode.TEST_CASE_AUTHORITY_DENIED;
 import static minskim2.JHP_World.global.exception.ErrorCode.TEST_CASE_NOT_FOUND;
 
 @Service
@@ -46,16 +45,9 @@ public class TestCaseService {
 
     private void checkTestCaseAuthority(TestCaseRes.Get result) {
         try {
-            // 테스트 케이스가 비공개 상태라면
+            // 테스트 케이스가 비공개 상태라면 관리자 권한 확인
             if (!result.isPublic()) {
-                // 로그인 상태 확인
-                authenticationUtil.checkLogin();
-                CustomOAuth2User member = (CustomOAuth2User) SecurityContextHolder.getContext().getAuthentication();
-                // 해당 테스트 케이스를 생성한 사용자가 아닌 경우
-                if (!member.getMemberId().equals(result.memberId())) {
-                    // 관리자 권한 확인
-                    authenticationUtil.checkAdmin();
-                }
+                authenticationUtil.checkAdmin();
             }
         } catch (AccessDeniedException ex) {
             // 비공개 상태이며 테스트 케이스에 대한 권한이 없는 경우
@@ -80,6 +72,7 @@ public class TestCaseService {
                 .input(req.input())
                 .output(req.output())
                 .description(req.description())
+                .isPublic(true)
                 .build();
 
         testCaseRepository.save(testCase);
@@ -88,13 +81,14 @@ public class TestCaseService {
     }
 
     @Transactional
-    public TestCaseRes.Get createTestCase(Long AdminId, TestCaseReq.CreateByAdmin req) {
+    public TestCaseRes.Get createTestCaseByAdmin(Long AdminId, TestCaseReq.CreateByAdmin req) {
         TestCase testCase = TestCase.builder()
                 .assignment(Assignment.ById(req.assignmentId()))
                 .member(Member.ById(AdminId))
                 .input(req.input())
                 .output(req.output())
                 .description(req.description())
+                .isPublic(req.isPublic())
                 .build();
 
         testCaseRepository.save(testCase);
@@ -109,7 +103,7 @@ public class TestCaseService {
         );
 
         if (!testCase.getMember().getId().equals(memberId)) {
-            throw new IllegalArgumentException("해당 테스트 케이스에 대한 권한이 없습니다.");
+            throw CustomException.of(TEST_CASE_AUTHORITY_DENIED);
         }
 
         testCase.update(req);

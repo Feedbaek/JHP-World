@@ -107,7 +107,7 @@ public class AdminRestController {
     @PostMapping("/test-case")
     public TestCaseRes.Get createTestCase(@AuthenticationPrincipal DefaultUser admin,
                                           @Validated @RequestBody TestCaseReq.CreateByAdmin req) {
-        return testCaseService.createTestCase(admin.getMemberId(), req);
+        return testCaseService.createTestCaseByAdmin(admin.getMemberId(), req);
     }
 
     /**
