@@ -114,8 +114,7 @@ public class AdminRestController {
      * 테스트 케이스 수정
      * */
     @PatchMapping("/test-case")
-    public TestCaseRes.Get updateTestCase(@AuthenticationPrincipal DefaultUser admin,
-                                          @Validated @RequestBody TestCaseReq.UpdateByAdmin req) {
-        return testCaseService.updateTestCase(admin.getMemberId(), req);
+    public TestCaseRes.Get updateTestCase(@Validated @RequestBody TestCaseReq.UpdateByAdmin req) {
+        return testCaseService.updateTestCaseByAdmin(req);
     }
 }

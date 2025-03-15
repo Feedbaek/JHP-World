@@ -12,6 +12,7 @@ import minskim2.JHP_World.global.utils.AuthenticationUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +28,6 @@ public class TestCaseService {
     private final TestCaseRepository testCaseRepository;
     private final AuthenticationUtil authenticationUtil;
 
-//    public TestCaseRes.Get findById(Long id) {
-//        return TestCaseRes.Get.of(testCaseRepository.findById(id).orElseThrow(
-//                () -> CustomException.of(TEST_CASE_NOT_FOUND)
-//        ));
-//    }
 
     public TestCaseRes.Get findById(Long id) {
 
@@ -81,6 +77,7 @@ public class TestCaseService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public TestCaseRes.Get createTestCaseByAdmin(Long AdminId, TestCaseReq.CreateByAdmin req) {
         TestCase testCase = TestCase.builder()
                 .assignment(Assignment.ById(req.assignmentId()))
@@ -112,16 +109,13 @@ public class TestCaseService {
     }
 
     @Transactional
-    public TestCaseRes.Get updateTestCase(Long memberId, TestCaseReq.UpdateByAdmin req) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public TestCaseRes.Get updateTestCaseByAdmin(TestCaseReq.UpdateByAdmin req) {
         TestCase testCase = testCaseRepository.findById(req.testCaseId()).orElseThrow(
                 () -> CustomException.of(TEST_CASE_NOT_FOUND)
         );
 
-        if (!testCase.getMember().getId().equals(memberId)) {
-            throw new IllegalArgumentException("해당 테스트 케이스에 대한 권한이 없습니다.");
-        }
-
-        testCase.update(req);
+        testCase.updateByAdmin(req);
 
         return TestCaseRes.Get.of(testCase);
     }

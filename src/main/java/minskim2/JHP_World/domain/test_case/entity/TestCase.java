@@ -56,7 +56,7 @@ public class TestCase extends BaseEntity {
         }
     }
 
-    public void update(TestCaseReq.UpdateByAdmin req) {
+    public void updateByAdmin(TestCaseReq.UpdateByAdmin req) {
         if (req.input() != null && !req.input().isBlank()) {
             this.input = req.input();
         }
