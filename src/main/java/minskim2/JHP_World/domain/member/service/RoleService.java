@@ -28,9 +28,7 @@ public class RoleService {
     protected void init() {
         for (RoleName roleName : RoleName.values()) {
             if (!roleRepository.existsByRoleName(roleName)) {
-                roleRepository.save(Role.builder()
-                        .roleName(roleName).build()
-                );
+                roleRepository.save(new Role(roleName));
             }
         }
     }

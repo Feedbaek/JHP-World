@@ -15,7 +15,7 @@ import jakarta.persistence.*;
 public class Member extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "oauth2id", nullable = false, unique = true, length = 50)
@@ -47,9 +47,7 @@ public class Member extends BaseEntity {
             this.name = req.name();
         }
         if (req.role() != null && !req.role().isBlank() && !equalRole(req.role())) {
-            this.role = Role.builder()
-                    .roleName(RoleName.valueOf(req.role()))
-                    .build();
+            this.role = new Role(RoleName.valueOf(req.role()));
         }
         if (req.isEnabled() != null) {
             this.isEnabled = req.isEnabled();

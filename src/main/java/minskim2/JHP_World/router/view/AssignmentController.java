@@ -94,7 +94,7 @@ public class AssignmentController {
     public String getTestCase(@PathVariable Long assignmentId, @PageParam int page, Model model) {
 
         // 테스트 케이스 조회
-        Page<TestCaseRes.Get> testcaseList = testCaseService.findAllByAssignmentId(assignmentId, page);
+        Page<TestCaseRes.Get> testcaseList = testCaseService.findPublicByAssignmentId(assignmentId, page);
         int totalPages = testcaseList.getTotalPages();
 
         // model에 추가

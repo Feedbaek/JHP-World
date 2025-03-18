@@ -2,7 +2,6 @@ package minskim2.JHP_World.domain.assignment.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentReq;
 import minskim2.JHP_World.domain.file.entity.File;
 import minskim2.JHP_World.domain.lecture.entity.Lecture;
@@ -16,7 +15,7 @@ import minskim2.JHP_World.global.entity.BaseEntity;
 @Builder
 public class Assignment extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "title", nullable = false, length = 50)

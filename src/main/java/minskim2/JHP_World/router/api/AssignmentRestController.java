@@ -22,6 +22,6 @@ public class AssignmentRestController {
     @GetMapping("/{assignmentId}/test-cases")
     public List<TestCaseRes.Get> getTestCasesByAssigmentId(@PathVariable Long assignmentId, @PageParam int page) {
 
-        return testCaseService.findAllByAssignmentId(assignmentId, page).toList();
+        return testCaseService.findPublicByAssignmentId(assignmentId, page).toList();
     }
 }

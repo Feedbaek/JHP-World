@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.nio.channels.FileChannel;
 import java.util.Optional;
 
 public interface TestCaseRepository extends JpaRepository<TestCase, Long> {
@@ -15,4 +14,7 @@ public interface TestCaseRepository extends JpaRepository<TestCase, Long> {
 
     @EntityGraph(attributePaths = {"assignment", "member"})
     Page<TestCase> findAllByAssignmentId(Long assignmentId, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"assignment", "member"})
+    Page<TestCase> findIsPublicByAssignmentId(Long assignmentId, Pageable pageable);
 }

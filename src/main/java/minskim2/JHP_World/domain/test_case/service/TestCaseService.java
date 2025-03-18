@@ -29,6 +29,10 @@ public class TestCaseService {
     private final AuthenticationUtil authenticationUtil;
 
 
+    /**
+     * 테스트 케이스 조회 by ID
+     * 테스트 케이스 권한을 확인하여 비공개 상태인 경우 관리자 권한 확인
+     * */
     public TestCaseRes.Get findById(Long id) {
 
         var result = TestCaseRes.Get.of(testCaseRepository.findById(id)
@@ -52,10 +56,16 @@ public class TestCaseService {
     }
 
     // TODO: 권한이 있는 테스트 케이스만 조회하도록 수정
+    public Page<TestCaseRes.Get> findPublicByAssignmentId(Long assignmentId, int page) {
+        return testCaseRepository.findIsPublicByAssignmentId(assignmentId, Pageable.ofSize(TEST_CASE_LIST.getSize()).withPage(page))
+                .map(TestCaseRes.Get::of);
+    }
+
     public Page<TestCaseRes.Get> findAllByAssignmentId(Long assignmentId, int page) {
         return testCaseRepository.findAllByAssignmentId(assignmentId, Pageable.ofSize(TEST_CASE_LIST.getSize()).withPage(page))
                 .map(TestCaseRes.Get::of);
     }
+
 
     /**
      * 테스트 케이스 생성
