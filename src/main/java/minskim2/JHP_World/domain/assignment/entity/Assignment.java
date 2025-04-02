@@ -15,7 +15,7 @@ import minskim2.JHP_World.global.entity.BaseEntity;
 @Builder
 public class Assignment extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "title", nullable = false, length = 50)

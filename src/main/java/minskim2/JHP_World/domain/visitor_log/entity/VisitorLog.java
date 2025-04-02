@@ -14,7 +14,7 @@ import minskim2.JHP_World.global.entity.BaseEntity;
 public class VisitorLog extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "session_id", nullable = false, length = 50)

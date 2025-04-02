@@ -13,7 +13,7 @@ import minskim2.JHP_World.global.entity.BaseEntity;
 public class File extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false)

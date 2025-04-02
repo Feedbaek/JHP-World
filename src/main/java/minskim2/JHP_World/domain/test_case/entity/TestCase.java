@@ -15,7 +15,7 @@ import minskim2.JHP_World.global.entity.BaseEntity;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TestCase extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
