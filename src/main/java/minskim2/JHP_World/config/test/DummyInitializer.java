@@ -2,6 +2,7 @@
 package minskim2.JHP_World.config.test;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.config.EnvBean;
 import minskim2.JHP_World.domain.assignment.entity.Assignment;
 import minskim2.JHP_World.domain.assignment.repository.AssignmentRepository;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /** 테스트용 더미 데이터 생성 */
+@Slf4j(topic = "DummyInitializer")
 @Component
 @RequiredArgsConstructor
 public class DummyInitializer implements CommandLineRunner {
@@ -132,7 +134,7 @@ public class DummyInitializer implements CommandLineRunner {
      * 더미 Admin, Post 데이터 생성
      * */
     private void initPost() {
-        Member member = memberRepository.findById(1L).orElseThrow();
+        Member member = memberRepository.findByName("admin").orElseThrow();
         for (int i=1; i<=3; ++i) {
             Lecture lecture = lectureRepository.findByName("문제해결기법").orElseThrow();
             if (postRepository.countByLectureId(lecture.getId()) >= 3) {
@@ -192,10 +194,11 @@ public class DummyInitializer implements CommandLineRunner {
      * */
     private void initTestCase() {
 
-        for (long i=1; i<=3; ++i) {
+        long cnt = testCaseRepository.count();
+        for (long i=cnt; i<=3; ++i) {
             testCaseRepository.findById(i).orElseGet(() -> {
-                Member member = Member.ById(1L);
-                Assignment assignment = Assignment.ById(1L);
+                Member member = memberRepository.findByName("admin").orElseThrow();
+                Assignment assignment = assignmentRepository.findByTitle("과제 제목 - 1").getFirst();
 
                 TestCase testCase1 = TestCase.builder()
                         .member(member)
@@ -203,6 +206,7 @@ public class DummyInitializer implements CommandLineRunner {
                         .input("1 2")
                         .output("3")
                         .description("1과 2를 더하는 테스트.")
+                        .isPublic(true)
                         .build();
 
                 return testCaseRepository.save(testCase1);
@@ -215,10 +219,9 @@ public class DummyInitializer implements CommandLineRunner {
      * */
     private void initMember() {
         // Admin
-        memberRepository.findById(1L).orElseGet(() -> {
+        memberRepository.findByName("admin").orElseGet(() -> {
             Role adminRole = roleRepository.findByRoleName(RoleName.ADMIN).orElseThrow();
             Member member1 = Member.builder()
-                    .id(1L)
                     .name("admin")
                     .oauth2id("kakao:adminOauth2id")
                     .role(adminRole)
@@ -228,11 +231,11 @@ public class DummyInitializer implements CommandLineRunner {
         });
 
         // User
-        for (long i=2; i<=5; ++i) {
-            if (memberRepository.findById(i).isEmpty()) {
+        long cnt = memberRepository.count();
+        for (long i=cnt; i<=5; ++i) {
+            if (memberRepository.findByName("user" + i).isEmpty()) {
                 Role userRole = roleRepository.findByRoleName(RoleName.USER).orElseThrow();
                 Member member1 = Member.builder()
-                        .id(i)
                         .name("user" + i)
                         .oauth2id("kakao:user" + i + "Oauth2id")
                         .role(userRole)

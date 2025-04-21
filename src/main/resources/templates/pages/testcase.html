@@ -60,7 +60,8 @@
 <body>
 
 <div sec:authorize="isAuthenticated()" class="toggle-button">
-    <a th:href="'/testcase/submit?testcaseId=' + ${testcase.id}" th:text="'테스트 하기'"></a>
+    <a th:href="'/assignment/submit?testcaseId=' + ${testcase.id} +
+        '&assignmentId=' + ${testcase.assignmentId}" th:text="'테스트 하기'"></a>
 </div>
 
 <div class="container">

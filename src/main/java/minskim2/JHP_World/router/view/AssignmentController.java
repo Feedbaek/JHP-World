@@ -81,9 +81,11 @@ public class AssignmentController {
      * 과제 제출 페이지
      * */
     @GetMapping("/submit")
-    public String submitAssignment(@RequestParam Long assignmentId, Model model) {
-
+    public String submitAssignment(@RequestParam Long assignmentId, @RequestParam(required = false) Long testcaseId,
+                                   Model model) {
         model.addAttribute("assignmentId", assignmentId);
+        model.addAttribute("testcaseId", testcaseId);
+
         return "/pages/submitAssignment";
     }
 
