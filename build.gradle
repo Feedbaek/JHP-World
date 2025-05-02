@@ -40,6 +40,9 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// common
+	implementation 'io.github.feedbaek:minskim2-starter:0.0.1'
+
 	// spring session
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.session:spring-session-data-redis'
@@ -64,6 +67,9 @@ dependencies {
 
 	// HTML Parser
 	implementation 'org.jsoup:jsoup:1.18.3'
+
+	// Cache Caffeine
+	implementation 'com.github.ben-manes.caffeine:caffeine:3.2.0'
 
 }
 
