@@ -1,9 +1,9 @@
 # 📚 JHP-World
 
 > **Spring Boot, RabbitMQ, Go를 활용해 만든 알고리즘 과제 채점 플랫폼입니다.**  
-> PDF 형식의 문제 파일을 업로드하고, C/C++ 풀이 코드를 미리 등록된 테스트 케이스로 자동 채점할 수 있으며, 관리자 페이지를 통해 사용자와 과제를 손쉽게 관리할 수 있습니다.
+> PDF 형식의 문제 파일을 업로드하고, C/C++ 풀이 코드를 미리 등록된 테스트 케이스로 자동 채점할 수 있습니다.</br> 
+> 또한, 관리자 페이지를 통해 사용자와 과제를 손쉽게 관리할 수 있습니다.
 
-![banner](docs/banner.png)
 
 <p align="center">
   <img src="https://img.shields.io/badge/build-passing-brightgreen" />
@@ -32,22 +32,21 @@
 
 ```mermaid
 flowchart LR
-    subgraph Web Tier
-        UI["🖥️ React / Thymeleaf UI"]
+    subgraph Web Browser
+        UI["🖥️ Thymeleaf"]
     end
 
     subgraph Core Services
-        A["Spring Boot API\n(Assignment, Auth, Board)"]
+        A["Spring Boot API"]
         R[(Redis)]
         Q[(RabbitMQ)]
-        DB[(PostgreSQL)]
-        LOG[(Visitor Logs)]
+        DB[(MySQL)]
     end
 
     subgraph Executor Pool
         W1["Go Runner #1"]
         W2["Go Runner #2"]
-        Wn[[...]]
+        W3["Go Runner #3"]
     end
 
     UI -->|HTTPS| A
@@ -56,10 +55,9 @@ flowchart LR
     A --> Q
     Q --> W1 & W2 & Wn
     W1 --> Q
-    W1 -->|Result| A
-    W2 -->|Result| A
-    Wn -->|Result| A
-    A --> LOG
+    W1 -->|Result| Q --> A
+    W2 -->|Result| Q --> A
+    W3 -->|Result| Q --> A
 ```
 
 ---
