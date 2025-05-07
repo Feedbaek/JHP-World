@@ -165,4 +165,4 @@ src/main/resources/
 
 ---
 
-> Made with by **김민석** and contributors
+> Made by **김민석** and contributors
