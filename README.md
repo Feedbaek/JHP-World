@@ -32,31 +32,38 @@
 
 ```mermaid
 flowchart LR
-    subgraph Web Browser
+
+    %% Subgraphs
+    subgraph Web_Browser["Web Browser"]
         UI["🖥️ Thymeleaf"]
     end
 
-    subgraph Core Services
+    subgraph Core_Services["Core Services"]
         A["Spring Boot API"]
         R[(Redis)]
         Q[(RabbitMQ)]
         DB[(MySQL)]
     end
 
-    subgraph Executor Pool
+    subgraph Go_Runners["Go Runners"]
         W1["Go Runner #1"]
         W2["Go Runner #2"]
         W3["Go Runner #3"]
     end
 
-    UI -->|HTTPS| A
+    %% Main logic flow
+    UI -->|Request| A
     A <--> R
     A <--> DB
-    A --> |pub| Q
-    Q --> W1 & W2
-    W1 -->|Result| Q --> |sub| A
-    W2 -->|Result| Q --> |sub| A
-    W3 -->|Result| Q --> |sub| A
+    A --> |채점 요청 / pub| Q
+    Q --> |채점 요청 / sub| W1
+    Q --> |채점 요청 / sub| W2
+    Q --> |채점 요청 / sub| W3
+    W1 -->|채점 결과 / pub| Q
+    W2 -->|채점 결과 / pub| Q
+    W3 -->|채점 결과 / pub| Q
+    Q --> |채점 결과 / sub| A
+
 ```
 
 ---
