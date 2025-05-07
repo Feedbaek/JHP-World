@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/badge/license-MIT-blue" />
 </p>
 
-### [채점 서버 (JHP-World-micro-server)](https://github.com/Feedbaek/JHP-World-micro-server)
+🎈 [채점 서버 (JHP-World-micro-server)](https://github.com/Feedbaek/JHP-World-micro-server)
 
 ---
 
