@@ -97,16 +97,16 @@ flowchart LR
 
 ```bash
 # 1. 저장소 클론
-$ git clone https://github.com/<your-org>/algo-grader.git && cd algo-grader
+$ git clone https://github.com/Feedbaek/JHP-World.git && cd JHP-World
 
 # 2. 환경 변수 설정
 $ vi application.yml
 $ vi application-oauth2.yml # 파일을 수정하여 DB, Redis, RabbitMQ 설정을 맞춤화합니다.
 
-# 3. 의존 서비스 실행
-$ docker compose up -d  # mysql, redis, rabbitmq, runners 등 실행
+# 3. 의존 서비스 실행 (docker-compose 추가 예정)
+$ docker compose up -d  # mysql, redis, rabbitmq 등 실행
 
-# 4. Spring Boot 서버 실행 (개발 모드)
+# 4. Spring Boot 서버 실행
 $ ./mvnw spring-boot:run
 
 # 5. 접속
