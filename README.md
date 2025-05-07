@@ -114,7 +114,7 @@ $ ./mvnw spring-boot:run
 → http://localhost:8080/admin  # 관리자 페이지 (기본 계정: admin / admin)
 ```
 
-> **TIP:** API까지 포함한 전체 컨테이너 실행은 `docker-compose.full.yml`을 사용하세요.
+> **TIP:** 전체 컨테이너 실행을 위한 `docker-compose.yml`은 추가 예정 입니다.
 
 ---
 
