@@ -52,12 +52,11 @@ flowchart LR
     UI -->|HTTPS| A
     A <--> R
     A <--> DB
-    A --> Q
-    Q --> W1 & W2 & Wn
-    W1 --> Q
-    W1 -->|Result| Q --> A
-    W2 -->|Result| Q --> A
-    W3 -->|Result| Q --> A
+    A --> |pub| Q
+    Q --> W1 & W2
+    W1 -->|Result| Q --> |sub| A
+    W2 -->|Result| Q --> |sub| A
+    W3 -->|Result| Q --> |sub| A
 ```
 
 ---
