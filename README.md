@@ -13,6 +13,8 @@
 
 🎈 [채점 서버 (JHP-World-micro-server)](https://github.com/Feedbaek/JHP-World-micro-server)
 
+💽 [PDF 파일 저장소 (JHP-World-File-Storage)](https://github.com/Feedbaek/JHP-World-File-Storage/pull/1)
+
 ---
 
 ## ✨ 주요 기능
