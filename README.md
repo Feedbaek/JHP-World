@@ -6,11 +6,12 @@
 
 
 <p align="center">
-  <img src="https://img.shields.io/badge/build-passing-brightgreen" />
   <img src="https://img.shields.io/badge/spring_boot-3.x-6DB33F" />
   <img src="https://img.shields.io/badge/go-1.22-00ADD8" />
   <img src="https://img.shields.io/badge/license-MIT-blue" />
 </p>
+
+### [채점 서버 (JHP-World-micro-server)](https://github.com/Feedbaek/JHP-World-micro-server)
 
 ---
 
