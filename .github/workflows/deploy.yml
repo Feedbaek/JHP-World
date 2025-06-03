@@ -64,7 +64,7 @@ jobs:
               echo "[ ${{ secrets.APPLICATION_NAME }} is not running ]"
             fi
             
-            echo "${{ secrets.ENV_LIST }}" > env.list
+            echo "${{ secrets.ENV_LIST }}" | tr ';' '\n' > env.list
 
             docker run --env-file env.list -d --name ${{ secrets.APPLICATION_NAME }} \
               -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
