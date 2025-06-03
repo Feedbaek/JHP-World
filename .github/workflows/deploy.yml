@@ -67,7 +67,7 @@ jobs:
             echo "${{ secrets.ENV_LIST }}" | tr ';' '\n' > env.list
 
             docker run --env-file env.list -d --name ${{ secrets.APPLICATION_NAME }} \
-              -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} \
+              -p ${{ secrets.APPLICATION_PORT }}:${{ secrets.APPLICATION_PORT }} \
               ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APPLICATION_NAME }}:latest
 
             docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APPLICATION_NAME }}:latest
