@@ -12,7 +12,7 @@ spring:
       username: root
       password: 1234
       maximum-pool-size: 10
-      minimum-idle: 0
+      minimum-idle: 10
 
   flyway:
     enabled: true
@@ -130,7 +130,7 @@ spring:
       username: root
       password: 1234
       maximum-pool-size: 10
-      minimum-idle: 0
+      minimum-idle: 10
 
   flyway:
     enabled: false
@@ -143,3 +143,45 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    hikari:
+      driver-class-name: ${DB_DRIVER_CLASS_NAME}
+      jdbc-url: ${DB_JDBC_URL}
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+      maximum-pool-size: 10
+      minimum-idle: 10
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      repositories:
+        enabled: false
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    pub-queue: execute-queue
+    sub-queue: result-queue
+    pub-exchange: execute-exchange
+    sub-exchange: result-exchange
+    pub-routing-key: execute
+    sub-routing-key: result
+
+proobject:
+  minskim2:
+    redis:
+      type: standalone
+      nodes:
+        - ${REDIS_HOST}:${REDIS_PORT}

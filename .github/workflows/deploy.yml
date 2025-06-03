@@ -8,6 +8,7 @@ jobs:
   build:
     name: Build and push Docker image
     runs-on: ubuntu-latest
+    environment: prod
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 21
@@ -43,6 +44,7 @@ jobs:
     name: Deploy to Server Instance using SSH
     needs: build
     runs-on: ubuntu-latest
+    environment: prod
     steps:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v1.2.2
