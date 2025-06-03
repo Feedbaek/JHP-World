@@ -70,4 +70,4 @@ jobs:
               -p ${{ secrets.APPLICATION_PORT }}:${{ secrets.APPLICATION_PORT }} \
               ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APPLICATION_NAME }}:latest
 
-            docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APPLICATION_NAME }}:latest
+            docker image prune -f
