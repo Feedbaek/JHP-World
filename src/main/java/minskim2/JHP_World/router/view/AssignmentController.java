@@ -51,7 +51,7 @@ public class AssignmentController {
         // model에 추가
         model.addAttribute("assignment", assignmentDto);
         model.addAttribute("postList", postList);
-        return "/pages/assignment";
+        return "pages/assignment";
     }
 
 
@@ -74,7 +74,7 @@ public class AssignmentController {
         ModelSetter.init(model, lectureDto.getName() + " 과제 목록", page, totalPages, currentUri);
         model.addAttribute("assignmentList", assignmentList);
 
-        return "/pages/assignmentList";
+        return "pages/assignmentList";
     }
 
     /**
@@ -86,7 +86,7 @@ public class AssignmentController {
         model.addAttribute("assignmentId", assignmentId);
         model.addAttribute("testcaseId", testcaseId);
 
-        return "/pages/submitAssignment";
+        return "pages/submitAssignment";
     }
 
     /**

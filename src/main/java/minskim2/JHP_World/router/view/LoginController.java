@@ -13,7 +13,7 @@ public class LoginController {
     // 로그인 페이지로 이동
     @GetMapping
     public String login() {
-        return "/pages/login";
+        return "pages/login";
     }
 
     // 카카오 로그인 페이지로 리다이렉트

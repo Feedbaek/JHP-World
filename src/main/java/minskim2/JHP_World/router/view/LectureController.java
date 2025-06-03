@@ -35,6 +35,6 @@ public class LectureController {
         ModelSetter.init(model, "과제 목록", page, totalPage, "/lecture/" + lecture_id + "/assignmentList");
         model.addAttribute("assignmentList", assignmentList);
 
-        return "/pages/assignmentList";
+        return "pages/assignmentList";
     }
 }

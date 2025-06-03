@@ -23,6 +23,6 @@ public class TestCaseController {
         TestCaseRes.Get testcase = testCaseService.findById(testCaseId);
         model.addAttribute("testcase", testcase);
 
-        return "/pages/testcase";
+        return "pages/testcase";
     }
 }

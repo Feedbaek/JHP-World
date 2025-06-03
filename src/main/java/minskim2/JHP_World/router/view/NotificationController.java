@@ -14,8 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/notifications")
@@ -35,6 +33,6 @@ public class NotificationController {
         // 세션에서 알림 표시 제거
         session.removeAttribute("notification");
 
-        return "/pages/notifications";
+        return "pages/notifications";
     }
 }

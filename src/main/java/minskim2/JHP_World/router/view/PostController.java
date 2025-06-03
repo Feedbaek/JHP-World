@@ -45,7 +45,7 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("commentList", commentList);
 
-        return "/pages/post";
+        return "pages/post";
     }
 
     /**
@@ -69,6 +69,6 @@ public class PostController {
         List<LectureDto> lectureList = lectureService.findAll();
         model.addAttribute("lectureList", lectureList);
 
-        return "/pages/postList";
+        return "pages/postList";
     }
 }

@@ -43,7 +43,7 @@ public class AdminController {
     @GetMapping("/home")
     @PreAuthorize("hasRole('ADMIN')")
     public String adminHomePage() {
-        return "/pages/admin/home";
+        return "pages/admin/home";
     }
 
     /**
@@ -54,7 +54,7 @@ public class AdminController {
         if (error != null) {
             model.addAttribute("error", error);
         }
-        return "/pages/admin/login";
+        return "pages/admin/login";
     }
 
     /**
@@ -68,7 +68,7 @@ public class AdminController {
         model.addAttribute("memberList", memberList);
         ModelSetter.init(model, "회원 관리", page, memberList.getTotalPages(), "/admin/member");
 
-        return "/pages/admin/member";
+        return "pages/admin/member";
     }
 
     /**
@@ -91,7 +91,7 @@ public class AdminController {
 
         ModelSetter.init(model, "과제 관리", page, totalPage, "/admin/assignment");
 
-        return "/pages/admin/assignment";
+        return "pages/admin/assignment";
     }
 
     /**
@@ -110,7 +110,7 @@ public class AdminController {
 
         ModelSetter.init(model, "테스트 케이스 관리", page, totalPage, "/admin/testcase");
 
-        return "/pages/admin/testcase";
+        return "pages/admin/testcase";
     }
 
     /**
@@ -133,6 +133,6 @@ public class AdminController {
 
         ModelSetter.init(model, "토론글 관리", page, totalPage, "/admin/post");
 
-        return "/pages/admin/post";
+        return "pages/admin/post";
     }
 }

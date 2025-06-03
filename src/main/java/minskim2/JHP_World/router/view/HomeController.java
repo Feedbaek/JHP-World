@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
 import minskim2.JHP_World.domain.assignment.service.AssignmentService;
 import minskim2.JHP_World.domain.lecture.dto.LectureDto;
-import minskim2.JHP_World.domain.post.dto.PostRes;
-import minskim2.JHP_World.global.utils.ModelSetter;
-import minskim2.JHP_World.domain.lecture.entity.Lecture;
 import minskim2.JHP_World.domain.lecture.service.LectureService;
+import minskim2.JHP_World.domain.post.dto.PostRes;
 import minskim2.JHP_World.domain.post.service.PostService;
+import minskim2.JHP_World.global.utils.ModelSetter;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -72,13 +71,13 @@ public class HomeController {
         // 강의 리스트 추가
         model.addAttribute("lectureList", lectureList);
 
-        return "/pages/home";
+        return "pages/home";
     }
 
     @GetMapping("/myPage")
     public String myPage(Model model) {
 
         ModelSetter.setTitle(model, "My Page");
-        return "/pages/myPage";
+        return "pages/myPage";
     }
 }

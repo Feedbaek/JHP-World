@@ -29,6 +29,6 @@ public class GradeController {
         ModelSetter.init(model, "과제 테스트 결과 조회", page, gradeList.getTotalPages(), "/grade/result?assignmentId=" + assignmentId);
 
         model.addAttribute("gradeList", gradeList);
-        return "/pages/gradingResult";
+        return "pages/gradingResult";
     }
 }
