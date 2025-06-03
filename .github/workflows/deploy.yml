@@ -68,6 +68,7 @@ jobs:
             echo "${{ secrets.ENV_LIST }}" | tr ';' '\n' > env.list
 
             docker run --env-file env.list -d --name ${{ secrets.APPLICATION_NAME }} \
+              --add-host=myhost:host-gateway \
               -p ${{ secrets.APPLICATION_PORT }}:${{ secrets.APPLICATION_PORT }} \
               ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APPLICATION_NAME }}:latest
 
