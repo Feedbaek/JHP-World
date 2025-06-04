@@ -56,6 +56,6 @@ public class CustomException extends RuntimeException {
      * 에러 응답을 반환한다. property는 포함되지 않는다.
      * */
     public String getErrorResponse() {
-        return String.format(RESPONSE_MESSAGE, errorCode.getCode(), errorCode,getMessage());
+        return String.format(RESPONSE_MESSAGE, errorCode.getCode(), errorCode.getMessage());
     }
 }
