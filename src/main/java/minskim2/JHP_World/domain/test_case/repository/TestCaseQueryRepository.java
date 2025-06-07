@@ -2,6 +2,7 @@ package minskim2.JHP_World.domain.test_case.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +36,15 @@ public class TestCaseQueryRepository {
 
         NumberExpression<Long> runCount = grade.id.countDistinct();
         NumberExpression<Long> recommendCount = recommendation.id.countDistinct();
+        NumberExpression<Long> commentCount = Expressions.asNumber(0L);
 
         List<OrderSpecifier<?>> orders = new ArrayList<>();
         if ("run".equals(sort)) {
             orders.add(runCount.desc());
         } else if ("recommend".equals(sort)) {
             orders.add(recommendCount.desc());
+        } else if ("comment".equals(sort)) {
+            orders.add(commentCount.desc());
         } else { // recent
             orders.add(testCase.createdDate.desc());
         }
@@ -54,6 +58,7 @@ public class TestCaseQueryRepository {
                         testCase.member.name.as("member"),
                         testCase.description,
                         runCount.as("runCount"),
+                        commentCount.as("commentCount"),
                         recommendCount.as("recommendCount"),
                         testCase.createdDate
                 ))

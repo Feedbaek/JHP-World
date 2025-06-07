@@ -18,4 +18,8 @@ public interface GradeRepository extends JpaRepository<Grade, Long> {
     /** 최근 테스트 결과를 최신순으로 조회 */
     @Query("select g from Grade g where g.assignment.id = :assignmentId order by g.createdDate desc")
     List<Grade> findLatestByAssignmentId(@Param("assignmentId") Long assignmentId);
+
+    /** 특정 테스트 케이스의 최근 결과를 최신순으로 조회 */
+    @Query("select g from Grade g where g.testCase.id = :testCaseId order by g.createdDate desc")
+    List<Grade> findLatestByTestCaseId(@Param("testCaseId") Long testCaseId);
 }

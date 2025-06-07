@@ -177,7 +177,8 @@
             <select name="sort" onchange="this.form.submit()">
                 <option value="recent" th:selected="${sort}=='recent'">최근 날짜순</option>
                 <option value="run" th:selected="${sort}=='run'">실행 횟수순</option>
-                <option value="recommend" th:selected="${sort}=='recommend'">추천 수순</option>
+                <option value="comment" th:selected="${sort}=='comment'">댓글 수</option>
+                <option value="recommend" th:selected="${sort}=='recommend'">추천 수</option>
             </select>
             <button type="submit">검색</button>
         </form>
@@ -206,6 +207,7 @@
         <div class="testcase-card" th:each="testcase : ${testcaseList}">
             <a th:href="'/test-case/' + ${testcase.id}" th:text="${testcase.member} + '-' + ${testcase.id}"></a>
             <p>실행 횟수: <span th:text="${testcase.runCount}"></span></p>
+            <p>댓글 수: <span th:text="${testcase.commentCount}"></span></p>
             <p>추천 수: <span th:text="${testcase.recommendCount}"></span></p>
             <p th:text="${#temporals.format(testcase.createdDate, 'yyyy-MM-dd')}"></p>
         </div>

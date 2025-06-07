@@ -12,6 +12,7 @@ public class TestCaseQ {
     private String member;
     private String description;
     private Long runCount;
+    private Long commentCount;
     private Long recommendCount;
     private LocalDateTime createdDate;
 }
