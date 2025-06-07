@@ -140,4 +140,14 @@ public class GradeService {
                 .map(GradeSummaryRes::from)
                 .toList();
     }
+
+    /**
+     * 특정 테스트 케이스의 최근 결과를 사용자 구분 없이 조회
+     */
+    public List<GradeSummaryRes> getLatestSummaryByTestCase(Long testCaseId) {
+        return gradeRepository.findLatestByTestCaseId(testCaseId)
+                .stream()
+                .map(GradeSummaryRes::from)
+                .toList();
+    }
 }
