@@ -7,6 +7,8 @@ import minskim2.JHP_World.domain.test_case.dto.TestCaseReq;
 import minskim2.JHP_World.domain.test_case.dto.TestCaseRes;
 import minskim2.JHP_World.domain.test_case.entity.TestCase;
 import minskim2.JHP_World.domain.test_case.repository.TestCaseRepository;
+import minskim2.JHP_World.domain.test_case.repository.TestCaseQueryRepository;
+import minskim2.JHP_World.domain.test_case.dto.TestCaseQ;
 import minskim2.JHP_World.global.exception.CustomException;
 import minskim2.JHP_World.global.utils.AuthenticationUtil;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import static minskim2.JHP_World.global.exception.ErrorCode.TEST_CASE_NOT_FOUND;
 public class TestCaseService {
 
     private final TestCaseRepository testCaseRepository;
+    private final TestCaseQueryRepository testCaseQueryRepository;
     private final AuthenticationUtil authenticationUtil;
 
 
@@ -64,6 +67,10 @@ public class TestCaseService {
     public Page<TestCaseRes.Get> findAllByAssignmentId(Long assignmentId, int page) {
         return testCaseRepository.findAllByAssignmentId(assignmentId, Pageable.ofSize(TEST_CASE_LIST.getSize()).withPage(page))
                 .map(TestCaseRes.Get::of);
+    }
+
+    public Page<TestCaseQ> searchTestCases(Long assignmentId, String username, String sort, int page) {
+        return testCaseQueryRepository.findList(assignmentId, username, sort, page);
     }
 
 

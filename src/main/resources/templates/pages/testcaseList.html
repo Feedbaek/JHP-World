@@ -172,6 +172,15 @@
 
     <!-- 테스트 케이스 등록 액션 바 -->
     <div class="action-bar">
+        <form id="searchForm" th:action="@{'/assignment/' + ${assignmentId} + '/test-cases'}" method="get">
+            <input type="text" name="username" placeholder="사용자 검색" th:value="${username}">
+            <select name="sort" onchange="this.form.submit()">
+                <option value="recent" th:selected="${sort}=='recent'">최근 날짜순</option>
+                <option value="run" th:selected="${sort}=='run'">실행 횟수순</option>
+                <option value="recommend" th:selected="${sort}=='recommend'">추천 수순</option>
+            </select>
+            <button type="submit">검색</button>
+        </form>
         <!-- 등록 버튼 -->
         <div sec:authorize="isAuthenticated()" class="toggle-button">
             <button id="openPopupButton">테스트 등록</button>
@@ -196,6 +205,9 @@
     <div class="testcase-list">
         <div class="testcase-card" th:each="testcase : ${testcaseList}">
             <a th:href="'/test-case/' + ${testcase.id}" th:text="${testcase.member} + '-' + ${testcase.id}"></a>
+            <p>실행 횟수: <span th:text="${testcase.runCount}"></span></p>
+            <p>추천 수: <span th:text="${testcase.recommendCount}"></span></p>
+            <p th:text="${#temporals.format(testcase.createdDate, 'yyyy-MM-dd')}"></p>
         </div>
     </div>
 </div>
