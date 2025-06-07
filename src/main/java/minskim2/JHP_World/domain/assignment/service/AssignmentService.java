@@ -92,6 +92,22 @@ public class AssignmentService {
         return assignment.getId();
     }
 
+    @Transactional
+    public String updateAssignmentFile(AssignmentReq.UpdateFile req) {
+        Assignment assignment = assignmentRepository.findById(req.assignmentId())
+                .orElseThrow(() -> CustomException.of(ASSIGNMENT_NOT_FOUND));
+
+        try {
+            String filePath = gitHubFileUtil.upload(req.file(), "application/pdf");
+            FileDto fileDto = fileService.createFile(req.file().getOriginalFilename(), filePath, "pdf");
+            assignment.updateFile(File.ById(fileDto.getId()));
+            return AssignmentDto.convertPdfUrl(fileDto.getUrl());
+        } catch (Exception e) {
+            log.error("파일 업로드 중 오류 발생: {}", e.getMessage());
+            throw CustomException.of(ASSIGNMENT_FILE_UPLOAD_FAILED);
+        }
+    }
+
     /**
      * Assignment 삭제 메소드
      * */

@@ -24,6 +24,12 @@ public class AssignmentReq {
     ) {
     }
 
+    public record UpdateFile(
+            Long assignmentId,
+            MultipartFile file
+    ) {
+    }
+
     public record Delete(
             Long id
     ) {

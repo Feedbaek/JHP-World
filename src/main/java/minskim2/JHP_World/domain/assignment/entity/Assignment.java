@@ -48,4 +48,8 @@ public class Assignment extends BaseEntity {
             this.body = assignmentDto.body();
         }
     }
+
+    public void updateFile(File file) {
+        this.file = file;
+    }
 }

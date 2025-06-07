@@ -287,6 +287,7 @@
 
             <h3>과제 파일</h3>
             <iframe id="popup-assignment-file" src="http://docs.google.com/gview?url=https://github.com/user-attachments/files/18808858/Rmd_beamer.pdf&embedded=true" width="100%" height="500px"></iframe>
+            <input type="file" id="popup-assignment-file-input" name="file">
             <div class="popup-buttons">
                 <button class="btn-save" id="saveAssignmentButton">저장</button>
                 <button class="btn-delete" id="deleteAssignmentButton">삭제</button>
@@ -313,6 +314,7 @@
         const popupOverlay = document.getElementById("editPopup");
         const saveAssignmentButton = document.getElementById("saveAssignmentButton");
         const deleteAssignmentButton = document.getElementById("deleteAssignmentButton");
+        const fileInput = document.getElementById("popup-assignment-file-input");
 
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
@@ -330,6 +332,7 @@
                         document.getElementById('popup-assignment-title').value = data.title;
                         document.getElementById('popup-assignment-body').value = data.body;
                         document.getElementById('popup-assignment-file').src = data.fileUrl;
+                        fileInput.value = '';
 
                         popupOverlay.style.display = "block";
                     });
@@ -366,13 +369,38 @@
                     body: JSON.stringify(assignmentData)
                 });
 
-                if (response.ok) {
-                    alert('과제가 저장되었습니다.');
-                    location.reload();
-                } else {
+                if (!response.ok) {
                     const errorData = await response.json();
                     alert('저장 실패: ' + errorData.message);
+                    return;
                 }
+
+                if (fileInput.files.length) {
+                    const formData = new FormData();
+                    formData.append('assignmentId', assignmentData.id);
+                    formData.append('file', fileInput.files[0]);
+
+                    const fileResponse = await fetch('/api/admin/assignment/file', {
+                        method: 'PATCH',
+                        headers: {
+                            [csrfHeader]: csrfToken
+                        },
+                        body: formData
+                    });
+
+                    if (!fileResponse.ok) {
+                        const errorData = await fileResponse.json();
+                        alert('파일 수정 실패: ' + errorData.message);
+                        return;
+                    }
+
+                    const newUrl = await fileResponse.text();
+                    document.getElementById('popup-assignment-file').src = newUrl;
+                    fileInput.value = '';
+                }
+
+                alert('과제가 저장되었습니다.');
+                location.reload();
             } catch (error) {
                 console.error('API 요청 중 오류 발생:', error);
                 alert('알 수 없는 오류가 발생했습니다.');
@@ -405,6 +433,7 @@
                 }
             }
         });
+
     });
 </script>
 
