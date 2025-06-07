@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minskim2.JHP_World.config.anotation.PageParam;
 import minskim2.JHP_World.domain.test_case.dto.TestCaseRes;
+import minskim2.JHP_World.domain.test_case.dto.TestCaseQ;
 import minskim2.JHP_World.domain.test_case.service.TestCaseService;
 import minskim2.JHP_World.global.utils.ModelSetter;
 import minskim2.JHP_World.domain.assignment.dto.AssignmentDto;
@@ -93,16 +94,20 @@ public class AssignmentController {
      * 과제 id 기반으로 테스트 케이스 조회
      * */
     @GetMapping("/{assignmentId}/test-cases")
-    public String getTestCase(@PathVariable Long assignmentId, @PageParam int page, Model model) {
+    public String getTestCase(@PathVariable Long assignmentId,
+                              @PageParam int page,
+                              @RequestParam(required = false) String username,
+                              @RequestParam(defaultValue = "recent") String sort,
+                              Model model) {
 
-        // 테스트 케이스 조회
-        Page<TestCaseRes.Get> testcaseList = testCaseService.findPublicByAssignmentId(assignmentId, page);
+        Page<TestCaseQ> testcaseList = testCaseService.searchTestCases(assignmentId, username, sort, page);
         int totalPages = testcaseList.getTotalPages();
 
-        // model에 추가
         ModelSetter.init(model, "테스트 케이스 관리", page, totalPages, "/assignment/" + assignmentId + "/test-cases");
         model.addAttribute("assignmentId", assignmentId);
         model.addAttribute("testcaseList", testcaseList);
+        model.addAttribute("sort", sort);
+        model.addAttribute("username", username);
 
         return "pages/testcaseList";
     }
