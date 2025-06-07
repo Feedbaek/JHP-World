@@ -53,6 +53,11 @@ public class AdminRestController {
         return assignmentService.updateAssignment(req);
     }
 
+    @PatchMapping("/assignment/file")
+    public String updateAssignmentFile(@ModelAttribute AssignmentReq.UpdateFile req) {
+        return assignmentService.updateAssignmentFile(req);
+    }
+
     /**
      * 과제 삭제
      * */
