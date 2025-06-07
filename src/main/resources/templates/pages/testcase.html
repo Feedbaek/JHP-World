@@ -17,12 +17,41 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 30px auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+        }
+
+        .testcase-content {
+            flex: 1;
+            margin-right: 30px;
+        }
+
+        .result-panel {
+            width: 250px;
+        }
+
+        .result-panel h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .result-panel ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .result-panel li {
+            background-color: #f7f7f7;
+            border-radius: 5px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
 
         h1 {
@@ -65,13 +94,23 @@
 </div>
 
 <div class="container">
-    <h1 th:text="${testcase.assignmentTitle}"></h1>
-    <p th:text="${testcase.member}" style="text-align: right"></p>
-    <p th:text="${testcase.description}"></p>
-    <h4>input</h4>
-    <p th:text="${testcase.input}"></p>
-    <h4>output</h4>
-    <p th:text="${testcase.output}"></p>
+    <div class="testcase-content">
+        <h1 th:text="${testcase.assignmentTitle}"></h1>
+        <p th:text="${testcase.member}" style="text-align: right"></p>
+        <p th:text="${testcase.description}"></p>
+        <h4>input</h4>
+        <p th:text="${testcase.input}"></p>
+        <h4>output</h4>
+        <p th:text="${testcase.output}"></p>
+    </div>
+    <div class="result-panel">
+        <h3>최근 실행 결과</h3>
+        <ul>
+            <li th:each="grade : ${recentGrades}"
+                th:text="${grade.result == null ? '채점 중' : (grade.success ? '성공' : grade.result)}"></li>
+            <li th:if="${#lists.isEmpty(recentGrades)}">결과가 없습니다</li>
+        </ul>
+    </div>
 </div>
 
 </body>

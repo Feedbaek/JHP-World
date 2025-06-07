@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 import static minskim2.JHP_World.global.enums.SizeEnum.GRADE_LIST;
 
@@ -126,5 +127,16 @@ public class GradeService {
     public Page<GradeResponse> getGradeListByAssignmentId(Long assignmentId, int page) {
         return gradeRepository.findAllByAssignmentId(assignmentId, PageRequest.of(page, GRADE_LIST.getSize(), Sort.Direction.DESC, "createdDate"))
                 .map(GradeResponse::from);
+    }
+
+    /**
+     * 테스트케이스별 최근 테스트 결과 조회
+     */
+    public List<GradeResponse> getRecentGradesByTestCaseId(Long testCaseId) {
+        return gradeRepository
+                .findRecentGrades(testCaseId, PageRequest.of(0, 5))
+                .stream()
+                .map(GradeResponse::from)
+                .toList();
     }
 }
