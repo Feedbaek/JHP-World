@@ -8,6 +8,7 @@ import minskim2.JHP_World.domain.grade.dto.ExecuteRequest;
 import minskim2.JHP_World.domain.grade.dto.GradeDto;
 import minskim2.JHP_World.domain.grade.dto.GradeRequest;
 import minskim2.JHP_World.domain.grade.dto.GradeResponse;
+import minskim2.JHP_World.domain.grade.dto.GradeSummaryRes;
 import minskim2.JHP_World.domain.grade.entity.Grade;
 import minskim2.JHP_World.domain.grade.repository.GradeRepository;
 import minskim2.JHP_World.domain.solution.dto.SolutionDto;
@@ -24,6 +25,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static minskim2.JHP_World.global.enums.SizeEnum.GRADE_LIST;
 
@@ -126,5 +129,15 @@ public class GradeService {
     public Page<GradeResponse> getGradeListByAssignmentId(Long assignmentId, int page) {
         return gradeRepository.findAllByAssignmentId(assignmentId, PageRequest.of(page, GRADE_LIST.getSize(), Sort.Direction.DESC, "createdDate"))
                 .map(GradeResponse::from);
+    }
+
+    /**
+     * 최근 테스트 결과를 사용자 구분 없이 조회
+     */
+    public List<GradeSummaryRes> getLatestSummary(Long assignmentId) {
+        return gradeRepository.findLatestByAssignmentId(assignmentId)
+                .stream()
+                .map(GradeSummaryRes::from)
+                .toList();
     }
 }
