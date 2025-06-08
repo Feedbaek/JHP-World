@@ -1,6 +1,5 @@
 package minskim2.JHP_World.config;
 
-import jakarta.annotation.PostConstruct;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import minskim2.JHP_World.config.interceptor.AnonymousVisitInterceptor;
@@ -14,7 +13,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
-import java.util.TimeZone;
 
 @Configuration
 @RequiredArgsConstructor
@@ -56,10 +54,5 @@ public class WebConfig implements WebMvcConfigurer {
     public void addArgumentResolvers(@NonNull List<HandlerMethodArgumentResolver> resolvers) {
         // 커스텀한 ArgumentResolver를 추가
         resolvers.add(new PageArgumentResolver());
-    }
-
-    @PostConstruct
-    public void setTimezone() {
-        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
     }
 }
