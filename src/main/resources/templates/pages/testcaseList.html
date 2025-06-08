@@ -175,8 +175,8 @@
         <form id="searchForm" th:action="@{'/assignment/' + ${assignmentId} + '/test-cases'}" method="get">
             <input type="text" name="username" placeholder="사용자 검색" th:value="${username}">
             <select name="sort" onchange="this.form.submit()">
-                <option value="recent" th:selected="${sort}=='recent'">최근 날짜순</option>
-                <option value="run" th:selected="${sort}=='run'">실행 횟수순</option>
+                <option value="recent" th:selected="${sort}=='recent'">최근 날짜</option>
+                <option value="run" th:selected="${sort}=='run'">실행 횟수</option>
                 <option value="comment" th:selected="${sort}=='comment'">댓글 수</option>
                 <option value="recommend" th:selected="${sort}=='recommend'">추천 수</option>
             </select>
