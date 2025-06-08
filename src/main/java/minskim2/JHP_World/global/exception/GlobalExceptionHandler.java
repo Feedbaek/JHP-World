@@ -78,4 +78,14 @@ public class GlobalExceptionHandler {
         return getResponseEntity(e);
     }
 
+    /**
+     * 그 외 예외 처리 핸들러
+     * */
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<String> handleException(final Throwable e) {
+        log.error("Unhandled exception: {}", e.getMessage(), e);
+        return ResponseEntity
+                .status(INTERNAL_SERVER_ERROR)
+                .body("알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.");
+    }
 }
