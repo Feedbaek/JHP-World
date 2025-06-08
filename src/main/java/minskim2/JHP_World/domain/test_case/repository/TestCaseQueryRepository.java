@@ -65,7 +65,7 @@ public class TestCaseQueryRepository {
                 .from(testCase)
                 .leftJoin(testCase.member, member)
                 .leftJoin(grade).on(grade.testCase.eq(testCase))
-                .leftJoin(recommendation).on(recommendation.testCase.eq(testCase))
+                .leftJoin(recommendation).on(recommendation.board.id.eq(testCase.id))
                 .where(testCase.assignment.id.eq(assignmentId)
                         .and(testCase.isPublic.isTrue()))
                 .groupBy(testCase.id);

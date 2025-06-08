@@ -39,7 +39,7 @@ public class CommentService {
 
         Comment comment = Comment.builder()
                 .member(member)
-                .post(post)
+                .board(post)
                 .body(req.body())
                 .build();
 
@@ -55,7 +55,7 @@ public class CommentService {
      * 댓글 목록 조회
      * */
     public List<GetRes> getCommentList(Long postId) {
-        List<Comment> comments = commentRepository.findAllByPost_Id(postId);
+        List<Comment> comments = commentRepository.findAllByBoard_Id(postId);
 
         return comments.stream()
                 .map(GetRes::from)
