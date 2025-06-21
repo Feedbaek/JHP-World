@@ -40,6 +40,7 @@ public class SecurityConfig {
         // 정적 리소스
         "/css/**",
         "/js/**",
+        "/favicon.ico",
 
         // Home 페이지
         "/home",
